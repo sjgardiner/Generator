@@ -29,8 +29,17 @@
 #include <complex>
 #include <Math/IFunction.h>
 #include "Physics/NuclearState/NuclearModelI.h"
+#include "Physics/QuasiElastic/XSection/QELUtils.h"
 
 namespace genie {
+
+typedef enum EQELRmax {
+  // Use the same maximum radius as VertexGenerator (3*R0*A^(1/3))
+  kMatchVertexGeneratorRmax,
+
+  // Use the method for calculting Rmax from Nieves' Fortran code
+  kMatchNieves
+} Nieves_Coulomb_Rmax_t;
 
 class QELFormFactorsModelI;
 class XSecIntegratorI;
@@ -78,6 +87,19 @@ private:
   bool   fDoAvgOverNucleonMomentum;    ///< Average cross section over hit nucleon monentum?
   double fEnergyCutOff;                ///< Average only for energies below this cutoff defining
                                        ///< the region where nuclear modeling details do matter
+
+  /// Enum specifying the method to use when calculating the binding energy of
+  /// the initial hit nucleon during spline generation
+  QELEvGen_BindingMode_t fIntegralNucleonBindingMode;
+
+  /// Nuclear radius parameter r = R0*A^(1/3) used to compute the
+  /// maximum radius for integration of the Coulomb potential
+  /// when matching the VertexGenerator method
+  double fR0;
+
+  /// Enum variable describing which method of computing Rmax should be used
+  /// for integrating the Coulomb potential
+  Nieves_Coulomb_Rmax_t fCoulombRmaxMode;
 
   //Functions needed to calculate XSec:
 
