@@ -59,7 +59,7 @@ void MarleyInterface::LoadConfig(void)
   fMarleyGenerator = jc.create_generator();
 }
 //____________________________________________________________________________
-marley::Generator* MarleyInterface::GetMarleyGenerator() {
+marley::Generator* MarleyInterface::GetMarleyGenerator() const {
   return &fMarleyGenerator;
 }
 //____________________________________________________________________________

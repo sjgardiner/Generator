@@ -47,13 +47,13 @@ public:
   void Configure (const Registry & config);
   void Configure (string param_set);
 
-  marley::Generator* GetMarleyGenerator();
+  marley::Generator* GetMarleyGenerator() const;
 
 private:
 
   void LoadConfig (void);
 
-  marley::Generator fMarleyGenerator;
+  mutable marley::Generator fMarleyGenerator;
 
 };
 
