@@ -22,6 +22,7 @@ if(($match = grep(/--help/i, @ARGV)) > 0) {
   print "    incl                 Interface with INCL++ for nuclear transport                 default: disabled \n";
   print "    geant4               Interface with Geant4 for nuclear transport                 default: disabled \n";
   print "    hepmc3               Interface with HepMC3 event format library                  default: disabled \n";
+  print "    marley               Interface with MARLEY                                       default: disabled \n";  
   print "    lhapdf5              Use the LHAPDF5 parton density function library             default: enabled  \n";
   print "    lhapdf6              Use the LHAPDF6 parton density function library             default: disabled \n";
   print "    apfel                Use APFEL to compute NLO structure functions                default: disabled \n";
@@ -64,6 +65,8 @@ if(($match = grep(/--help/i, @ARGV)) > 0) {
   print "    geant4-lib        Geant4 library path          needed if you --enable-geant4       (if unset: checks for a \$GEANT4_LIB env.var.. then tries to auto-detect it) \n";
   print "    hepmc3-inc        HepMC3 includes path         needed if you --enable-hepmc3       (if unset: checks for a \$HEPMC3_INC env.var.. then tries to auto-detect it) \n";
   print "    hepmc3-lib        HepMC3 library path          needed if you --enable-hepmc3       (if unset: checks for a \$HEPMC3_LIB env.var.. then tries to auto-detect it) \n";
+  print "    marley-inc          MARLEY includes path         needed if you --enable-marley         (if unset: tries to auto-detect it) \n";
+  print "    marley-lib          MARLEY library path          needed if you --enable-marley         (if unset: tries to auto-detect it) \n";
   print "    lhapdf5-inc       LHAPDF5 includes path        needed if you --enable-lhapdf5      (if unset: checks for a \$LHAPDF5_INC env.var., then tries to auto-detect it) \n";
   print "    lhapdf5-lib       LHAPDF5 libraries path       needed if you --enable-lhapdf5      (if unset: checks for a \$LHAPDF5_LIB env.var.. then tries to auto-detect it) \n";
   print "    lhapdf6-inc       LHAPDF6 includes path        needed if you --enable-lhapdf6      (if unset: checks for a \$LHAPDF6_INC env.var., then tries to auto-detect it) \n";
@@ -173,6 +176,7 @@ my $gopt_enable_hnl_validation       = "NO";
 my $gopt_enable_dark_neutrino        = "NO";
 my $gopt_enable_evtlib               = "NO";
 my $gopt_enable_incl                 = "NO";
+my $gopt_enable_marley               = "NO";
 my $gopt_enable_geant4_interface     = "NO";
 my $gopt_enable_hepmc3_interface     = "NO";
 my $gopt_enable_masterclass          = "NO";
@@ -212,6 +216,7 @@ if(($match = grep(/--enable-hnl-validation/i,       @ARGV)) > 0) { $gopt_enable_
 if(($match = grep(/--enable-dark-neutrino/i,        @ARGV)) > 0) { $gopt_enable_dark_neutrino        = "YES"; }
 if(($match = grep(/--enable-event-library/i,        @ARGV)) > 0) { $gopt_enable_evtlib               = "YES"; }
 if(($match = grep(/--enable-incl/i,                 @ARGV)) > 0) { $gopt_enable_incl                 = "YES"; }
+if(($match = grep(/--enable-marley/i,               @ARGV)) > 0) { $gopt_enable_marley               = "YES"; }
 if(($match = grep(/--enable-geant4/i,               @ARGV)) > 0) { $gopt_enable_geant4_interface     = "YES"; }
 if(($match = grep(/--enable-hepmc3/i,               @ARGV)) > 0) { $gopt_enable_hepmc3_interface     = "YES"; }
 if(($match = grep(/--enable-masterclass/i,          @ARGV)) > 0) { $gopt_enable_masterclass          = "YES"; }
@@ -966,6 +971,45 @@ if($gopt_enable_hepmc3_interface eq "YES") {
   if(! -e $fileso && ! -e $filedylib) {
      print "*** Error *** You need to specify the path to HepMC3 library using --with-hepmc3-lib=/some/path/\n";
      print "*** Error *** Otherwise, you should --disable-hepmc3\n\n";
+
+# MARLEY path
+# ------------------------------------------------
+
+# If --enable-marley was set then the full path to the MARLEY libraries must be specified
+#
+my $gopt_with_marley_lib = "";
+if($gopt_enable_marley eq "YES") {
+  if(($match = grep(/--with-marley-lib/i, @ARGV)) > 0) {
+    $options=~m/--with-marley-lib=(\S*)/i;
+    $gopt_with_marley_lib = $1;
+  }
+  if(! -d $gopt_with_marley_lib)  {
+    print "\n*** Warning *** MARLEY has been enabled but you didn't specify the MARLEY library path \n";
+  }
+  # if it was not set, try to pick it up from the environment
+  if($gopt_with_marley_lib eq "" && defined $ENV{'MARLEY_LIB'}) {
+     $gopt_with_marley_lib = $ENV{'MARLEY_LIB'};
+     print "The \$MARLEY_LIB env var is defined. I will pick that and use --with-marley-lib=$gopt_with_marley_lib\n";
+  }
+  if($gopt_with_marley_lib eq "" && defined $ENV{'MARLEY'}) {
+     $gopt_with_marley_lib = "$ENV{'MARLEY'}/build";
+     print "The \$MARLEY env var is defined. I will pick that and use --with-marley-lib=$gopt_with_marley_lib\n";
+  }
+  # if it still not set, try autodetecting it
+  if(! -d $gopt_with_marley_lib && $auto_detect)  {
+    print "Auto-detecting MARLEY library path...\n";
+    $matched = auto_detect("libMARLEY.so");
+    if( $matched=~m/(\S*)\/libMARLEY.so/i ) {
+       $gopt_with_marley_lib = $1;
+    }
+    print "Setting --with-marley-lib=$gopt_with_marley_lib\n";
+  }
+  # check
+  my $fileso    = "$gopt_with_marley_lib/libMARLEY.so";
+  my $filedylib = "$gopt_with_marley_lib/libMARLEY.dylib";
+  if(! -e $fileso && ! -e $filedylib) {
+     print "*** Error *** You need to specify the path to the MARLEY libraries using --with-marley-lib=/some/path/\n";
+     print "*** Error *** Otherwise, you should --disable-marley\n\n";
      exit 1;
   }
 }
@@ -1001,6 +1045,42 @@ if($gopt_enable_hepmc3_interface eq "YES") {
   if(! -e $file) {
      print "*** Error *** You need to specify the HepMC3 includes path using --with-hepmc3-inc=/some/path/\n";
      print "*** Error *** Otherwise, you should --disable-hepmc3\n\n";
+
+# If --enable-marley was set then the full path to the MARLEY includes must be specified
+#
+my $gopt_with_marley_inc = "";
+if($gopt_enable_marley eq "YES") {
+  if(($match = grep(/--with-marley-inc/i, @ARGV)) > 0) {
+    $options=~m/--with-marley-inc=(\S*)/i;
+    $gopt_with_marley_inc = $1;
+  }
+  if(! -d $gopt_with_marley_inc)  {
+    print "\n*** Warning *** MARLEY has been enabled but you didn't specify the MARLEY include path \n";
+  }
+  # if it was not set, try to pick it up from the environment
+  if($gopt_with_marley_inc eq "" && defined $ENV{'MARLEY_INC'}) {
+     $gopt_with_marley_inc = $ENV{'MARLEY_INC'};
+     print "The \$MARLEY_INC env var is defined. I will pick that and use --with-marley-inc=$gopt_with_marley_inc\n";
+  }
+  if($gopt_with_marley_inc eq "" && defined $ENV{'MARLEY'}) {
+     $gopt_with_marley_inc = "$ENV{'MARLEY'}/include";
+     print "The \$MARLEY env var is defined. I will pick that and use --with-marley-inc=$gopt_with_marley_inc\n";
+  }
+  # if it still not set, try autodetecting it
+  if(! -d $gopt_with_marley_inc && $auto_detect)  {
+    print "Auto-detecting the MARLEY include path...\n";
+    $matched = auto_detect("marley_utils.hh","marley/marley_utils.hh");
+    print "$gopt_with_marley_inc  \n";
+    if( $matched=~m/(\S*)\/marley\/marley_utils.hh/i ) {
+       $gopt_with_marley_inc = $1;
+    }
+    print "Setting --with-marley-inc=$gopt_with_marley_inc\n";
+  }
+  # check
+  my $file = "$gopt_with_marley_inc/marley/marley_utils.hh";
+  if(! -e $file) {
+     print "*** Error *** You need to specify the MARLEY includes path using --with-marley-inc=/some/path/\n";
+     print "*** Error *** Otherwise, you should --disable-marley\n\n";
      exit 1;
   }
 }
@@ -1074,6 +1154,7 @@ print MKCONF "GOPT_ENABLE_PYTHIA8=$gopt_enable_pythia8\n";
 print MKCONF "GOPT_ENABLE_INCL=$gopt_enable_incl\n";
 print MKCONF "GOPT_ENABLE_GEANT4_INTERFACE=$gopt_enable_geant4_interface\n";
 print MKCONF "GOPT_ENABLE_HEPMC3_INTERFACE=$gopt_enable_hepmc3_interface\n";
+print MKCONF "GOPT_ENABLE_MARLEY=$gopt_enable_marley\n";
 print MKCONF "GOPT_ENABLE_LHAPDF5=$gopt_enable_lhapdf5\n";
 print MKCONF "GOPT_ENABLE_LHAPDF6=$gopt_enable_lhapdf6\n";
 print MKCONF "GOPT_ENABLE_APFEL=$gopt_enable_apfel\n";
@@ -1127,6 +1208,8 @@ print MKCONF "GOPT_WITH_GEANT4_INC=$gopt_with_geant4_inc\n";
 print MKCONF "GOPT_WITH_GEANT4_LIB=$gopt_with_geant4_lib\n";
 print MKCONF "GOPT_WITH_HEPMC3_INC=$gopt_with_hepmc3_inc\n";
 print MKCONF "GOPT_WITH_HEPMC3_LIB=$gopt_with_hepmc3_lib\n";
+print MKCONF "GOPT_WITH_MARLEY_INC=$gopt_with_marley_inc\n";
+print MKCONF "GOPT_WITH_MARLEY_LIB=$gopt_with_marley_lib\n";
 print MKCONF "GOPT_WITH_GFORTRAN_LIB=$gopt_with_gfortran_lib\n";
 print MKCONF "GOPT_WITH_G2C_LIB=$gopt_with_g2c_lib\n";
 close(MKCONF);

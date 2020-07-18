@@ -33,6 +33,7 @@ INITIAL_BUILD_TARGETS = print-make-info \
 		   physics-neutrino-scattering-modes \
 		   physics-nucleon-decay \
 		   physics-nnbar-oscillation \
+		   physics-marley \
 		   physics-boosted-dark-matter \
 		   physics-heavy-neutral-lepton \
 		   physics-dark-neutrino \
@@ -144,6 +145,18 @@ else
 	@echo "** N-Nbar oscillation library was not enabled. Skipping..."
 endif
 
+physics-marley:
+	@echo " "
+	@echo "** Building MARLEY interface library..."
+ifeq ($(strip $(GOPT_ENABLE_MARLEY)),YES)
+	cd ${GENIE}/src/Physics && \
+	cd MARLEY && \
+	$(MAKE) && \
+	cd ${GENIE}
+else
+	@echo " "
+	@echo "** MARLEY interface library was not enabled. Skipping..."
+endif
 
 physics-boosted-dark-matter:
 	@echo " "
@@ -428,6 +441,7 @@ endif
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/Physics/InverseBetaDecay
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/Physics/InverseBetaDecay/XSection
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/Physics/InverseBetaDecay/EventGen
+	mkdir ${GENIE_INC_INSTALLATION_PATH}/Physics/MARLEY
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/Physics/Multinucleon
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/Physics/Multinucleon/XSection
 	mkdir ${GENIE_INC_INSTALLATION_PATH}/Physics/Multinucleon/EventGen
@@ -498,6 +512,7 @@ copy-install-files: FORCE
 	cd ${GENIE}/src/Physics/HadronTensors                    &&  $(MAKE) install && \
 	cd ${GENIE}/src/Physics/InverseBetaDecay/XSection        &&  $(MAKE) install && \
 	cd ${GENIE}/src/Physics/InverseBetaDecay/EventGen        &&  $(MAKE) install && \
+	cd ${GENIE}/src/Physics/MARLEY                           &&  $(MAKE) install && \
 	cd ${GENIE}/src/Physics/Multinucleon/XSection            &&  $(MAKE) install && \
 	cd ${GENIE}/src/Physics/Multinucleon/EventGen            &&  $(MAKE) install && \
 	cd ${GENIE}/src/Physics/MuonEnergyLoss                   &&  $(MAKE) install && \
@@ -560,6 +575,7 @@ purge: FORCE
 	cd ${GENIE}/src/Physics/HadronTransport                  &&  $(MAKE) purge && \
 	cd ${GENIE}/src/Physics/InverseBetaDecay/XSection        &&  $(MAKE) purge && \
 	cd ${GENIE}/src/Physics/InverseBetaDecay/EventGen        &&  $(MAKE) purge && \
+	cd ${GENIE}/src/Physics/MARLEY                           &&  $(MAKE) purge && \
 	cd ${GENIE}/src/Physics/Multinucleon/XSection            &&  $(MAKE) purge && \
 	cd ${GENIE}/src/Physics/Multinucleon/EventGen            &&  $(MAKE) purge && \
 	cd ${GENIE}/src/Physics/MuonEnergyLoss                   &&  $(MAKE) purge && \
@@ -623,6 +639,7 @@ clean-files: FORCE
 	cd ${GENIE}/src/Physics/HadronTransport                  &&  $(MAKE) clean && \
 	cd ${GENIE}/src/Physics/InverseBetaDecay/XSection        &&  $(MAKE) clean && \
 	cd ${GENIE}/src/Physics/InverseBetaDecay/EventGen        &&  $(MAKE) clean && \
+	cd ${GENIE}/src/Physics/MARLEY                           &&  $(MAKE) clean && \
 	cd ${GENIE}/src/Physics/Multinucleon/XSection            &&  $(MAKE) clean && \
 	cd ${GENIE}/src/Physics/Multinucleon/EventGen            &&  $(MAKE) clean && \
 	cd ${GENIE}/src/Physics/MuonEnergyLoss                   &&  $(MAKE) clean && \
@@ -711,6 +728,7 @@ endif
 	cd ${GENIE}/src/Physics/HadronTensors                    &&  $(MAKE) distclean && \
 	cd ${GENIE}/src/Physics/InverseBetaDecay/XSection        &&  $(MAKE) distclean && \
 	cd ${GENIE}/src/Physics/InverseBetaDecay/EventGen        &&  $(MAKE) distclean && \
+	cd ${GENIE}/src/Physics/MARLEY                           &&  $(MAKE) distclean && \
 	cd ${GENIE}/src/Physics/Multinucleon/XSection            &&  $(MAKE) distclean && \
 	cd ${GENIE}/src/Physics/Multinucleon/EventGen            &&  $(MAKE) distclean && \
 	cd ${GENIE}/src/Physics/MuonEnergyLoss                   &&  $(MAKE) distclean && \

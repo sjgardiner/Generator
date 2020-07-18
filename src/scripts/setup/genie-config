@@ -58,6 +58,9 @@ if test "$GOPT_ENABLE_HEAVY_NEUTRAL_LEPTON" = "YES"; then
   phys_libs="$phys_libs -lGPhHNL "
   features="$features heavy-neutral-lepton"
 fi
+if test "$GOPT_ENABLE_MARLEY" = "YES"; then
+  phys_libs="$phys_libs -lGPhMARLEY"
+fi
 
 # Libraries from GENIE/Generator/Tools
 # (standard)

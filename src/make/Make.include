@@ -334,6 +334,21 @@ ROOT_VERSION = $(shell root-config --version )
 ROOT_MAJOR   = $(shell root-config --version | cut -d. -f1 )
 
 #-------------------------------------------------------------------
+# MARLEY
+#-------------------------------------------------------------------
+
+MARLEY_LIBRARIES =
+MARLEY_INCLUDES  =
+
+ifeq ($(strip $(GOPT_ENABLE_MARLEY)),YES)
+
+MARLEY_INCLUDES  = -I$(GOPT_WITH_MARLEY_INC)
+MARLEY_FLAGS     = $(shell $(GOPT_WITH_MARLEY_LIB)/marley-config --cflags)
+MARLEY_LIBRARIES = -L$(GOPT_WITH_MARLEY_LIB)  $(shell $(GOPT_WITH_MARLEY_LIB)/marley-config --libs)
+
+endif
+
+#-------------------------------------------------------------------
 # PROFILING / DEBUGING OPTIONS
 #-------------------------------------------------------------------
 # Linking in the Google Profiling Tool library
