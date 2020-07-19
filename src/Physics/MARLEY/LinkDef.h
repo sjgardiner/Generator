@@ -9,6 +9,7 @@
 
 #ifdef __GENIE_MARLEY_ENABLED__
 #pragma link C++ class genie::MarleyInterface;
+#pragma link C++ class genie::MarleyGenerator;
 #pragma link C++ class genie::MarleyPXSec;
 #endif
 
