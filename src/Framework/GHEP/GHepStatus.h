@@ -11,7 +11,7 @@
 \created  November 20, 2004
 
 \cpright  Copyright (c) 2003-2025, The GENIE Collaboration
-          For the full text of the license visit http://copyright.genie-mc.org  
+          For the full text of the license visit http://copyright.genie-mc.org
 */
 //____________________________________________________________________________
 
@@ -40,6 +40,7 @@ typedef enum EGHepStatus {
    kIStPreDeExNuclearRemnant      = 17,   /* nuclear fragments before de-excitation */
    kIStDeExFinalState             = 18,    /* generator-level final state: particles from de-excitation */
    kIStSpectator                           /* the spectator particle in FSI collision */
+   kIStFormZone                   = 17    // for hadrons about to traverse their formation zone
 }
 GHepStatus_t;
 
