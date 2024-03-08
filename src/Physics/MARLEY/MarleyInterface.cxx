@@ -11,6 +11,9 @@
 */
 //____________________________________________________________________________
 
+// Standard library includes
+#include <cstdlib>
+
 // GENIE includes
 #include "Physics/MARLEY/MarleyInterface.h"
 
@@ -55,7 +58,9 @@ void MarleyInterface::LoadConfig(void)
   GetParam( "ConfigFileName", config_file_name ) ;
 
   // Initialize a new marley::Generator object
-  marley::RootJSONConfig jc( config_file_name );
+  std::string full_path = std::getenv( "GENIE" );
+  full_path += "/data/evgen/marley/" + config_file_name;
+  marley::RootJSONConfig jc( full_path );
   fMarleyGenerator = jc.create_generator();
 }
 //____________________________________________________________________________
