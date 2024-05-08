@@ -470,6 +470,35 @@ void genie::SuSAv2InelGenerator::MakeHadronicFinalState( GHepRecord* evrec )
     }
     case HadronicFSChoice::OtherRES: {
       // TODO: implement this part!
+      // FIXME: first attempt
+      double ratio_other_RES = 0.085 * Ev + 0.045;
+      // Get access to the random number generators
+      genie::RandomGen* rnd = RandomGen::Instance();
+      genie::Resonance_t other_res;
+      int other_res_norm = int( ratio_other_RES / 0.1);
+      int other_res_choice = int( (other_res_norm + 1) * rnd->RndKine().Rndm());
+      switch (other_res_choice) {
+        case 0: other_res = genie::EResonance::kP11_1440; break;
+        case 1: other_res = genie::EResonance::kP33_1600; break;
+        case 2: other_res = genie::EResonance::kS11_1650; break;
+        case 3: other_res = genie::EResonance::kD15_1675; break;
+        case 4: other_res = genie::EResonance::kD33_1700; break;
+        case 5: other_res = genie::EResonance::kP11_1710; break;
+        case 6: other_res = genie::EResonance::kP31_1910; break;
+        case 7: other_res = genie::EResonance::kP33_1920; break;
+        case 8: other_res = genie::EResonance::kF37_1950; break;
+        default:{
+          LOG( "SuSAv2Inel", pERROR )
+            << "*** Failed to select valid *other* hadronic final state";
+          evrec->EventFlags()->SetBitNumber( genie::kHadroSysGenErr, true );
+          genie::exceptions::EVGThreadException exception;
+          exception.SetReason( "Couldn't select *other* hadronic final state" );
+          exception.SwitchOnFastForward();
+          throw exception;
+        }
+      }
+      interaction->ExclTagPtr()->SetResonance( other_res );
+      fRESHadronGenerator->ProcessEventRecord( evrec );
       break;
     }
     default: {
