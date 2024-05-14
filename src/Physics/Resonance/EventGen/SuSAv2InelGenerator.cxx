@@ -31,6 +31,8 @@
 #include "Framework/Utils/KineUtils.h"
 #include "Physics/Resonance/EventGen/SuSAv2InelGenerator.h"
 
+#include <map>
+
 namespace {
 
   enum HadronicFSChoice { Unknown, DeltaRES, OtherRES, DIS };
@@ -471,31 +473,38 @@ void genie::SuSAv2InelGenerator::MakeHadronicFinalState( GHepRecord* evrec )
     case HadronicFSChoice::OtherRES: {
       // TODO: implement this part!
       // FIXME: first attempt
-      double ratio_other_RES = 0.085 * Ev + 0.045;
-      // Get access to the random number generators
+
+      std::map<genie::Resonance_t, int> resonance_pdg;
+      resonance_pdg.insert(std::pair<genie::Resonance_t, const int>(genie::EResonance::kP11_1440, kPdgP11m1440_N0));
+      resonance_pdg.insert(std::pair<genie::Resonance_t, const int>(genie::EResonance::kP33_1600, kPdgP33m1600_Delta0));
+      resonance_pdg.insert(std::pair<genie::Resonance_t, const int>(genie::EResonance::kS11_1650, kPdgS11m1650_N0));
+      resonance_pdg.insert(std::pair<genie::Resonance_t, const int>(genie::EResonance::kD15_1675, kPdgD15m1675_N0));
+      resonance_pdg.insert(std::pair<genie::Resonance_t, const int>(genie::EResonance::kD33_1700, kPdgD33m1700_Delta0));
+      resonance_pdg.insert(std::pair<genie::Resonance_t, const int>(genie::EResonance::kP11_1710, kPdgP11m1710_N0));
+      resonance_pdg.insert(std::pair<genie::Resonance_t, const int>(genie::EResonance::kP31_1910, kPdgP31m1910_Delta0));
+      resonance_pdg.insert(std::pair<genie::Resonance_t, const int>(genie::EResonance::kP33_1920, kPdgP33m1920_Delta0));
+      resonance_pdg.insert(std::pair<genie::Resonance_t, const int>(genie::EResonance::kF37_1950, kPdgF37m1950_Delta0));
+
+      PDGLibrary * pdglib = PDGLibrary::Instance();
+
+      std::map<double, genie::Resonance_t> ratio_other_res;
+      double temp_BW = 0;
+      for(auto it = resonance_pdg.begin(); it != resonance_pdg.end(); it++){
+        int res_pdg = it->second;
+        double M_res = pdglib->Find(res_pdg)->Mass();
+        double Gamma_res = pdglib->Find(res_pdg)->Width();
+        temp_BW += TMath::BreitWigner(W, M_res, Gamma_res);
+        ratio_other_res.insert(std::pair<double, genie::Resonance_t>(temp_BW, it->first));
+      }
+
       genie::RandomGen* rnd = RandomGen::Instance();
-      genie::Resonance_t other_res;
-      int other_res_norm = int( ratio_other_RES / 0.1);
-      int other_res_choice = int( (other_res_norm + 1) * rnd->RndKine().Rndm());
-      switch (other_res_choice) {
-        case 0: other_res = genie::EResonance::kP11_1440; break;
-        case 1: other_res = genie::EResonance::kP33_1600; break;
-        case 2: other_res = genie::EResonance::kS11_1650; break;
-        case 3: other_res = genie::EResonance::kD15_1675; break;
-        case 4: other_res = genie::EResonance::kD33_1700; break;
-        case 5: other_res = genie::EResonance::kP11_1710; break;
-        case 6: other_res = genie::EResonance::kP31_1910; break;
-        case 7: other_res = genie::EResonance::kP33_1920; break;
-        case 8: other_res = genie::EResonance::kF37_1950; break;
-        default:{
-          LOG( "SuSAv2Inel", pERROR )
-            << "*** Failed to select valid *other* hadronic final state";
-          evrec->EventFlags()->SetBitNumber( genie::kHadroSysGenErr, true );
-          genie::exceptions::EVGThreadException exception;
-          exception.SetReason( "Couldn't select *other* hadronic final state" );
-          exception.SwitchOnFastForward();
-          throw exception;
-        }
+
+      // Choose a channel based on the relative probabilities
+      double rand = temp_BW * rnd->RndKine().Rndm();
+
+      genie::Resonance_t other_res = ratio_other_res.begin()->second;
+      for(auto it = ratio_other_res.begin(); it != ratio_other_res.end() && rand > it->first; it++){
+        other_res = it->second;
       }
       interaction->ExclTagPtr()->SetResonance( other_res );
       fRESHadronGenerator->ProcessEventRecord( evrec );
