@@ -11,11 +11,14 @@
 #pragma link C++ class genie::RESInteractionListGenerator;
 
 #pragma link C++ class genie::RSPPHadronicSystemGenerator;
+#pragma link C++ class genie::SPPEventGenerator;
 #pragma link C++ class genie::RESHadronicSystemGenerator;
 #pragma link C++ class genie::RSPPResonanceSelector;
 #pragma link C++ class genie::RSPPInteractionListGenerator;
 
 #pragma link C++ class genie::SuSAv2InelGenerator;
 #pragma link C++ class genie::SuSAv2InelInteractionListGenerator;
+// Wrappers for GSL/MathMore lib
+#pragma link C++ class genie::utils::gsl::d4XSecMK_dWQ2CosThetaPhi_E;
 
 #endif
