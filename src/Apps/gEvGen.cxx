@@ -348,6 +348,9 @@ void GenerateEventsAtFixedInitState(void)
     << "\n ** Will generate " << gOptNevents << " events for \n"
     << init_state << " at Ev = " << Ev << " GeV";
 
+  // Store the total interaction cross section for later use
+  double tot_xsec = -1.;
+
   // Generate events / print the GHEP record / add it to the ntuple
   int ievent = 0;
   while (ievent < gOptNevents) {
@@ -362,6 +365,20 @@ void GenerateEventsAtFixedInitState(void)
           << "Last attempt failed. Re-trying....";
         continue;
      }
+
+     if ( tot_xsec < 0. ) {
+       evg_driver.CreateSplines();
+       evg_driver.CreateXSecSumSpline( 30, 1e-8, Ev );
+       const Spline* tot_xsec_spl = evg_driver.XSecSumSpline();
+       tot_xsec = tot_xsec_spl->Evaluate( Ev );
+     }
+
+     // Store the inclusive total cross section (known exactly) in the accepted
+     // event. The flux-averaged value is identical because the neutrino source
+     // in this case is monoenergetic.
+     event->SetTotInclXSec( tot_xsec );
+     event->SetFluxAvgXSec( tot_xsec );
+     event->SetFluxAvgXSecErr( 0. );
 
      LOG("gevgen", pNOTICE)
         << "Generated Event GHEP Record: " << *event;
