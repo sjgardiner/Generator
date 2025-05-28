@@ -343,8 +343,8 @@ MARLEY_INCLUDES  =
 ifeq ($(strip $(GOPT_ENABLE_MARLEY)),YES)
 
 MARLEY_INCLUDES  = -I$(GOPT_WITH_MARLEY_INC)
-MARLEY_FLAGS     = $(shell $(GOPT_WITH_MARLEY_LIB)/marley-config --cflags)
-MARLEY_LIBRARIES = -L$(GOPT_WITH_MARLEY_LIB)  $(shell $(GOPT_WITH_MARLEY_LIB)/marley-config --libs)
+MARLEY_FLAGS     = $(shell marley-config --cflags)
+MARLEY_LIBRARIES = -L$(GOPT_WITH_MARLEY_LIB)  $(shell marley-config --libs)
 
 endif
 
