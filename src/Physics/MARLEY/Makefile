@@ -31,7 +31,7 @@ ifeq ($(strip $(GOPT_ENABLE_MARLEY)),YES)
   # extra flags, include paths, and libraries to link to
   CXXFLAGS               += $(MARLEY_FLAGS)
   CPP_INCLUDES           += $(MARLEY_INCLUDES)
-  ROOT_DICT_GEN_INCLUDES += $(MARLEY_INCLUDES) ${MARLEY_FLAGS}
+  ROOT_DICT_GEN_INCLUDES += $(MARLEY_INCLUDES)
   EXTRA_EXT_LIBS         += $(MARLEY_LIBRARIES)
 else
   $(info $(PACKAGE) not build against MARLEY)
