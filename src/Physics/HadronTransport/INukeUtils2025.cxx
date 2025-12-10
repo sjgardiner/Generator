@@ -16,24 +16,8 @@
  For documentation see the corresponding header file.
 
  Important revisions after version 2.0.0 :
- @ Mar 04, 2009 - JD
-   Was first added in v2.5.1. Adapted from the T2K GENIE reweighting tool.
- @ Mar 05, 2009 - CA
-   Modified ReconstructHadronFateHA() to work with hadron+A event files in
-   addition to neutrino event files.
- @ Sep 10, 2009 - CA
-   Added MeanFreePath(), Dist2Exit(), Dist2ExitMFP()
- @ Sep 30, 2009 - CA
-   Added StepParticle() from Intranuke.cxx
- @ Oct 02, 2009 - CA
-   Added test MeanFreePath_Delta().
- @ Jul 15, 2010 - AM
-   Added common utility functions used by both hA and hN mode. Updated
-   MeanFreePath to separate proton and neutron cross sections. Added general
-   utility functions.
- @ Jan 9, 2015 - SD, NG, TG
-   Added 2014 version of INTRANUKE codes for v2.9.0.  Uses INukeHadroData2014,
-   but no changes to mean free path.
+ @ Sep, 2025 - SD, MI
+   Copied from 2018 version, no changes
 */
 //____________________________________________________________________________
 
