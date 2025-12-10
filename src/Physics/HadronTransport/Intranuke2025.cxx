@@ -1,6 +1,6 @@
 //____________________________________________________________________________
 /*
- Copyright (c) 2003-2024, The GENIE Collaboration
+ Copyright (c) 2003-2025, The GENIE Collaboration
  For the full text of the license visit http://copyright.genie-mc.org
 
 
@@ -14,44 +14,7 @@
  For the class documentation see the corresponding header file.
 
  Important revisions after version 2.0.0 :
- @ Nov 30, 2007 - SD
-   Changed the hadron tracking algorithm to take into account the radial
-   nuclear density dependence. Using the somewhat empirical approach of
-   increasing the nuclear radius by a const (tunable) number times the tracked
-   particle's de Broglie wavelength as this helps getting the hadron+nucleus
-   cross sections right.
- @ Mar 08, 2008 - CA
-   Fixed code retrieving the remnant nucleus which stopped working as soon as
-   simulation of nuclear de-excitation started pushing photons in the target
-   nucleus daughter list.
- @ Jun 20, 2008 - CA
-   Fix a mem leak: The (clone of the) GHepParticle being re-scattered was not
-   deleted after it was added at the GHEP event record.
- @ Jan 28, 2009 - CA
-   The nuclear remnant is now marked as a kIStFinalStateNuclearRemnant, not
-   as a kIStStableFinalState.
- @ Sep 15, 2009 - CA
-   IsFake() and IsNucleus() are no longer available in GHepParticle.
-   Use pdg::IsPseudoParticle() and pdg::IsIon().
- @ Sep 15, 2009 - CA
-   Store the rescattering code (hadron fate) in the GHEP record so as to
-   facilitate event reweighting.
- @ Jul 15, 2010 - AM
-   Split Intranuke class into two separate classes, one for each interaction mode.
-   Intranuke.cxx now only contains methods common to both classes and associated
-   with the stepping of the hadrons through the nucleus and with configuration.
- @ Nov 20, 2011 - CA
-   Tweaked the way TransportHadrons() looks-up the nuclear environment so that
-   it works for the nucleon decay mode as well.
- @ Dec 08, 2011 - CA
-   Some minor structural changes. The new GEvGenMode_t is determined at the
-   start of the event processing and is used throughout. fInTestMode flag and
-   special INTRANUKE configs not needed. ProcessEventRecord() was added by
-   factoring out code from HNIntranuke and HAIntranuke. Some comments added.
- @ Dec 23, 2014 - TG, SD
-   New 2014 class for latest Intranuke model
- @ Apr 26, 2025 - SD
-   Change year 2015 to 2025
+ @ Oct, 2025 - SD, MI establish hA2025 and hN2025, start with identical code of 2018 versions.
 
 */
 //____________________________________________________________________________
