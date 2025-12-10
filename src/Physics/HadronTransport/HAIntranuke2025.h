@@ -21,11 +21,13 @@
 
 \created  September 20, 2005
 
-\cpright  Copyright (c) 2003-2024, The GENIE Collaboration
+\cpright  Copyright (c) 2003-2025, The GENIE Collaboration
           For the full text of the license visit http://copyright.genie-mc.org
 
 \created on  september,2025 by Mohamed Ismail <msi10@pitt.edu>
-no changes from the 2018 class version, major changed made in INukeHadroData2025          
+no changes from the 2018 class version, major changes made in INukeHadroData2025 for new hA pion splines
+Add data, use hN for high pion KE, use INCL for low energy.  Use splines for channel and total reac xs
+to improve accuracy.  Also, smooth results to avoid discontinuities.
 */
 //____________________________________________________________________________
 
