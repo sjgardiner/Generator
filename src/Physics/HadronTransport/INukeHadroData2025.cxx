@@ -33,8 +33,13 @@
  @ Apr, 2016 - Flor Blasczyk
    Added K+ cex data files
 
- @ Sep, 2025  -  Mohamed Ismail
- added total cross sections TGraph2d for hA2025 model + corresponding data
+ @ Sep, 2025  -  Mohamed Ismail, SD
+ added total cross sections TGraph2d for hA2025 model + corresponding data.
+no changes for the 2018 class version, major changes made in INukeHadroData2025 
+for new hA pion splines  Add data, use hN for high pion KE, use INCL for low energy.  
+Use splines for channel and total reac xs to improve accuracy.  Also, smooth results to 
+avoid discontinuities.
+
 */
 //____________________________________________________________________________
 
