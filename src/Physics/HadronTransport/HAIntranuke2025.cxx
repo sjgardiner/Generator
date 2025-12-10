@@ -1,6 +1,6 @@
 //____________________________________________________________________________
 /*
- Copyright (c) 2003-2024, The GENIE Collaboration
+ Copyright (c) 2003-2025, The GENIE Collaboration
  For the full text of the license visit http://copyright.genie-mc.org
  
 
@@ -14,36 +14,11 @@
  For the class documentation see the corresponding header file.
 
  Important revisions after version 2.0.0 :
- @ Nov 30, 2007 - SD
-   Changed the hadron tracking algorithm to take into account the radial
-   nuclear density dependence. Using the somewhat empirical approach of
-   increasing the nuclear radius by a const (tunable) number times the tracked
-   particle's de Broglie wavelength as this helps getting the hadron+nucleus
-   cross sections right.
- @ Mar 08, 2008 - CA
-   Fixed code retrieving the remnant nucleus which stopped working as soon as
-   simulation of nuclear de-excitation started pushing photons in the target
-   nucleus daughter list.
- @ Jun 20, 2008 - CA
-   Fix a mem leak: The (clone of the) GHepParticle being re-scattered was not
-   deleted after it was added at the GHEP event record.
- @ Jul 15, 2010 - AM
-   Major overhaul of the function of each interaction type. Absorption fates
-   changed to allow more than 6 particles at a time (up to 85 now). PiPro fates
-   now allow the pion to rescatter inside the nucleus, will be changed at a
-   later date. HAIntranuke class is now defined as derived from virtual class.
-   Intranuke.
- @ Oct 10, 2011 - SD
-   Changes to keep reweighting alive.  Add exception handling in ElasHA, InelasticHA,
-   and Inelastic.
- @ Jan 24, 2012 - SD
-   Add option of doing K+.
- @ Jan 9, 2015 - SD, NG, TG
-   Added 2014 version of INTRANUKE codes (new class) for independent development.
- @ Aug 30, 2016 - SD
-   Fix memory leaks - Igor.
- @  sep 2025  - Mohamed Ismail
-  new class for hA2025
+ @  sep 2025  - Mohamed Ismail, SD
+  new class for hA2025.  no changes from the 2018 class version, major changes made in INukeHadroData2025 
+for new hA pion splines  Add data, use hN for high pion KE, use INCL for low energy.  Use splines for channel 
+and total reac xs to improve accuracy.  Also, smooth results to avoid discontinuities.
+
  
 */
 //____________________________________________________________________________
