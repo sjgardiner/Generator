@@ -1,7 +1,7 @@
 
 //____________________________________________________________________________
 /*
- Copyright (c) 2003-2024, The GENIE Collaboration
+ Copyright (c) 2003-2025, The GENIE Collaboration
  For the full text of the license visit http://copyright.genie-mc.org
  
 
@@ -45,6 +45,7 @@
    fix memory leak, fix fates, improve NNCorr binning
  & Mar, 2025  Nicholas Suarez, SD
    add compound nucleus option to populate KE<30 MeV
+ @ Sep, 2025 Mohamed Ismail, SD - hN2025 is born, identical to hN2018
 */
 //____________________________________________________________________________
 
