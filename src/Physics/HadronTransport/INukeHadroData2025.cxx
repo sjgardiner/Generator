@@ -164,13 +164,7 @@ INukeHadroData2025::~INukeHadroData2025()
   delete fhN2dXSecGamPimP_Inelas;
   delete fhN2dXSecKpN_CEx;
   
- // delete TPipA_Tot;
-  delete TfracPipA_Abs;
-  delete TfracPipA_CEx;
-//  delete TfracPipA_Elas;
-  delete TfracPipA_Inelas;
-  delete TfracPipA_PiPro;
-    
+  // for hA2025
     delete TPipA_Tot;
     delete TPipA_Abs;
     delete TPipA_CEx;
@@ -842,7 +836,7 @@ void INukeHadroData2025::LoadCrossSections(void)
   }
 
  
-  // kIHNFtTot,   pip + A                                            PipA_Tot
+  // kIHNFtTot,   pip + A    PipA_Tot used for hA2025 - this is total reaction cross section - sd
   {
     const int pipATot_nfiles = 7;
     const int pipATot_nuclei[pipATot_nfiles] = {12,27 ,3,56, 93,209,7};
@@ -858,7 +852,7 @@ void INukeHadroData2025::LoadCrossSections(void)
     for(int ifile=0; ifile < pipATot_nfiles; ifile++) {
       ostringstream ADep_datafile;
       int nucleus = pipATot_nuclei[ifile];
-      ADep_datafile << data_dir << "/tot_xsec/pipA_tot/pip" << nucleus << "_tot.txt";
+      ADep_datafile << data_dir << "/tot_xsec/2025/pipA_tot/pip" << nucleus << "_tot.txt";
       TGraph * buff = new TGraph(ADep_datafile.str().c_str());
       buff->SetNameTitle("buff","buff");
       for(int i=0; i < buff->GetN(); i++) {
@@ -879,73 +873,8 @@ void INukeHadroData2025::LoadCrossSections(void)
 
 
   // kIHNFtAbs, pip + A                                                            PipA_Abs_frac
-  {
-    const int pipAAbs_f_nfiles = 18;
-    const int pipAAbs_f_nuclei[pipAAbs_f_nfiles] = {1, 2, 3, 4, 7, 9, 12, 16, 27, 48, 56, 58, 63, 93, 120, 165, 181, 209};
-    const int pipAAbs_f_npoints = 111;
 
-    TfracPipA_Abs = new TGraph2D(pipAAbs_f_npoints);
-    TfracPipA_Abs->SetNameTitle("TfracPipA_Abs","TfracPipA_Abs");
-    TfracPipA_Abs->SetDirectory(0);
-
-    int ipoint=0;
-    double x, y;
-    for(int ifile=0; ifile < pipAAbs_f_nfiles; ifile++) {
-      ostringstream ADep_datafile;
-      int nucleus = pipAAbs_f_nuclei[ifile];
-      ADep_datafile << data_dir << "/tot_xsec/pipA_abs_frac/pip" << nucleus << "_abs_frac.txt";
-      TGraph * buff = new TGraph(ADep_datafile.str().c_str());
-      buff->SetNameTitle("buff","buff");
-      for(int i=0; i < buff->GetN(); i++) {
-	buff -> GetPoint(i,x,y);
-	TfracPipA_Abs -> SetPoint(ipoint,(double)nucleus,x,y);
-	ipoint++;
-      }
-      delete buff;
-    }
-    if (saveTGraphsToFile) {
-      TfracPipA_Abs -> Write("TfracPipA_Abs");
-    }
-
-  }
-
-
-  // kIHNFtCEx, pip + A      PipA_CEx_frac
-  {
-    const int pipACEx_f_nfiles = 18;
-    const int pipACEx_f_nuclei[pipACEx_f_nfiles] = {1, 2, 3, 4, 7, 9, 12, 16, 27, 48, 56, 58, 63, 93, 120, 165, 181, 209};
-    const int pipACEx_f_npoints = 129;
-
-    TfracPipA_CEx = new TGraph2D(pipACEx_f_npoints);
-    TfracPipA_CEx->SetNameTitle("TfracPipA_CEx","TfracPipA_CEx");
-    TfracPipA_CEx->SetDirectory(0);
-
-    int ipoint=0;
-    double x, y;
-
-    for(int ifile=0; ifile < pipACEx_f_nfiles; ifile++) {
-      ostringstream ADep_datafile;
-      int nucleus = pipACEx_f_nuclei[ifile];
-      ADep_datafile << data_dir << "/tot_xsec/pipA_cex_frac/pip" << nucleus << "_cex_frac.txt";
-      TGraph * buff = new TGraph(ADep_datafile.str().c_str());
-      buff->SetNameTitle("buff","buff");
-      for(int i=0; i < buff->GetN(); i++) {
-	buff -> GetPoint(i,x,y);
-	TfracPipA_CEx -> SetPoint(ipoint,(double)nucleus,x,y);
-	ipoint++;
-      }
-      delete buff;
-    }
-
-    if (saveTGraphsToFile) {
-      TfracPipA_CEx -> Write("TfracPipA_CEx");
-    }
-
-  }
-
-
-
-  // kIHNFtCEx, pip + A                                                            PipA_CEx (just for developmental purposes)
+  // kIHNFtCEx, pip + A   PipA_CEx total pi+ charge exchange cross section - used in hA2025 - sd 
   {
 
 
@@ -963,7 +892,7 @@ void INukeHadroData2025::LoadCrossSections(void)
     for(int ifile=0; ifile < pipACEx_nfiles; ifile++) {
       ostringstream ADep_datafile;
       int nucleus = pipACEx_nuclei[ifile];
-      ADep_datafile << data_dir << "/tot_xsec/pipA_cex/pip" << nucleus << "_cex.txt";
+      ADep_datafile << data_dir << "/tot_xsec/2025/pipA_cex/pip" << nucleus << "_cex.txt";
       TGraph * buff = new TGraph(ADep_datafile.str().c_str());
       buff->SetNameTitle("buff","buff");
       for(int i=0; i < buff->GetN(); i++) {
@@ -983,7 +912,7 @@ void INukeHadroData2025::LoadCrossSections(void)
    
   }
 
-  // kIHNFtAbs, pip + A                                                            PipA_Abs (just for developmental purposes)
+  // kIHNFtAbs, pip + A   PipA_Abs used in hA2025 - sd
   {
 
     const int pipAAbs_nfiles = 7;
@@ -1000,7 +929,7 @@ void INukeHadroData2025::LoadCrossSections(void)
     for(int ifile=0; ifile < pipAAbs_nfiles; ifile++) {
       ostringstream ADep_datafile;
       int nucleus = pipAAbs_nuclei[ifile];
-      ADep_datafile << data_dir << "/tot_xsec/pipA_abs/pip" << nucleus << "_abs.txt";
+      ADep_datafile << data_dir << "/tot_xsec/2025/pipA_abs/pip" << nucleus << "_abs.txt";
       TGraph * buff = new TGraph(ADep_datafile.str().c_str());
       buff->SetNameTitle("buff","buff");
       for(int i=0; i < buff->GetN(); i++) {
@@ -1018,43 +947,8 @@ void INukeHadroData2025::LoadCrossSections(void)
     }
    
   }
-
-  // kIHNFtElas, pip + A                                                            PipA_Elas (just for developmental purposes)
-  {
-    TGraph2D * TPipA_Elas;
-
-    const int pipAElas_nfiles = 18;
-    const int pipAElas_nuclei[pipAElas_nfiles] = {1, 2, 3, 4, 7, 9, 12, 16, 27, 48, 56, 58, 63, 93, 120, 165, 181, 209};
-    const int pipAElas_npoints = 125;
-
-    TPipA_Elas = new TGraph2D(pipAElas_npoints);
-    TPipA_Elas->SetNameTitle("TPipA_Elas","TPipA_Elas");
-    TPipA_Elas->SetDirectory(0);
-
-    int ipoint=0;
-    double x, y;
-
-    for(int ifile=0; ifile < pipAElas_nfiles; ifile++) {
-      ostringstream ADep_datafile;
-      int nucleus = pipAElas_nuclei[ifile];
-      ADep_datafile << data_dir << "/tot_xsec/pipA_elas/pip" << nucleus << "_elas.txt";
-      TGraph * buff = new TGraph(ADep_datafile.str().c_str());
-      buff->SetNameTitle("buff","buff");
-      for(int i=0; i < buff->GetN(); i++) {
-	buff -> GetPoint(i,x,y);
-	TPipA_Elas -> SetPoint(ipoint,(double)nucleus,x,y);
-	ipoint++;
-      }
-      delete buff;
-    }
-
-    if (saveTGraphsToFile) {
-      TPipA_Elas -> Write("TPipA_Elas");
-    }
-    delete TPipA_Elas; 
-  }
-
-  // kIHNFtInelas, pip + A                                                            PipA_Inelas (just for developmental purposes)
+  
+  // kIHNFtInelas, pip + A     PipA_Inelas  used in hA2025 - sd 
   {
 
     const int pipAInelas_nfiles = 7;
@@ -1071,7 +965,7 @@ void INukeHadroData2025::LoadCrossSections(void)
     for(int ifile=0; ifile < pipAInelas_nfiles; ifile++) {
       ostringstream ADep_datafile;
       int nucleus = pipAInelas_nuclei[ifile];
-      ADep_datafile << data_dir << "/tot_xsec/pipA_inelas/pip" << nucleus << "_inelas.txt";
+      ADep_datafile << data_dir << "/tot_xsec/2025/pipA_inelas/pip" << nucleus << "_inelas.txt";
       TGraph * buff = new TGraph(ADep_datafile.str().c_str());
       buff->SetNameTitle("buff","buff");
       for(int i=0; i < buff->GetN(); i++) {
@@ -1089,7 +983,7 @@ void INukeHadroData2025::LoadCrossSections(void)
     }
   }
     
-    // kIHNFtPiPro, pip + A                                                            PipA_pipro (just for developmental purposes)
+    // kIHNFtPiPro, pip + A   PipA_pipro  used in hA2025 - sd
     {
 
       const int pipApipro_nfiles = 6;
@@ -1106,7 +1000,7 @@ void INukeHadroData2025::LoadCrossSections(void)
       for(int ifile=0; ifile < pipApipro_nfiles; ifile++) {
         ostringstream ADep_datafile;
         int nucleus = pipApipro_nuclei[ifile];
-        ADep_datafile << data_dir << "/tot_xsec/pipA_pipro/pip" << nucleus << "_pipro.txt";
+        ADep_datafile << data_dir << "/tot_xsec/2025/pipA_pipro/pip" << nucleus << "_pipro.txt";
         TGraph * buff = new TGraph(ADep_datafile.str().c_str());
         buff->SetNameTitle("buff","buff");
         for(int i=0; i < buff->GetN(); i++) {
@@ -1124,113 +1018,12 @@ void INukeHadroData2025::LoadCrossSections(void)
       }
     }
 
-
-  /*
-  // kIHNFtElas, pip + A                                                            PipA_Elas_frac
-  {
-    const int pipAElas_f_nfiles = 18;
-    const int pipAElas_f_nuclei[pipAElas_f_nfiles] = {1, 2, 3, 4, 7, 9, 12, 16, 27, 48, 56, 58, 63, 93, 120, 165, 181, 209};
-    const int pipAElas_f_npoints = 125;
-
-    TfracPipA_Elas = new TGraph2D(pipAElas_f_npoints);
-    TfracPipA_Elas->SetNameTitle("TfracPipA_Elas","TfracPipA_Elas");
-    TfracPipA_Elas->SetDirectory(0);
-
-    int ipoint=0;
-    double x, y;
-
-    for(int ifile=0; ifile < pipAElas_f_nfiles; ifile++) {
-      ostringstream ADep_datafile;
-      int nucleus = pipAElas_f_nuclei[ifile];
-      ADep_datafile << data_dir << "/tot_xsec/pipA_elas_frac/pip" << nucleus << "_elas_frac.txt";
-      TGraph * buff = new TGraph(ADep_datafile.str().c_str());
-      buff->SetNameTitle("buff","buff");
-      for(int i=0; i < buff->GetN(); i++) {
-	buff -> GetPoint(i,x,y);
-	TfracPipA_Elas -> SetPoint(ipoint,(double)nucleus,x,y);
-	ipoint++;
-      }
-      delete buff;
-    }
-
-    if (saveTGraphsToFile) {
-      TfracPipA_Elas -> Write("TfracPipA_Elas");
-    }
-
-  }
-  */
-
-  // kIHNFtInelas, pip + A                                                            PipA_Inelas_frac
-  {
-    const int pipAInelas_f_nfiles = 20;
-    const int pipAInelas_f_nuclei[pipAInelas_f_nfiles] = {1, 2, 3, 4, 7, 9, 12, 16, 27, 40, 48, 56, 58, 63, 93, 120, 165, 181, 208, 209};
-    const int pipAInelas_f_npoints = 118;
-
-    TfracPipA_Inelas = new TGraph2D(pipAInelas_f_npoints);
-    TfracPipA_Inelas->SetNameTitle("TfracPipA_Inelas","TfracPipA_Inelas");
-    TfracPipA_Inelas->SetDirectory(0);
-
-    int ipoint=0;
-    double x, y;
-
-    for(int ifile=0; ifile < pipAInelas_f_nfiles; ifile++) {
-      ostringstream ADep_datafile;
-      int nucleus = pipAInelas_f_nuclei[ifile];
-      ADep_datafile << data_dir << "/tot_xsec/pipA_inelas_frac/pip" << nucleus << "_inelas_frac.txt";
-      TGraph * buff = new TGraph(ADep_datafile.str().c_str());
-      buff->SetNameTitle("buff","buff");
-      for(int i=0; i < buff->GetN(); i++) {
-	buff -> GetPoint(i,x,y);
-	TfracPipA_Inelas -> SetPoint(ipoint,(double)nucleus,x,y);
-	ipoint++;
-      }
-      delete buff;
-    }
-
-    if (saveTGraphsToFile) {
-      TfracPipA_Inelas -> Write("TfracPipA_Inelas");
-    }
-
-  }
-
-
-  // kIHNFtPiPro, pip + A                                                            PipA_PiPro_frac
-   {
-    const int pipAPiPro_f_nfiles = 17;
-    const int pipAPiPro_f_nuclei[pipAPiPro_f_nfiles] = {1, 2, 3, 4, 7, 9, 12, 16, 48, 56, 58, 63, 93, 120, 165, 181, 209};
-    const int pipAPiPro_f_npoints = 76;
-
-    TfracPipA_PiPro = new TGraph2D(pipAPiPro_f_npoints);
-    TfracPipA_PiPro->SetNameTitle("TfracPipA_PiPro","TfracPipA_PiPro");
-    TfracPipA_PiPro->SetDirectory(0);
-
-    int ipoint=0;
-    double x, y;
-
-    for(int ifile=0; ifile < pipAPiPro_f_nfiles; ifile++) {
-      ostringstream ADep_datafile;
-      int nucleus = pipAPiPro_f_nuclei[ifile];
-      ADep_datafile << data_dir << "/tot_xsec/pipA_pipro_frac/pip" << nucleus << "_pipro_frac.txt";
-      TGraph * buff = new TGraph(ADep_datafile.str().c_str());
-      buff->SetNameTitle("buff","buff");
-      for(int i=0; i < buff->GetN(); i++) {
-	buff -> GetPoint(i,x,y);
-	TfracPipA_PiPro -> SetPoint(ipoint,(double)nucleus,x,y);
-	ipoint++;
-      }
-      delete buff;
-    }
-
-    if (saveTGraphsToFile) {
-      TfracPipA_PiPro -> Write("TfracPipA_PiPro");
-    }
-   }
-
    TGraphs_file.Close();
 
    LOG("INukeData", pINFO)  << "Done building x-section splines...";
    
 }
+  
 //____________________________________________________________________________
 void INukeHadroData2025::ReadhNFile(
   string filename, double ke, int npoints, int & curr_point,
