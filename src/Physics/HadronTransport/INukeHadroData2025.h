@@ -1,37 +1,39 @@
 //____________________________________________________________________________
 /*!
 
-\class    genie::INukeHadroData
+\class    genie::INukeHadroData2025
 
 \brief    Singleton class to load & serve hadron x-section splines used by
           GENIE's version of the INTRANUKE cascade MC.
 
-          See $GENIE/src/HadronTransport/Intranuke.h for more details on the
-          INTRANUKE cascade MC developed primarity by S.Dytman and H.Gallagher
-          continuing older work from R.Edgecock, G.F.Pearce, W.A.Mann,
-          R.Merenyi and others.
-
+          This is extension of INukeHadroData2018, changes for piA cross sections.
           The hadron x-section data used to build the x-section splines stored
           at this singleton are provided & maintained by Steve Dytman.
           See the data files in $GENIE/data/hadron_xsec/ for more details on
           Steve's data sources and applied corrections.
           In a nutshell:
           The h+N x-sections come mostly from the SAID (Arndt et al.) PWA fit
-          while the h+A x-sections come from a combination of Ashery, Carroll
-          data and extrapolations, and INC model results from Mashnik et al.
-          for h+Fe56.
+          while the h+A x-sections come from a combination of Ashery,  various sigma_reac
+	     dat for piA.  For pA, data used for total xs and
+          INC model results from Mashnik et al. for h+Fe56 which is extrapolated
+             to other targets via A^2/3 approximation.
 
 \author   Costas Andreopoulos <c.andreopoulos \at cern.ch>, Rutherford Lab.
           Steve Dytman <dytman+@pitt.edu>, Pittsburgh Univ.
 	  Aaron Meyer <asm58@pitt.edu>, Pittsburgh Univ.
-	  Alex Bell, Pittsburgh Univ.
+	  Mohamed Ismail <msi10@pitt.edu>, Pittsburgh Univ.
 
-\created  February 01, 2007
+\created  September 01, 2025
 
 \cpright  Copyright (c) 2003-2025, The GENIE Collaboration
           For the full text of the license visit http://copyright.genie-mc.org
     @ september,2025 Mohamed Ismail <msi10@pitt.edu>, SD
- For hA2025, we rely now on total cross sections TGraph2d not the fractions TGraph2d.            
+Data sources for hA splines updated.
+   - replace Mashnik CEM03 at  Tpi>400 MeV with hN calculations
+   - replace estimates at Tpi<60 MeV with INCL calculatiosn
+   - fix errors in CEX (too large at low energies, too low and highenergies
+   - use total reaction cross sections as denominator in xs fractiopns instead of total cross section
+ For hA2025, we rely now on total cross sections TGraph2d not the fractions TGraph2d.
 
 */
 //____________________________________________________________________________
