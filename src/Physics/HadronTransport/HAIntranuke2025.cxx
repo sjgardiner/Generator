@@ -115,7 +115,7 @@ void HAIntranuke2025::SimulateHadronicFinalState(
   int  pdgc = p->Pdg();
   bool is_gamma   = (pdgc==kPdgGamma);
   bool is_pion    = (pdgc==kPdgPiP || pdgc==kPdgPiM || pdgc==kPdgPi0);
-  bool is_kaon    = (pdgc==kPdgKP || pdgc==kPdgKM);
+  bool is_kaon    = (pdgc==kPdgKP);  // sd: only K+. need many changes for K-
   bool is_baryon  = (pdgc==kPdgProton || pdgc==kPdgNeutron);
   bool is_handled = (is_baryon || is_pion || is_kaon || is_gamma);
   if(!is_handled) {
@@ -358,8 +358,8 @@ INukeFateHA_t HAIntranuke2025::HadronFateHA(const GHepParticle * p) const
          << "No selection after going through all fates! "
                         << "Total fraction = " << tf << " (r = " << r << ")";
     }
-    // handle kaons
-    else if (pdgc==kPdgKP || pdgc==kPdgKM) {
+    // handle kaons SD: only K+, remove K- in following statement
+    else if (pdgc==kPdgKP) {
        double frac_inel     = fHadroData2025->FracAIndep(pdgc, kIHAFtInelas,  ke);
        double frac_abs      = fHadroData2025->FracAIndep(pdgc, kIHAFtAbs,     ke);
 
@@ -620,7 +620,7 @@ void HAIntranuke2025::InelasticHA(
   else
     {
       tcode = (rnd->RndFsi().Rndm()<=ppcnt)?(kPdgProton):(kPdgNeutron);
-      //      if(pcode == kPdgKP || pcode == kPdgKM) tcode = kPdgProton;
+      //      if(pcode == kPdgKP) tcode = kPdgProton;
       scode = pcode;
       s2code = tcode;
     }
@@ -959,7 +959,7 @@ void HAIntranuke2025::Inelastic(
               //construct remnant nucleus and its mass
 
               if (pdgc==kPdgPiP || pdgc==kPdgKP) fRemnZ++;
-              if (pdgc==kPdgPiM || pdgc==kPdgKM) fRemnZ--;
+              if (pdgc==kPdgPiM) fRemnZ--;  //sd: remove K-, only K+ at present
               if (t1code==kPdgProton) fRemnZ--;
               if (t2code==kPdgProton) fRemnZ--;
               fRemnA-=2;
@@ -1070,7 +1070,7 @@ void HAIntranuke2025::Inelastic(
           LOG("HAIntranuke2025", pINFO) << "--> mean diff distr = " << nd0 << ", stand dev = " << Sig_nd;
           LOG("HAIntranuke2025", pINFO) << "--> mean sum distr = " << ns0 << ", Stand dev = " << Sig_ns;
         }
-      else if (pdgc==kPdgKP || pdgc==kPdgKM) // kaon probe
+      else if (pdgc==kPdgKP) // kaon probe, only K+ at present
         {
           ns0 = (rnd->RndFsi().Rndm()>0.5?3:2);
           nd0 = 1.;
@@ -1196,7 +1196,7 @@ void HAIntranuke2025::Inelastic(
           else if ((np + nn == 2.) &&  pdg::IsNeutronOrProton (pdgc))                     {iter++; continue;}
           else if (np > fRemnZ + ((pdg::IsProton(pdgc) || pdgc==kPdgPiP || pdgc==kPdgKP)?1:0)
                    - ((pdgc==kPdgPiM || pdgc==kPdgKM)?1:0)) {iter++; continue;}
-          else if (nn > fRemnA-fRemnZ + ((pdg::IsNeutron(pdgc)||pdgc==kPdgPiM||pdgc==kPdgKM)?1:0)
+          else if (nn > fRemnA-fRemnZ + ((pdg::IsNeutron(pdgc)||pdgc==kPdgPiM)?1:0)
                    - ((pdgc==kPdgPiP||pdgc==kPdgKP)?1:0)) {iter++; continue;}
           else {
             not_done=false;   //success
@@ -1208,8 +1208,8 @@ void HAIntranuke2025::Inelastic(
                 nn = int(nn*frac);
               }
 
-            if (  (np==fRemnZ       +((pdg::IsProton (pdgc)||pdgc==kPdgPiP||pdgc==kPdgKP)?1:0)-(pdgc==kPdgPiM||pdgc==kPdgKM?1:0))
-                &&(nn==fRemnA-fRemnZ+((pdg::IsNeutron(pdgc)||pdgc==kPdgPiM||pdgc==kPdgKM)?1:0)-(pdgc==kPdgPiP||pdgc==kPdgKP?1:0)) )
+            if (  (np==fRemnZ       +((pdg::IsProton (pdgc)||pdgc==kPdgPiP||pdgc==kPdgKP)?1:0)-(pdgc==kPdgPiM?1:0))
+                &&(nn==fRemnA-fRemnZ+((pdg::IsNeutron(pdgc)||pdgc==kPdgPiM)?1:0)-(pdgc==kPdgPiP||pdgc==kPdgKP?1:0)) )
               { // leave at least one nucleon in the nucleus to prevent excess momentum
                 if (rnd->RndFsi().Rndm()<np/(double)(np+nn)) np--;
                 else nn--;
@@ -1222,7 +1222,7 @@ void HAIntranuke2025::Inelastic(
 
       // change remnants to reflect probe
       if ( pdgc==kPdgProton || pdgc==kPdgPiP || pdgc==kPdgKP)     fRemnZ++;
-      if ( pdgc==kPdgPiM || pdgc==kPdgKM)                         fRemnZ--;
+      if ( pdgc==kPdgPiM)                         fRemnZ--;
       if ( pdg::IsNeutronOrProton (pdgc) )         fRemnA++;
 
       // PhaseSpaceDecay forbids anything over 18 particles
@@ -1383,7 +1383,7 @@ void HAIntranuke2025::Inelastic(
       else // less than 18 particles pion
         {
           if (pdgc==kPdgKP)  list.push_back(kPdgKP); //normally conserve strangeness
-          if (pdgc==kPdgKM)  list.push_back(kPdgKM);
+//          if (pdgc==kPdgKM)  list.push_back(kPdgKM);
           /*
           TParticlePDG * remn0 = 0;
           int ipdgc0 = pdg::IonPdgCode(fRemnA, fRemnZ);
