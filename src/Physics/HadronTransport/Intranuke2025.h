@@ -12,18 +12,20 @@
           Current INTRANUKE development is led by S.Dytman and H.Gallagher.
           The original INTRANUKE cascade MC was developed (in fortran) for the
           NeuGEN MC by R.Edgecock, G.F.Pearce, W.A.Mann, R.Merenyi and others.
+          Vast changes since then at Univ. of Pittsburgh and elsewhere
 
 \author   Steve Dytman <dytman+@pitt.edu>, Pittsburgh University
           Aaron Meyer <asm58@pitt.edu>, Pittsburgh University
-	  Alex Bell, Pittsburgh University
+	  Mohamed Ismail <msi10@PITT.EDU> , Pittsburgh University
           Hugh Gallagher <gallag@minos.phy.tufts.edu>, Tufts University
           Costas Andreopoulos <c.andreopoulos \at cern.ch> STFC, Rutherford Lab
 
-\created  September 20, 2005
+\created  September 20, 2025
 
 \cpright  Copyright (c) 2003-2025, The GENIE Collaboration
           For the full text of the license visit http://copyright.genie-mc.org
 
+	Sepr 2025:  MI, SD: copied from Intranuke2018.h with no modifications except labels
 */
 //____________________________________________________________________________
 
