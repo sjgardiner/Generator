@@ -84,7 +84,7 @@ void Intranuke2025::ProcessEventRecord(GHepRecord * evrec) const
   // Do not continue if there is no nuclear target
   GHepParticle * nucltgt = evrec->TargetNucleus();
   if (!nucltgt) {
-    LOG("HNIntranuke2025", pINFO) << "No nuclear target found - INTRANUKE exits";
+    LOG("Intranuke2025", pINFO) << "No nuclear target found - INTRANUKE exits";
     return;
   }
 
