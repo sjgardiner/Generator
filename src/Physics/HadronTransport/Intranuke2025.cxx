@@ -103,6 +103,7 @@ void Intranuke2025::ProcessEventRecord(GHepRecord * evrec) const
   // This method only takes effect in hadron/photon-nucleus interactions.
   // In this special mode, an interaction vertex is set at the periphery
   // of the target nucleus.
+// This is the only exception to the general case of setting vertex according to nuclear density  presently anticipated.
   if(fGMode == kGMdHadronNucleus ||
      fGMode == kGMdPhotonNucleus)
   {
