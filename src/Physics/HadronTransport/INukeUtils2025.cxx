@@ -62,7 +62,8 @@ using namespace genie::controls;
 //____________________________________________________________________________
 double genie::utils::intranuke2025::MeanFreePath(
    int pdgc, const TLorentzVector & x4, const TLorentzVector & p4,
-   double A, double Z, double nRpi, double nRnuc, const bool useOset, const bool altOset, const bool xsecNNCorr, string INukeMode)
+   double A, double Z, double nRpi, double nRnuc, const bool useOset, 
+   const bool altOset, const bool xsecNNCorr, string INukeMode)
 {
 // Calculate the mean free path (in fm) for a pions and nucleons in a nucleus
 //
@@ -1397,7 +1398,7 @@ bool genie::utils::intranuke2025::PionProduction(
            {
              p3code = (ptarg ? kPdgNeutron : kPdgProton);
              p4code = p1code;
-             p5code = p4code;
+             p5code = p1code;
            }
          else {  // pi+ & pi0 & p final state
            p3code = (ptarg ? kPdgProton : kPdgNeutron);
@@ -1430,17 +1431,17 @@ bool genie::utils::intranuke2025::PionProduction(
      else if (p1code==kPdgPi0)
        {
          rand = rnd->RndFsi().Rndm();
-         if (rand < 191./270.)
+         if (rand < 191./270.)   //unknown source, likely data in narrow energy range - sd
            {  // pi+ & pi- & p final state
              p3code = (ptarg ? kPdgProton : kPdgNeutron);
              p4code = kPdgPiP;
              p5code = kPdgPiM;
            }
-         else if (rand < 7./135.)
+         else if (rand < 7./135.)   //unknown source, likely data in narrow energy range - sd
            {  // pi0 & pi0 & p final state
              p3code = (ptarg ? kPdgProton : kPdgNeutron);
              p4code = kPdgPi0;
-             p5code = p4code;
+             p5code = kPdgPi0;
            }
          else
            {  // pi+ & pi0 & n final state
@@ -1915,6 +1916,7 @@ double genie::utils::intranuke2025::sigmaTotalOset (
       static const std::string dataDir = (gSystem->Getenv("GINUKEHADRONDATA")) ?
                                    string(gSystem->Getenv("GINUKEHADRONDATA")) :
                                               string(gSystem->Getenv("GENIE")) +
+                                              string("/") +
                                               string("/data/evgen/intranuke/");
       // set file with Oset table on first call
       static const std::string dataFile = dataDir + "tot_xsec/"
