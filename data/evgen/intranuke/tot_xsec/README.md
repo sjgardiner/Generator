@@ -21,3 +21,8 @@ If probe is pi0, cross sections are modified inside HAIntranuke2025 according to
 
 Only hA pionA splines have been modified.  Similar updates of pA and nA splines are anticipated
 in the future. 
+
+references:
+Ashery, et al., Phys Rev C 23, 2173 (1981)
+Lehmann, et al., Phys Rev C 55, 2391 (1997)
+SAID: downloaded from web site httphttps://gwdac.phys.gwu.edu/ 2009-2018.
