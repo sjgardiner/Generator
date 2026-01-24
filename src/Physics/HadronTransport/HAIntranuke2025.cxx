@@ -249,9 +249,11 @@ INukeFateHA_t HAIntranuke2025::HadronFateHA(const GHepParticle * p) const
 	if (apply_pi0_ratio_correction && pdgc == kPdgPi0) {
 
 	    // Cap the kinetic energy at 1000 MeV for the correction calculation
+           // decision made by Steve Dytman and Hugh Gallagher (2006) as best for MINOS.  Looks OK for DUNE in 1st simulations.
+           //   This is reasonable because cross ections for KE above 1 GeV tend to be constand.
 	    double ke_ratio = (ke > 1000.0) ? 1000.0 : ke;
 
-	    // Define correction scale factors as a function of kinetic energy (in MeV)
+	    // Define correction scale factors as a function of kinetic energy (in MeV) to match reslts of hN sim.  MI  Nov, 2025.
 	    double ratio_cex    =  0.0008702 * ke_ratio + 1.9047;
 	    double ratio_abs    =  0.0003291 * ke_ratio + 0.82617;
 	    double ratio_inel   = -0.0003209 * ke_ratio + 0.837764;
@@ -853,14 +855,15 @@ void HAIntranuke2025::Inelastic(
       // added 03/21/11 - Aaron Meyer
       //
       if (pdg::IsPion(pdgc) && rnd->RndFsi().Rndm()<1.14*(.903-0.00189*fRemnA)*(1.35-0.00467*ke))
-        {  // pi d -> N N, probability determined empirically with McKeown data
+        {  // pi d -> N N, probability determined empirically with McKeown et al (Phys Rev C24, 211 (1984))  data
+           // parameters have energy and angle dependence for proton prouction for pi+ and pi-
 
           INukeFateHN_t fate_hN=kIHNFtAbs;
           int t1code,t2code,scode,s2code;
           double ppcnt = (double) fRemnZ / (double) fRemnA; // % of protons
 
           // choose target nucleon
-          // -- fates weighted by values from Engel, Mosel...
+          // -- fates weighted by values from Engels and Mosel Nuclear Physics A572 (1994) 657-681
           if (pdgc==kPdgPiP) {
             double Prob_pipd_pp=2.*ppcnt*(1.-ppcnt);
             double Prob_pipnn_pn=.083*(1.-ppcnt)*(1.-ppcnt);
@@ -881,7 +884,7 @@ void HAIntranuke2025::Inelastic(
                                t1code=kPdgProton;  t2code=kPdgProton;
                                scode=kPdgProton;   s2code=kPdgNeutron;}
           }
-          else { // pi0
+          else { // pi0  These values are from Engels and Mosel Nuclear Physics A572 (1994) 657-681
             double Prob_pi0d_pn=0.88*ppcnt*(1.-ppcnt); // 2 * .44
             double Prob_pi0pp_pp=.14*ppcnt*ppcnt;
             double Prob_pi0nn_nn=.14*(1.-ppcnt)*(1.-ppcnt);
@@ -1030,6 +1033,8 @@ void HAIntranuke2025::Inelastic(
 
       // declare some parameters for double gaussian and determine values chosen
       // parameters for proton and pi+, others come from isospin transformations
+      //  work done in 2011 by Steve Dytman and Aaron Meyer. Fit Gaussians to hN pi abs simulations
+      //      for sum and difference of n, p multiplicity. Parameters have energy, A, and Z dependence.
 
           double ns0=0; // mean - sum of nucleons
           double nd0=0; // mean - difference of nucleons
@@ -1125,9 +1130,11 @@ void HAIntranuke2025::Inelastic(
 
           if ( pdg::IsNeutronOrProton (pdgc) ) //nucleon probe
             {
+         // work done in 2011 by Meyer and Dytman. Make fits to hN simulation output for p and n. 
               ns = -TMath::Log(rnd->RndFsi().Rndm())/gam_ns; // exponential random variable
             }
-          if ( pdg::IsKaon (pdgc) ) //charged kaon probe - either 2 or 3 nucleons to stay simple
+          if ( pdg::IsKaon (pdgc) ) //charged kaon probe - either 2 or 3 nucleons to stay simple.  
+                                    // No data available, use hN simulation (sd)
             {
               ns =  (rnd->RndFsi().Rndm()<0.5?2:3);
             }
