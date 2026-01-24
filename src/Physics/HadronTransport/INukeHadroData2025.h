@@ -8,15 +8,15 @@
 
           This is extension of INukeHadroData2018, changes for piA cross sections.
           The hadron x-section data used to build the x-section splines stored
-          at this singleton are provided & maintained by Steve Dytman.
-          See the data files in $GENIE/data/hadron_xsec/ for more details on
-          Steve's data sources and applied corrections.
+          at this singleton are provided & maintained by Steve Dytman and students.
           In a nutshell:
           The h+N x-sections come mostly from the SAID (Arndt et al.) PWA fit
           while the h+A x-sections come from a combination of Ashery,  various sigma_reac
 	     dat for piA.  For pA, data used for total xs and
           INC model results from Mashnik et al. for h+Fe56 which is extrapolated
              to other targets via A^2/3 approximation.
+
+	See README.md for more detail.
 
 \author   Costas Andreopoulos <c.andreopoulos \at cern.ch>, Rutherford Lab.
           Steve Dytman <dytman+@pitt.edu>, Pittsburgh Univ.
