@@ -116,11 +116,6 @@ void HNIntranuke2025::ProcessEventRecord(GHepRecord * evrec) const
   LOG("HNIntranuke2025", pNOTICE) 
      << "************ Running hN2025 MODE INTRANUKE ************";
      
-  /*  LOG("HNIntranuke2025", pWARN) 
-     << print::PrintFramedMesg(
-         "Experimental code (INTRANUKE/hN model) - Run at your own risk");
-  */
-
   Intranuke2025::ProcessEventRecord(evrec);
 
   LOG("HNIntranuke2025", pINFO) << "Done with this event";

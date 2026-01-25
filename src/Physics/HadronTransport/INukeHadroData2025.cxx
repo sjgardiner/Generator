@@ -1159,7 +1159,6 @@ double INukeHadroData2025::XSec(
     else if( (hpdgc == kPdgProton && tgtpdgc == kPdgProton) ||
 	     (hpdgc == kPdgNeutron && tgtpdgc == kPdgNeutron) )
       {
-	LOG("INukeData", pWARN)  << "Inelastic pp does not exist!";
 	ke_eval = TMath::Min(ke_eval, 999.);
 	ke_eval = TMath::Max(ke_eval,  50.);
 	return fhN2dXSecPP_Elas->Evaluate(ke_eval, costh_eval);
