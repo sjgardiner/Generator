@@ -64,7 +64,7 @@ typedef enum EINukeFateHA_t {
 
 } INukeFateHA_t;   
 
-class INukeHadroFates {
+class INukeHadroFates2025 {
 
 public:
   //__________________________________________________________________________
