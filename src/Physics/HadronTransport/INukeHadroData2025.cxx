@@ -1271,7 +1271,7 @@ double INukeHadroData2025::FracADep(int hpdgc, INukeFateHA_t fate, double ke, in
       std::string sign("+");
       if ( hpdgc == kPdgPiM ) sign = "-";
       else if ( hpdgc == kPdgPi0 ) sign = "0";
-      LOG("INukeData", pWARN) << "Pi" << sign << "'s don't have this fate: " << INukeHadroFates::AsString(fate);
+      LOG("INukeData", pWARN) << "Pi" << sign << "'s don't have this fate: " << INukeHadroFates2025::AsString(fate);
       return 0.;
     }
   }
@@ -1310,7 +1310,7 @@ double INukeHadroData2025::FracAIndep(int hpdgc, INukeFateHA_t fate, double ke) 
     else if ( fate == kIHAFtCmp    ) return frac_comp / total; // cmp - add support for this later
     else {
       LOG("INukeData", pWARN)
-        << "Protons don't have this fate: " << INukeHadroFates::AsString(fate);
+        << "Protons don't have this fate: " << INukeHadroFates2025::AsString(fate);
       return 0;
     }
   }
@@ -1334,7 +1334,7 @@ double INukeHadroData2025::FracAIndep(int hpdgc, INukeFateHA_t fate, double ke) 
     else if ( fate == kIHAFtCmp    ) return frac_comp / total; // cmp - add support for this later
     else {
       LOG("INukeData", pWARN)
-        << "Neutrons don't have this fate: " << INukeHadroFates::AsString(fate);
+        << "Neutrons don't have this fate: " << INukeHadroFates2025::AsString(fate);
       return 0;
     }
   }
@@ -1352,7 +1352,7 @@ double INukeHadroData2025::FracAIndep(int hpdgc, INukeFateHA_t fate, double ke) 
     else if ( fate == kIHAFtAbs ) return frac_abs / total;
     else {
       LOG("INukeData", pWARN)
-        << "K+'s don't have this fate: " << INukeHadroFates::AsString(fate);
+        << "K+'s don't have this fate: " << INukeHadroFates2025::AsString(fate);
       return 0.;
     }
   }
@@ -1387,7 +1387,7 @@ double INukeHadroData2025::XSec(int hpdgc, INukeFateHN_t fate, double ke, int ta
 				    return xsec;}
     else {
      LOG("INukeData", pWARN)
-        << "Pi+'s don't have this fate: " << INukeHadroFates::AsString(fate);
+        << "Pi+'s don't have this fate: " << INukeHadroFates2025::AsString(fate);
      return 0;
     }
 
@@ -1406,7 +1406,7 @@ double INukeHadroData2025::XSec(int hpdgc, INukeFateHN_t fate, double ke, int ta
 				    return xsec;}
     else {
      LOG("INukeData", pWARN)
-        << "Pi-'s don't have this fate: " << INukeHadroFates::AsString(fate);
+        << "Pi-'s don't have this fate: " << INukeHadroFates2025::AsString(fate);
      return 0;
     }
 
@@ -1425,7 +1425,7 @@ double INukeHadroData2025::XSec(int hpdgc, INukeFateHN_t fate, double ke, int ta
 				    return xsec;}
     else {
      LOG("INukeData", pWARN)
-        << "Pi0's don't have this fate: " << INukeHadroFates::AsString(fate);
+        << "Pi0's don't have this fate: " << INukeHadroFates2025::AsString(fate);
      return 0;
     }
 
@@ -1442,7 +1442,7 @@ double INukeHadroData2025::XSec(int hpdgc, INukeFateHN_t fate, double ke, int ta
 				    return xsec;}
     else {
      LOG("INukeData", pWARN)
-        << "Protons don't have this fate: " << INukeHadroFates::AsString(fate);
+        << "Protons don't have this fate: " << INukeHadroFates2025::AsString(fate);
      return 0;
     }
 
@@ -1459,7 +1459,7 @@ double INukeHadroData2025::XSec(int hpdgc, INukeFateHN_t fate, double ke, int ta
                                     return xsec;}
     else {
      LOG("INukeData", pWARN)
-        << "Neutrons don't have this fate: " << INukeHadroFates::AsString(fate);
+        << "Neutrons don't have this fate: " << INukeHadroFates2025::AsString(fate);
      return 0;
     }
     //Adding here kaons, why elastic only on protons? hA or hN? No _Reac for kaons...
@@ -1475,7 +1475,7 @@ double INukeHadroData2025::XSec(int hpdgc, INukeFateHN_t fate, double ke, int ta
 				    return xsec;}*/
     	else {
     		LOG("INukeData", pWARN)
-        	<< "K+'s don't have this fate: " << INukeHadroFates::AsString(fate);
+        	<< "K+'s don't have this fate: " << INukeHadroFates2025::AsString(fate);
      	return 0;
     }
     //------------------------------------------------
@@ -1486,7 +1486,7 @@ double INukeHadroData2025::XSec(int hpdgc, INukeFateHN_t fate, double ke, int ta
 				    return xsec;}
     else {
      LOG("INukeData", pWARN)
-        << "Gamma's don't have this fate: " << INukeHadroFates::AsString(fate);
+        << "Gamma's don't have this fate: " << INukeHadroFates2025::AsString(fate);
      return 0;
      }*/
    }
@@ -1661,7 +1661,7 @@ while(iter)
             {
  	      LOG("Intranuke", pWARN) << "Hung-up in IntBounce method - Exiting";
 	      LOG("Intranuke", pWARN) << (*p);
-	      LOG("Intranuke", pWARN) << "Target: " << target << ", Scode: " << scode << ", fate: " << INukeHadroFates::AsString(fate);
+	      LOG("Intranuke", pWARN) << "Target: " << target << ", Scode: " << scode << ", fate: " << INukeHadroFates2025::AsString(fate);
 	      for(int ie=0;ie<200;ie+=10) {
 		LOG("Intranuke", pWARN)   << points[ie+0] << ", " << points[ie+1] << ", " << points[ie+2] << ", "
 		   << points[ie+3] << ", " << points[ie+4] << ", " << points[ie+5] << ", " << points[ie+6] << ", "
