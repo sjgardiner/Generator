@@ -183,7 +183,8 @@ void HNIntranuke2025::SimulateHadronicFinalState(GHepRecord* ev, GHepParticle* p
 	  this-> InelasticHN(ev,p);
 	}
       else if(fate == kIHNFtInelas && pdgc == kPdgGamma) {this-> GammaInelasticHN(ev,p,fate);}
-      else if(fate == kIHNFtCmp){utils::intranuke2025::PreEquilibrium(ev,p,fRemnA,fRemnZ,fRemnP4,fDoFermi,fFermiFac,fNuclmodel,fNucRmvE,kIMdHN);}
+      else if(fate == kIHNFtCmp)  LOG("HNIntranuke2025", pFATAL) << "The PreEquilibrium and Compound Nucleus code are experimental, should not be used";
+//{utils::intranuke2025::PreEquilibrium(ev,p,fRemnA,fRemnZ,fRemnP4,fDoFermi,fFermiFac,fNuclmodel,fNucRmvE,kIMdHN);}
       else if(fate == kIHNFtNoInteraction)
 	{
 	  p->SetStatus(kIStStableFinalState);

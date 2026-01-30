@@ -175,6 +175,7 @@ void HAIntranuke2025::SimulateHadronicFinalStateKinematics(
         else if (fate == kIHAFtCmp) //(suarez edit, 17 July, 2017: cmp)
           {
             LOG("HAIntranuke2025", pWARN) << "Running PreEquilibrium for kIHAFtCmp";
+            LOG("HAIntranuke2025", pFATAL) << "The PreEquilibrium and Compound Nucleus code are experimental, should not be used";
             utils::intranuke2025::PreEquilibrium(ev,p,fRemnA,fRemnZ,fRemnP4,fDoFermi,fFermiFac,fNuclmodel,fNucRmvE,kIMdHA); //should be kiMdHA or HN?
           }
     }
