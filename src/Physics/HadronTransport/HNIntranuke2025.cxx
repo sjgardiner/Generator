@@ -164,7 +164,7 @@ void HNIntranuke2025::SimulateHadronicFinalState(GHepRecord* ev, GHepParticle* p
 	}
 
       LOG("HNIntranuke2025", pNOTICE)
-	<< "Selected " << p->Name() << " fate: " << INukeHadroFates::AsString(fate);
+	<< "Selected " << p->Name() << " fate: " << INukeHadroFates2025::AsString(fate);
 
       // handle the reaction
       if(fate == kIHNFtCEx || fate == kIHNFtElas)
@@ -177,7 +177,7 @@ void HNIntranuke2025::SimulateHadronicFinalState(GHepRecord* ev, GHepParticle* p
 #ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
 	  LOG("HNIntranuke2025", pDEBUG)
 	    << "Invoking InelasticHN() for a : " << p->Name()
-	    << " whose fate is : " << INukeHadroFates::AsString(fate);
+	    << " whose fate is : " << INukeHadroFates2025::AsString(fate);
 #endif
 
 	  this-> InelasticHN(ev,p);
@@ -242,10 +242,10 @@ INukeFateHN_t HNIntranuke2025::HadronFateHN(const GHepParticle * p) const
        if(pdgc==kPdgPi0) frac_abs*= 0.665;  //isospin factor
 
        LOG("HNIntranuke2025", pNOTICE) 
-	 << "\n frac{" << INukeHadroFates::AsString(kIHNFtCEx)     << "} = " << frac_cex
-	 << "\n frac{" << INukeHadroFates::AsString(kIHNFtElas)    << "} = " << frac_elas
-	 << "\n frac{" << INukeHadroFates::AsString(kIHNFtInelas)  << "} = " << frac_inel
-	 << "\n frac{" << INukeHadroFates::AsString(kIHNFtAbs)     << "} = " << frac_abs;
+	 << "\n frac{" << INukeHadroFates2025::AsString(kIHNFtCEx)     << "} = " << frac_cex
+	 << "\n frac{" << INukeHadroFates2025::AsString(kIHNFtElas)    << "} = " << frac_elas
+	 << "\n frac{" << INukeHadroFates2025::AsString(kIHNFtInelas)  << "} = " << frac_inel
+	 << "\n frac{" << INukeHadroFates2025::AsString(kIHNFtAbs)     << "} = " << frac_abs;
 
        // compute total fraction (can be <1 if fates have been switched off)
        double tf = frac_cex      +
@@ -283,8 +283,8 @@ INukeFateHN_t HNIntranuke2025::HadronFateHN(const GHepParticle * p) const
 	                           * fHadroData2025->Frac(pdgc, kIHNFtCmp,    ke, fRemnA , fRemnZ);
 
       LOG("HNIntranuke2025", pINFO) 
-	<< "\n frac{" << INukeHadroFates::AsString(kIHNFtElas)    << "} = " << frac_elas
-	<< "\n frac{" << INukeHadroFates::AsString(kIHNFtInelas)  << "} = " << frac_inel;
+	<< "\n frac{" << INukeHadroFates2025::AsString(kIHNFtElas)    << "} = " << frac_elas
+	<< "\n frac{" << INukeHadroFates2025::AsString(kIHNFtInelas)  << "} = " << frac_inel;
 
        // compute total fraction (can be <1 if fates have been switched off)
        double tf = frac_elas     +
@@ -322,8 +322,8 @@ INukeFateHN_t HNIntranuke2025::HadronFateHN(const GHepParticle * p) const
        //       frac_elas    *= fNucQEFac;   // Flor - Correct scaling factors?
 
        LOG("HNIntranuke", pINFO) 
-          << "\n frac{" << INukeHadroFates::AsString(kIHNFtCEx)     << "} = " << frac_cex
-          << "\n frac{" << INukeHadroFates::AsString(kIHNFtElas)    << "} = " << frac_elas;
+          << "\n frac{" << INukeHadroFates2025::AsString(kIHNFtCEx)     << "} = " << frac_cex
+          << "\n frac{" << INukeHadroFates2025::AsString(kIHNFtElas)    << "} = " << frac_elas;
 
        // compute total fraction (can be <1 if fates have been switched off)
        double tf = frac_cex      +
@@ -392,14 +392,14 @@ void HNIntranuke2025::AbsorbHN(
 #ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
   LOG("HNIntranuke2025", pDEBUG)
     << "AbsorbHN() is invoked for a : " << p->Name()
-    << " whose fate is : " << INukeHadroFates::AsString(fate);
+    << " whose fate is : " << INukeHadroFates2025::AsString(fate);
 #endif
 
   // check fate
   if(fate!=kIHNFtAbs)
     {
       LOG("HNIntranuke2025", pWARN)
-        << "AbsorbHN() cannot handle fate: " << INukeHadroFates::AsString(fate);
+        << "AbsorbHN() cannot handle fate: " << INukeHadroFates2025::AsString(fate);
       return;
     }
 
@@ -661,13 +661,13 @@ void HNIntranuke2025::ElasHN(
 #ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
   LOG("HNIntranuke2025", pDEBUG)
     << "ElasHN() is invoked for a : " << p->Name()
-    << " whose fate is : " << INukeHadroFates::AsString(fate);
+    << " whose fate is : " << INukeHadroFates2025::AsString(fate);
 #endif
 
   if(fate!=kIHNFtCEx && fate!=kIHNFtElas)
     {
       LOG("HNIntranuke2025", pWARN)
-	<< "ElasHN() cannot handle fate: " << INukeHadroFates::AsString(fate);
+	<< "ElasHN() cannot handle fate: " << INukeHadroFates2025::AsString(fate);
       return;
     }
 
@@ -805,13 +805,13 @@ void HNIntranuke2025::GammaInelasticHN(GHepRecord* ev, GHepParticle* p, INukeFat
 #ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
   LOG("HNIntranuke2025", pDEBUG)
     << "GammaInelasticHN() is invoked for a : " << p->Name()
-    << " whose fate is : " << INukeHadroFates::AsString(fate);
+    << " whose fate is : " << INukeHadroFates2025::AsString(fate);
 #endif
 
   if(fate!=kIHNFtInelas && p->Pdg()!=kPdgGamma)
     {
       LOG("HNIntranuke2025", pWARN)
-	<< "GammaInelasticHN() cannot handle fate: " << INukeHadroFates::AsString(fate);
+	<< "GammaInelasticHN() cannot handle fate: " << INukeHadroFates2025::AsString(fate);
       return;
     }
 
@@ -850,7 +850,7 @@ void HNIntranuke2025::GammaInelasticHN(GHepRecord* ev, GHepParticle* p, INukeFat
   }    
 
   LOG("HNIntranuke2025", pNOTICE)
-    << "GammaInelastic fate: " << INukeHadroFates::AsString(fate);
+    << "GammaInelastic fate: " << INukeHadroFates2025::AsString(fate);
   LOG("HNIntranuke2025", pNOTICE)
     << " final state: " << scode << " and " << s2code;
   LOG("HNIntranuke2025", pNOTICE)
