@@ -60,7 +60,8 @@ private:
   double fT0;
   double fTcut;
   double fFA0;
-  std::vector<double> fZ_An;
+  //double fZ_An[11];
+  double* fZ_An;
 };
 
 }         // genie namespace
