@@ -65,6 +65,7 @@ private:
   double fGmp0;
   double fGen0;
   double fGmn0;
+  //double fZ_An[11];
   std::vector<double> fZ_APn;
   std::vector<double> fZ_BPn;
   std::vector<double> fZ_ANn;

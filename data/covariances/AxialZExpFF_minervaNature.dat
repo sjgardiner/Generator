@@ -1,0 +1,8 @@
+% error matrix for z expansion axial form factor
+% based on T. Cai et al (MINERvA), Nature 614 (2023) 48-53 (kmax=8, the 4 free parameters)
+% See Supplementary Table 5
+% | an | an is a 4x4 matrix
+0.31 0.005589991  -0.713740919 0.541649333
+0.005589991  0.7  -0.369042003 -1.220893116
+-0.713740919 -0.369042003 1.9  -0.696265036
+0.541649333  -1.220893116 -0.696265036 3.5
