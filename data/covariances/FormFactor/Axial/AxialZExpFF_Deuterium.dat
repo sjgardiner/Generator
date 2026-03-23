@@ -1,0 +1,9 @@
+% error matrix for z expansion axial form factor
+% based on A. Meyer et al (MINERvA), https://arxiv.org/pdf/1603.03048 (LQCD kmax=8, the 4 free parameters)
+% See Eq. 31, 32, 33
+% Using Eq. 32 and Eq.33 to get covariance matrix
+% | an | an is a 4x4 matrix
+ 2.3716000e-04  5.8212000e-03 -6.8285448e-02  6.9629560e-02
+ 5.8212000e-03  1.1664000e+00 -6.3427536e+00  2.9330640e+00
+-6.8285448e-02 -6.3427536e+00  4.2771600e+01 -3.3151260e+01
+ 6.9629560e-02  2.9330640e+00 -3.3151260e+01  5.4760000e+01
