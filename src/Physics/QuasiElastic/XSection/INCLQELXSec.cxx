@@ -53,19 +53,15 @@ INCLQELXSec::INCLQELXSec(std::string config) : XSecIntegratorI("genie::INCLQELXS
 //____________________________________________________________________________
 double INCLQELXSec::Integrate(const XSecAlgorithmI* model, const Interaction* in) const
 {
-  LOG("INCLQELXSec",pDEBUG) << "Beginning integrate";
   if ( !model->ValidProcess(in) ) return 0.;
 
   Interaction* interaction = new Interaction( *in );
   interaction->SetBit( kISkipProcessChk );
   //interaction->SetBit( kISkipKinematicChk );
 
-  LOG("INCLQELXSec",pNOTICE) << "Liang Liu";
   const NucleusGenI* fNucleusGen = dynamic_cast<const NucleusGenI*>(
     model->SubAlg("IntegralNucleusGen") );
-  LOG("INCLQELXSec",pNOTICE) << "Liang Liu: " << fNucleusGen->Id().Name();
   assert( fNucleusGen );
-  LOG("INCLQELXSec",pNOTICE) << "Liang Liu";
 
   //const NuclearModelI* nucl_model = dynamic_cast<const NuclearModelI*>(
   //  model->SubAlg("IntegralNuclearModel") );
@@ -78,7 +74,6 @@ double INCLQELXSec::Integrate(const XSecAlgorithmI* model, const Interaction* in
 
   // Determine the appropriate binding energy mode to use.
   // The default given here is for the case of a free nucleon.
-  LOG("INCLQELXSec",pNOTICE) << "Liang Liu";
   QELEvGen_BindingMode_t bind_mode = kOnShell;
   Target* tgt = interaction->InitState().TgtPtr();
   if ( tgt->IsNucleus() ) {
@@ -87,12 +82,10 @@ double INCLQELXSec::Integrate(const XSecAlgorithmI* model, const Interaction* in
     bind_mode = genie::utils::StringToQELBindingMode( bind_mode_str );
   }
 
-  LOG("INCLQELXSec",pNOTICE) << "Liang Liu";
   utils::gsl::INCLFullQELdXSec* func = new utils::gsl::INCLFullQELdXSec(model,
     interaction, bind_mode, fMinAngleEM);
   ROOT::Math::IntegrationMultiDim::Type ig_type =
     utils::gsl::IntegrationNDimTypeFromString( fGSLIntgType );
-  LOG("INCLQELXSec",pNOTICE) << "Liang Liu";
 
   // Switch to using the copy of the interaction in the integrator rather than
   // the copy that we made in this function
@@ -114,7 +107,6 @@ double INCLQELXSec::Integrate(const XSecAlgorithmI* model, const Interaction* in
   double kine_min[2] = { cos_theta_0_lim.min, phi_0_lim.min };
   double kine_max[2] = { cos_theta_0_lim.max, phi_0_lim.max };
 
-  LOG("INCLQELXSec",pNOTICE) << "Liang Liu";
   // If averaging over the initial nucleon distribution has been
   // disabled, just integrate over angles and return the result.
   if ( !fAverageOverNucleons ) {
@@ -122,7 +114,6 @@ double INCLQELXSec::Integrate(const XSecAlgorithmI* model, const Interaction* in
     delete func;
     return xsec_total;
   }
-  LOG("INCLQELXSec",pNOTICE) << "Liang Liu";
 
   // For a free nucleon target (hit nucleon is at rest in the lab frame), we
   // don't need to do an MC integration over the initial state variables. In
@@ -135,11 +126,10 @@ double INCLQELXSec::Integrate(const XSecAlgorithmI* model, const Interaction* in
   double E_lab_cutoff = model->GetConfig()
     .GetDouble("IntegralNuclearInfluenceCutoffEnergy");
 
-  LOG("INCLQELXSec",pNOTICE) << "Liang Liu";
   double probeE = interaction->InitState().ProbeE( kRfLab );
+
   if ( !tgt->IsNucleus() || probeE > E_lab_cutoff ) {
     fNucleusGen->GenerateNucleon(interaction, isOrigin);
-    LOG("INCLQELXSec",pNOTICE) << "Liang Liu";
     //tgt->SetHitNucPosition(0.);
 
     //if ( tgt->IsNucleus() ) nucl_model->GenerateNucleon(*tgt, 0.);
@@ -175,14 +165,7 @@ double INCLQELXSec::Integrate(const XSecAlgorithmI* model, const Interaction* in
     fNucleusGen->GenerateNucleon(interaction, BothRPResamping);
     // The initial state variables have all been defined, so integrate over
     // the final lepton angles.
-    LOG("INCLQELXSec",pDEBUG) << "kine_min, kine_max : " << kine_min[0] << ", " << kine_max[0];
-    LOG("INCLQELXSec",pDEBUG) << "kine_min, kine_max : " << kine_min[1] << ", " << kine_max[1];
     double xsec = ig.Integral(kine_min, kine_max);
-    LOG("INCLQELXSec",pDEBUG) << "xsec : " << xsec;
-
-    if(n%100 == 0){
-    LOG("INCLQELXSec",pNOTICE) << "index : " << n << "  " << fNumNucleonThrows << " xsec : " << xsec;
-    }
 
     xsec_sum += xsec;
   }
@@ -192,7 +175,6 @@ double INCLQELXSec::Integrate(const XSecAlgorithmI* model, const Interaction* in
 
   // MC estimator of the total cross section is the mean of the xsec values
   double xsec_mean = xsec_sum / fNumNucleonThrows;
-  LOG("INCLQELXSec",pNOTICE) << "Liang's"  << " xsec_mean : " << xsec_mean;
 
   return xsec_mean;
 }
@@ -288,7 +270,6 @@ double genie::utils::gsl::INCLFullQELdXSec::DoEval(const double* xin) const
   // Dummy storage for the binding energy of the hit nucleon
   double dummy_Eb = 0.;
 
-  LOG("INCLQELXSec",pDEBUG) << "Do Eval";
 
   // Compute the full differential cross section
   double xsec = genie::utils::ComputeFullQELPXSec(fInteraction, fNucleusGen,

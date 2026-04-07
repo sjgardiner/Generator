@@ -227,6 +227,7 @@ void INCLNucleus::configure(){
   theConfig_->setLocalEnergyBBType(localEnergyTypeBB_);
   theConfig_->setLocalEnergyPiType(localEnergyTypePi_);
   theConfig_->setHadronizationTime(hadronizationTime_);
+  theConfig_->setsrcPairConfig(true);
 
   //theConfig_->setRPCorrelationCoefficient(1.0); // Using r-p correlation without fuzzy
 
@@ -367,16 +368,16 @@ void INCLNucleus::initialize(const Target * tgt){
 
   // cascade action is not related to simulation
   // it is just output the casade to file FIXME
-  //cascadeAction_->beforeCascadeAction(propagationModel_);
+  // cascadeAction_->beforeCascadeAction(propagationModel_);
   //
   // INCL need to decide whether the cascade can be ran or not
   // For genie, we need to run casecade for every events
   // const bool canRunCascade = preCascade(projectileSpecies, kineticEnergy);
   //
-  LOG("INCLNucleus", pDEBUG) << nucleus_->getStore()->getParticles().at(2)->getPotentialEnergy() ;
-  LOG("INCLNucleus", pDEBUG) << nucleus_->getStore()->getParticles().at(2)->getEnergy() -  nucleus_->getStore()->getParticles().at(2)->getPotentialEnergy()  ;
-  LOG("INCLNucleus", pDEBUG) << nucleus_->getStore()->getParticles().at(2)->getMomentum().print() ;
-  LOG("INCLNucleus", pDEBUG) << nucleus_->getStore()->getParticles().at(2)->getPosition().print() ;
+  // LOG("INCLNucleus", pDEBUG) << nucleus_->getStore()->getParticles().at(2)->getPotentialEnergy() ;
+  // LOG("INCLNucleus", pDEBUG) << nucleus_->getStore()->getParticles().at(2)->getEnergy() -  nucleus_->getStore()->getParticles().at(2)->getPotentialEnergy()  ;
+  // LOG("INCLNucleus", pDEBUG) << nucleus_->getStore()->getParticles().at(2)->getMomentum().print() ;
+  // LOG("INCLNucleus", pDEBUG) << nucleus_->getStore()->getParticles().at(2)->getPosition().print() ;
 
 }
 

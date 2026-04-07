@@ -137,6 +137,7 @@
   <priority msgstream="HINCLCascadeIntranuke"> NOTICE </priority>
   <priority msgstream="INCLCascadeIntranuke">  WARN </priority>
   <priority msgstream="INCLNucleus">  WARN </priority>
+  <priority msgstream="INCLQELXSec">  DEBUG </priority>
   <priority msgstream="NucleusGenHybridStruck">  NOTICE </priority>
   <priority msgstream="HG4BertCascIntranuke">  NOTICE </priority>
   <priority msgstream="INukeNucleonCorr">      NOTICE </priority>
