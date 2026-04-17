@@ -3,10 +3,10 @@
 
   \class    genie::INCLNucleus
 
-  \brief    INCLXX nuclear model. Implements the NuclearModelI 
+  \brief    INCLXX nuclear model. Implements the NuclearModelI
   interface.
 
-  \ref      
+  \ref
 
   \author   Liang Liu, (liangliu@fnal.gov)
 
@@ -71,7 +71,7 @@
 #include "G4INCLCascadeAction.hh"
 #include "G4INCLAvatarDumpAction.hh"
 
-#include <cstring> 
+#include <cstring>
 #include <cstdlib>
 #include <numeric>
 
@@ -227,7 +227,7 @@ void INCLNucleus::configure(){
   theConfig_->setLocalEnergyBBType(localEnergyTypeBB_);
   theConfig_->setLocalEnergyPiType(localEnergyTypePi_);
   theConfig_->setHadronizationTime(hadronizationTime_);
-  theConfig_->setsrcPairConfig(true);
+  //theConfig_->setsrcPairConfig(true);
 
   //theConfig_->setRPCorrelationCoefficient(1.0); // Using r-p correlation without fuzzy
 
@@ -269,8 +269,8 @@ void INCLNucleus::configure(){
 }
 
 void INCLNucleus::initialize(const Target * tgt){
-  // Skip to initialize a new nucleus if the INCL nucleus is not empty 
-  // and the same species with GENIE target 
+  // Skip to initialize a new nucleus if the INCL nucleus is not empty
+  // and the same species with GENIE target
 
 
   if(nucleus_){
@@ -290,7 +290,7 @@ void INCLNucleus::initialize(const Target * tgt){
   //Particle::INCLBiasVector.Clear();
   G4INCL::Particle::nextBiasedCollisionID = 0;
 
-  // Set the target and the projectile 
+  // Set the target and the projectile
   // implement prepare reaction
 
   // Reset the forced-transparent flag
@@ -308,7 +308,7 @@ void INCLNucleus::initialize(const Target * tgt){
   if(nucleus_){
     delete nucleus_;
   }
-  nucleus_ = new G4INCL::Nucleus(targetSpecies.theA, targetSpecies.theZ, targetSpecies.theS, 
+  nucleus_ = new G4INCL::Nucleus(targetSpecies.theA, targetSpecies.theZ, targetSpecies.theS,
       theConfig_, maxUniverseRadius_, G4INCL::Def);
   nucleus_->getStore()->getBook().reset();
   theDensity = nucleus_->getDensity();
@@ -385,7 +385,7 @@ void INCLNucleus::reset(const Target * tgt){
   // nucleus must exsit!
   if(!nucleus_)  LOG("INCLNucleus", pFATAL) << "nucleus doesn't exsit!";
   // can't reset a nucleus with different type
-  if(!(nucleus_->getA() == tgt->A() && nucleus_->getZ() == tgt->Z())) 
+  if(!(nucleus_->getA() == tgt->A() && nucleus_->getZ() == tgt->Z()))
     LOG("INCLNucleus", pFATAL) << "you are try to reset a nucleus with different type!";
   // reset the nucleus
   if(nucleus_){
@@ -541,24 +541,24 @@ double INCLNucleus::getRemovalEnergy(){
 
 void INCLNucleus::initUniverseRadius(const int A, const int Z){
   // This function is analogy to function in incl_physics/src/G4INCLCascade.cc
-  // void INCL::initUniverseRadius(ParticleSpecies const &p, 
-  //                const double kineticEnergy, const int A, 
+  // void INCL::initUniverseRadius(ParticleSpecies const &p,
+  //                const double kineticEnergy, const int A,
   //                const int Z)
   double rMax = 0.0;
   // A should be large than 0
-  // FIXME: 
+  // FIXME:
   // 1. do we need to consider the isotopes?
   // 2. do we need to consider the extra-impact parameter for neutrino?
   // 	The xsec for neutrino-nucleus is ~10 fb
   // 	the xsec for hadron-nucleus is ~800 mb
-  if(!(A > 0)) 
+  if(!(A > 0))
     throw std::runtime_error("Mass number A is not real!");
   const double pMaximumRadius = G4INCL::ParticleTable::getMaximumNuclearRadius(G4INCL::Proton,  A, Z);
   const double nMaximumRadius = G4INCL::ParticleTable::getMaximumNuclearRadius(G4INCL::Neutron, A, Z);
   const double maximumRadius = std::max(pMaximumRadius, nMaximumRadius);
   rMax = std::max(maximumRadius, rMax);
   maxUniverseRadius_ = rMax;
-  //  LOG("INCLNucleus", pINFO) << "max Universe Radius : " << maxUniverseRadius_; 
+  //  LOG("INCLNucleus", pINFO) << "max Universe Radius : " << maxUniverseRadius_;
 }
 
 std::shared_ptr<G4INCL::Cluster> INCLNucleus::getNNCluster(const int pdg1, const int pdg2){
@@ -712,12 +712,12 @@ void INCLNucleus::setHitParticle(const int pdg, TVector3 &posi){
     for(G4INCL::ParticleIter i=particles.begin(), e=particles.end(); i!=e; ++i) {
       if((*i)->getType() != G4INCL::Proton) continue;
       double space    = ((*i)->getPosition() - hitposi).mag2();
-      // we don't consider the momentum now. 
-      // double momentum = ...... ; 
+      // we don't consider the momentum now.
+      // double momentum = ...... ;
       double temp_size     = space;
       if(temp_size < size){ // TODO: maybe need to find a reasonable way to get the cluster
         size =  temp_size;
-        std::cout << "DEBUG:"<< __FILE__ << ":" << __LINE__ <<" find closet particle: " << size << std::endl; 
+        std::cout << "DEBUG:"<< __FILE__ << ":" << __LINE__ <<" find closet particle: " << size << std::endl;
         hitNucleon_ = (*i);
       }
     }
@@ -727,12 +727,12 @@ void INCLNucleus::setHitParticle(const int pdg, TVector3 &posi){
     for(G4INCL::ParticleIter i=particles.begin(), e=particles.end(); i!=e; ++i) {
       if((*i)->getType() != G4INCL::Neutron) continue;
       double space    = ((*i)->getPosition() - hitposi).mag2();
-      // we don't consider the momentum now. 
-      // double momentum = ...... ; 
+      // we don't consider the momentum now.
+      // double momentum = ...... ;
       double temp_size     = space;
       if(temp_size < size){
         size =  temp_size;
-        std::cout << "DEBUG:"<< __FILE__ << ":" << __LINE__ <<" find closet particle: " << size << std::endl; 
+        std::cout << "DEBUG:"<< __FILE__ << ":" << __LINE__ <<" find closet particle: " << size << std::endl;
         hitNucleon_ = (*i);
       }
     }
