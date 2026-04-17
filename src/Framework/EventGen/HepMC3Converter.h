@@ -32,6 +32,7 @@ namespace genie {
 
 class EventRecord;
 class GHepParticle;
+class Interaction;
 
 class HepMC3Converter {
 

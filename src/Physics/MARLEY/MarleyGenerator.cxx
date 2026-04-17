@@ -17,6 +17,7 @@
 // GENIE includes
 #include "Framework/Algorithm/AlgConfigPool.h"
 #include "Framework/Conventions/Constants.h"
+#include "Framework/EventGen/HepMC3Converter.h"
 #include "Framework/GHEP/GHepStatus.h"
 #include "Framework/GHEP/GHepFlags.h"
 #include "Framework/GHEP/GHepParticle.h"
@@ -31,13 +32,18 @@
 #include "Framework/ParticleData/PDGLibrary.h"
 #include "Framework/Utils/PrintUtils.h"
 
-// MARLEY includes
-#include "marley/Event.hh"
-#include "marley/Particle.hh"
+// HepMC3 includes
+#include "HepMC3/FourVector.h"
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenParticle.h"
 
 using namespace genie;
 using namespace genie::utils;
 using namespace genie::constants;
+
+namespace {
+  constexpr int HEPMC3_FINAL_STATE_STATUS = 1;
+}
 
 //___________________________________________________________________________
 MarleyGenerator::MarleyGenerator() :
@@ -56,21 +62,6 @@ MarleyGenerator::~MarleyGenerator()
 {
 
 }
-//___________________________________________________________________________
-void MarleyGenerator::AddMarleyParticle( GHepRecord* event,
-  const marley::Particle& part, int mom_index, GHepStatus_t status,
-  const TLorentzVector& v4 ) const
-{
-  // Get the particle's 4-momentum, and convert to using GeV instead of MeV
-  TLorentzVector p4( part.px() * genie::units::MeV,
-    part.py() * genie::units::MeV,
-    part.pz() * genie::units::MeV,
-    part.total_energy() * genie::units::MeV );
-
-  event->AddParticle( part.pdg_code(), status, mom_index, -1, -1, -1, p4, v4 );
-}
-
-
 //___________________________________________________________________________
 void MarleyGenerator::ProcessEventRecord(GHepRecord* event) const
 {
@@ -97,16 +88,20 @@ void MarleyGenerator::ProcessEventRecord(GHepRecord* event) const
   // Create a new MARLEY event for the given initial state
   // TODO: seed the MARLEY generator object appropriately
   marley::Generator* marley_gen = fMARLEY->GetMarleyGenerator();
-  marley::Event marley_event = marley_gen->create_event( probe_pdg, probe_KE,
-    tgt_pdg, probe_dir );
+  std::shared_ptr< HepMC3::GenEvent > marley_evt
+    = marley_gen->create_event( probe_pdg, probe_KE, tgt_pdg, probe_dir );
 
   const int probe_idx = event->ProbePosition();
   const int tgt_idx = event->TargetNucleusPosition();
 
   // Add the final-state particles to the event record
-  for ( const marley::Particle* part : marley_event.get_final_particles() ) {
+  for ( const auto& part : marley_evt->particles() ) {
 
-    int pdg = part->pdg_code();
+    // Skip everything except the final-state particles
+    // TODO: revisit this so we can store the full MARLEY event history
+    if ( part->status() != HEPMC3_FINAL_STATE_STATUS ) continue;
+
+    int pdg = part->pid();
     int mom_index = tgt_idx;
     if ( genie::pdg::IsLepton(pdg) ) mom_index = probe_idx;
 
@@ -134,5 +129,18 @@ void MarleyGenerator::LoadConfig(void)
   fMARLEY = dynamic_cast<const MarleyInterface*>( this->SubAlg("MarleyAlg") );
 }
 //___________________________________________________________________________
+void MarleyGenerator::AddMarleyParticle( GHepRecord* event,
+  const HepMC3::GenParticle& part, int mom_index,
+  GHepStatus_t status, const TLorentzVector& v4 ) const
+{
+  // Get the particle's 4-momentum, and convert to using GeV instead of MeV
+  const HepMC3::FourVector& mom4 = part.momentum();
+  TLorentzVector p4( mom4.px() * genie::units::MeV,
+    mom4.py() * genie::units::MeV, mom4.pz() * genie::units::MeV,
+    mom4.e() * genie::units::MeV );
+
+  event->AddParticle( part.pid(), status, mom_index,
+    -1, -1, -1, p4, v4 );
+}
 
 #endif // __GENIE_MARLEY_ENABLED__

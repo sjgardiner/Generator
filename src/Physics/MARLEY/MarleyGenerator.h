@@ -53,11 +53,13 @@ public :
   void Configure(const Registry& config);
   void Configure(string config);
 
+  void AddMarleyParticle( GHepRecord* event,
+    const HepMC3::GenParticle& part, int mom_index,
+    GHepStatus_t status, const TLorentzVector& v4 ) const;
+
 private:
 
   void LoadConfig(void);
-  void AddMarleyParticle( GHepRecord* event, const marley::Particle& part,
-    int mom_index, GHepStatus_t status, const TLorentzVector& v4 ) const;
 
   const genie::MarleyInterface* fMARLEY;
 

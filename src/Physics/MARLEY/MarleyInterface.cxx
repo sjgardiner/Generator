@@ -18,7 +18,7 @@
 #include "Physics/MARLEY/MarleyInterface.h"
 
 // MARLEY includes
-#include "marley/RootJSONConfig.hh"
+#include "marley/JSONConfig.hh"
 
 using namespace genie;
 
@@ -60,7 +60,7 @@ void MarleyInterface::LoadConfig(void)
   // Initialize a new marley::Generator object
   std::string full_path = std::getenv( "GENIE" );
   full_path += "/data/evgen/marley/" + config_file_name;
-  marley::RootJSONConfig jc( full_path );
+  marley::JSONConfig jc( full_path );
   fMarleyGenerator = jc.create_generator();
 }
 //____________________________________________________________________________
