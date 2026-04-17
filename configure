@@ -971,6 +971,9 @@ if($gopt_enable_hepmc3_interface eq "YES") {
   if(! -e $fileso && ! -e $filedylib) {
      print "*** Error *** You need to specify the path to HepMC3 library using --with-hepmc3-lib=/some/path/\n";
      print "*** Error *** Otherwise, you should --disable-hepmc3\n\n";
+     exit 1;
+  }
+}
 
 # MARLEY path
 # ------------------------------------------------
@@ -1045,6 +1048,9 @@ if($gopt_enable_hepmc3_interface eq "YES") {
   if(! -e $file) {
      print "*** Error *** You need to specify the HepMC3 includes path using --with-hepmc3-inc=/some/path/\n";
      print "*** Error *** Otherwise, you should --disable-hepmc3\n\n";
+     exit 1;
+  }
+}
 
 # If --enable-marley was set then the full path to the MARLEY includes must be specified
 #
