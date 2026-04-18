@@ -14,7 +14,7 @@
 
 \cpright  Copyright (c) 2003-2024, The GENIE Collaboration
           For the full text of the license visit http://copyright.genie-mc.org
-          
+
 */
 //____________________________________________________________________________
 
@@ -153,7 +153,7 @@ void NucleusGenINCL::GenerateCluster(GHepRecord * evrec) const{
   LOG("NucleusGenINCL", pINFO) << cluster_energy;
 
   //G4INCL::ThreeVector cluster_mom = incl_cluster->getMomentum();
-  TLorentzVector p4nclust   (   cluster_mom.getX() / 1000.,    
+  TLorentzVector p4nclust   (   cluster_mom.getX() / 1000.,
       cluster_mom.getY() / 1000.,
       cluster_mom.getZ() / 1000.,
       cluster_energy / 1000.   );
@@ -166,7 +166,7 @@ void NucleusGenINCL::GenerateCluster(GHepRecord * evrec) const{
 }
 
 //___________________________________________________________________________
-//  using INCL model to get the position and momentum of 
+//  using INCL model to get the position and momentum of
 //  Hit  nucleon
 void NucleusGenINCL::setInitialStateVertex(GHepRecord * evrec) const{
 
@@ -185,7 +185,7 @@ void NucleusGenINCL::setInitialStateVertex(GHepRecord * evrec) const{
     vtx.SetXYZ(0.,0.,0.);
   }else{
     double A = nucltgt->A();
- 	
+
   const ProcessInfo & proc_info = interaction->ProcInfo();
   bool is_coh = proc_info.IsCoherentProduction() || proc_info.IsCoherentElastic();
   bool is_ve  = proc_info.IsInverseMuDecay() ||
@@ -416,7 +416,7 @@ void NucleusGenINCL::GenerateNucleon(Interaction* interaction, ResamplingHitNucl
   // Call the GenerateNucleon will reset the INCLNucleus and generate a new nucleus
   if(! interaction->InitState().Tgt().IsNucleus()) return;
   Target* tgt = interaction->InitState().TgtPtr();
-  flag_isRadius = true; // initialize true 
+  flag_isRadius = true; // initialize true
   if(resampling_mode == isOrigin){
     tgt->SetHitNucPosition(0.);
     flag_isRadius = false;
@@ -487,7 +487,7 @@ void NucleusGenINCL::LoadConfig(void)
 
   std::string deExType;
   G4INCL::DeExcitationType deExcitationType;
-  GetParamDef( "inclxx-de-excitation", deExType, std::string(""));
+  GetParamDef( "inclxx-de-excitation", deExType, std::string("ABLA07") );
   LOG("NucleusGenINCL", pINFO) << "inclxx-de-excitation : " << deExType;
   if(!deExType.compare("ABLA07")){
     deExcitationType = G4INCL::DeExcitationABLA07;
@@ -495,6 +495,8 @@ void NucleusGenINCL::LoadConfig(void)
     deExcitationType = G4INCL::DeExcitationABLAXX;
   } else if(!deExType.compare("GEMINIXX")) {
     deExcitationType = G4INCL::DeExcitationGEMINIXX;
+  } else if(!deExType.compare("OFF")) {
+    deExcitationType = G4INCL::DeExcitationNone;
   } else {
     std::stringstream ss;
     ss<< "########################################################\n"

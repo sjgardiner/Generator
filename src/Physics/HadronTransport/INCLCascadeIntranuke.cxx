@@ -201,7 +201,7 @@ void INCLCascadeIntranuke::AddINCLParticle(int i, G4INCL::EventInfo &result, GHe
 //______________________________________________________________________________
 int INCLCascadeIntranuke::doCascade(GHepRecord * evrec) const {
 
-  // do hadron nucleus cascade 
+  // do hadron nucleus cascade
   // re-implement the interface from inclxx/main/src/INCLCascade.cc
   int tpos = evrec->TargetNucleusPosition();
   GHepParticle * target = evrec->Particle(tpos);
@@ -209,7 +209,7 @@ int INCLCascadeIntranuke::doCascade(GHepRecord * evrec) const {
   G4INCL::ParticleType theType = this->PDG_to_INCLType(pprobe->Pdg());
   G4INCL::ParticleSpecies  theSpecies(theType);
   INCLNucleus *incl_nucleus = INCLNucleus::Instance();
-  // setup INCL config 
+  // setup INCL config
   theConfig = incl_nucleus->getConfig();
   theConfig->setProjectileSpecies(theSpecies);
   theConfig->setProjectileKineticEnergy((pprobe->E() - pprobe->Mass())*1000.);
@@ -249,8 +249,8 @@ int INCLCascadeIntranuke::doCascade(GHepRecord * evrec) const {
     TParticlePDG * prem = PDGLibrary::Instance()->Find(pdg);
     int PreDeExPDG = pdg;
     double Rem_E = 0;
-    if(!prem){ 
-      PreDeExPDG = kPdgHadronicBlob; 
+    if(!prem){
+      PreDeExPDG = kPdgHadronicBlob;
       double Rem_p2 = std::sqrt(Rem_px*Rem_px + Rem_py*Rem_py + Rem_pz*Rem_pz);
       double Rem_mass = (Rem_p2*Rem_p2 - Rem_Kin*Rem_Kin) / ( 2.0 * Rem_Kin);
       Rem_E = Rem_Kin + Rem_mass;
@@ -282,6 +282,12 @@ int INCLCascadeIntranuke::doCascade(GHepRecord * evrec) const {
         {
           std::unique_ptr<G4INCL::IDeExcitation> theDeExcitation = std::make_unique<G4INCLGEMINIXXInterface>(theConfig);
           theDeExcitation->deExcite(&result);
+          break;
+        }
+      case G4INCL::DeExcitationNone:
+        {
+          // Skip the de-excitation step entirely and end processing early
+          return 0;
           break;
         }
       default:
@@ -355,7 +361,7 @@ void INCLCascadeIntranuke::ProcessEventRecord(GHepRecord * evrec)  const {
   //    propagationModel->setNucleus(incl_target);
   //    propagationModel->generateAllAvatars();
 
-  // stopping time: 
+  // stopping time:
   // INCL don't have the stopping time for neutrino.
   // we can calculate the longest stopping time for all the daughters from primary interaction.
 
@@ -481,6 +487,13 @@ void INCLCascadeIntranuke::ProcessEventRecord(GHepRecord * evrec)  const {
         theDeExcitation->deExcite(&theEventInfo);
         break;
       }
+    case G4INCL::DeExcitationNone:
+      {
+        // If de-excitations are disabled, then skip this step entirely
+        // and return early
+        return;
+        break;
+      }
     default:
       {
         exit(1);
@@ -506,13 +519,13 @@ void INCLCascadeIntranuke::ProcessEventRecord(GHepRecord * evrec)  const {
       double mass = (p2 - EKin*EKin) / (2.0 * EKin);
       double M = p->Mass();
       if(std::fabs(mass/1000. - M) > 0.05){
-        LOG("INCLCascadeIntranuke", pERROR) << " particle from de-excitation is unphysical for (" << depdg << "), mass = " << mass/1000. << "(" << M <<")"; 
+        LOG("INCLCascadeIntranuke", pERROR) << " particle from de-excitation is unphysical for (" << depdg << "), mass = " << mass/1000. << "(" << M <<")";
       }
       //double E = sqrt(p2/1000000. + M*M);
       double E = (EKin + mass) / 1000.;
       TLorentzVector p4mom(theEventInfo.px[i] / 1000.,
           theEventInfo.py[i] / 1000.,
-          theEventInfo.pz[i] / 1000., 
+          theEventInfo.pz[i] / 1000.,
           E);
       TLorentzVector p4posi(0,0,0,0);
 
@@ -553,7 +566,7 @@ void INCLCascadeIntranuke::ProcessEventRecord(GHepRecord * evrec)  const {
         case -6: fs_particle = "Mother    particle "; break;
         default:;
       }
-      LOG("INCLCascadeIntranuke", pINFO)  << fs_particle  << "  global id : " << ip->global_index << "  " 
+      LOG("INCLCascadeIntranuke", pINFO)  << fs_particle  << "  global id : " << ip->global_index << "  "
         << "pdg id : " << ip->pdgid << "  "
         << "mother id : " << ip->mother_index << "  "
         << "local id : " << ip->local_index;
@@ -673,35 +686,35 @@ void INCLCascadeIntranuke::fillEventRecord(G4INCL::FinalState *fs, G4INCL::Parti
     this->fillStep(*iter, stepParticleList, -6, time);
     ParticleSpecies ptype = (*iter)->getSpecies();
     stepFinalState[istep].emplace_back((*iter)->getID(), ptype.getPDGCode(), -6, 0);
-    LOG("INCLCascadeIntranuke", pDEBUG) << "mother list ID : " << (*iter)->getID() << " pdg : " << ptype.getPDGCode(); 
+    LOG("INCLCascadeIntranuke", pDEBUG) << "mother list ID : " << (*iter)->getID() << " pdg : " << ptype.getPDGCode();
   }
   ParticleList modified = fs->getModifiedParticles();
   for(ParticleIter iter=modified.begin(); iter!=modified.end(); ++iter){
     this->fillStep(*iter, stepParticleList, -2, time);
     ParticleSpecies ptype = (*iter)->getSpecies();
     stepFinalState[istep].emplace_back((*iter)->getID(), ptype.getPDGCode(), -2, 0);
-    LOG("INCLCascadeIntranuke", pDEBUG) << "Modified ID : " << (*iter)->getID() << " pdg : " << ptype.getPDGCode(); 
+    LOG("INCLCascadeIntranuke", pDEBUG) << "Modified ID : " << (*iter)->getID() << " pdg : " << ptype.getPDGCode();
   }
   ParticleList outgoing = fs->getOutgoingParticles();
   for(ParticleIter iter=outgoing.begin(); iter!=outgoing.end(); ++iter){
     this->fillStep(*iter, stepParticleList, -3, time);
     ParticleSpecies ptype = (*iter)->getSpecies();
     stepFinalState[istep].emplace_back((*iter)->getID(), ptype.getPDGCode(), -3, 0);
-    LOG("INCLCascadeIntranuke", pDEBUG) << "Outgoing ID : " << (*iter)->getID() << " pdg : " << ptype.getPDGCode(); 
+    LOG("INCLCascadeIntranuke", pDEBUG) << "Outgoing ID : " << (*iter)->getID() << " pdg : " << ptype.getPDGCode();
   }
   ParticleList destroyed = fs->getDestroyedParticles();
   for(ParticleIter iter=destroyed.begin();  iter!=destroyed.end(); ++iter){
     this->fillStep(*iter, stepParticleList, -4, time);
     ParticleSpecies ptype = (*iter)->getSpecies();
     stepFinalState[istep].emplace_back((*iter)->getID(), ptype.getPDGCode(), -4, 0);
-    LOG("INCLCascadeIntranuke", pDEBUG) << "Destroyed ID : " << (*iter)->getID() << " pdg : " << ptype.getPDGCode(); 
+    LOG("INCLCascadeIntranuke", pDEBUG) << "Destroyed ID : " << (*iter)->getID() << " pdg : " << ptype.getPDGCode();
   }
   ParticleList created = fs->getCreatedParticles();
   for(ParticleIter iter=created.begin(); iter!=created.end(); ++iter){
     this->fillStep(*iter, stepParticleList, -5, time);
     ParticleSpecies ptype = (*iter)->getSpecies();
     stepFinalState[istep].emplace_back((*iter)->getID(), ptype.getPDGCode(), -5, 0);
-    LOG("INCLCascadeIntranuke", pDEBUG) << "Created ID : " << (*iter)->getID() << " pdg : " << ptype.getPDGCode(); 
+    LOG("INCLCascadeIntranuke", pDEBUG) << "Created ID : " << (*iter)->getID() << " pdg : " << ptype.getPDGCode();
   }
 
   int num_partiles = tempFinalState.size();
@@ -1099,7 +1112,7 @@ void INCLCascadeIntranuke::postCascade(GHepRecord * evrec, G4INCL::FinalState * 
   }
 
   LOG("INCLCascadeIntranuke", pWARN) << "A and Z: " << incl_target->getA() << "  " << incl_target->getZ();
-  theEventInfo.clusterDecay = this->decayOutgoingClusters(evrec, finalState) || this->decayMe(evrec, finalState); 
+  theEventInfo.clusterDecay = this->decayOutgoingClusters(evrec, finalState) || this->decayMe(evrec, finalState);
   LOG("INCLCascadeIntranuke", pWARN) << "A and Z: " << incl_target->getA() << "  " << incl_target->getZ();
   incl_target->fillEventInfo(&theEventInfo);
 
@@ -1164,7 +1177,7 @@ int INCLCascadeIntranuke::INCLPDG_to_GHEPPDG(int pdg, int A, int Z, int S) const
       return ion_pdg;
     }
     else{
-      LOG("INCLCascadeIntranuke", pERROR) << "Particle is not identified: pdg = " << pdg << "; A, Z, S => " 
+      LOG("INCLCascadeIntranuke", pERROR) << "Particle is not identified: pdg = " << pdg << "; A, Z, S => "
         << A << " " << Z << " " << S;
       exit(1);
     }
@@ -1283,7 +1296,7 @@ void INCLCascadeIntranuke::fillFinalState(GHepRecord * evrec, G4INCL::FinalState
       }
     }
 
-    GHepParticle p(pdg, kIStStableFinalState, outp_mother_idx, -1, -1, -1, 
+    GHepParticle p(pdg, kIStStableFinalState, outp_mother_idx, -1, -1, -1,
         TLorentzVector((*iter)->getMomentum().getX() / 1000,
           (*iter)->getMomentum().getY() / 1000,
           (*iter)->getMomentum().getZ() / 1000,

@@ -14,6 +14,7 @@ inclxx-de-excitation          string  yes        options for deexcitation model 
                                                  - ABLA07
                                                  - ABLAXX
                                                  - GEMINIXX
+                                                 - OFF
 inclxx-potential              string  yes        options for potential energy                      IsospinEnergyPotential
                                                  - IsospinEnergyPotential 
                                                  - IsospinEnergySmoothPotential 
@@ -79,6 +80,8 @@ hadronizationTime             double  yes        Hadronization time, in fm/c. Pa
     <param type="double" name="hadronizationTime" > 0.0 </param>
   </param_set>
 
-
+  <param_set name="NoDeEx">
+    <param type="string" name="inclxx-de-excitation" > OFF </param>
+  </param>
 
 </alg_conf>
