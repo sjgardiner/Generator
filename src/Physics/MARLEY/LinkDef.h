@@ -11,6 +11,7 @@
 #pragma link C++ class genie::MarleyInterface;
 #pragma link C++ class genie::MarleyGenerator;
 #pragma link C++ class genie::MarleyPXSec;
+#pragma link C++ class genie::MarleyDeExcitation;
 #endif
 
 #endif

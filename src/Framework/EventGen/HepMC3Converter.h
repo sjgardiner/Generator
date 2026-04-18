@@ -46,14 +46,14 @@ public:
   std::shared_ptr< genie::EventRecord > RetrieveGHEP(
     const HepMC3::GenEvent& evt );
 
-protected:
-
   int GetNuHepMCParticleStatus( const genie::GHepParticle* gpart,
     const genie::EventRecord& gevrec ) const;
 
   int GetNuHepMCProcessID( const genie::Interaction& inter ) const;
 
   genie::GHepStatus_t GetGHepParticleStatus( int nuhepmc_status ) const;
+
+protected:
 
   void StoreInteraction( const genie::Interaction& inter,
     HepMC3::GenEvent& evt );

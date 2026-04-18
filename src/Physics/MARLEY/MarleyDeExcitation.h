@@ -4,42 +4,35 @@
 //____________________________________________________________________________
 /*!
 
-\class    genie::MarleyGenerator
+\class    genie::MarleyDeExcitation
 
-\brief    Simulate events using an interface to the external MARLEY
-          generator for low-energy neutrino interactions
+\brief    Interface to the MARLEY nuclear de-excitation model
 
 \author   Steven Gardiner <gardiner \at fnal.gov>
           Fermi National Accelerator Laboratory
 
-\created  July 18, 2020
+\created  April 27, 2026
 
-\cpright  Copyright (c) 2003-2020, The GENIE Collaboration
+\cpright  Copyright (c) 2003-2026, The GENIE Collaboration
           For the full text of the license visit http://copyright.genie-mc.org
 */
 //____________________________________________________________________________
 
-#ifndef _MARLEY_GENERATOR_H
-#define _MARLEY_GENERATOR_H
-
-#include "TLorentzVector.h"
+#ifndef _MARLEY_DEEXCITATION_H
+#define _MARLEY_DEEXCITATION_H
 
 #include "Framework/EventGen/EventRecordVisitorI.h"
-#include "Framework/GHEP/GHepStatus.h"
-#include "Physics/Common/PrimaryLeptonUtils.h"
 #include "Physics/MARLEY/MarleyInterface.h"
 
 namespace genie {
 
-class Interaction;
-
-class MarleyGenerator : public EventRecordVisitorI {
+class MarleyDeExcitation : public EventRecordVisitorI {
 
 public :
 
-  MarleyGenerator();
-  MarleyGenerator(string config);
-  ~MarleyGenerator();
+  MarleyDeExcitation();
+  MarleyDeExcitation(string config);
+  ~MarleyDeExcitation();
 
   // Implement the EventRecordVisitorI interface
   void ProcessEventRecord(GHepRecord* event) const;
@@ -48,10 +41,6 @@ public :
   // members from configuration options
   void Configure(const Registry& config);
   void Configure(string config);
-
-  void AddMarleyParticle( GHepRecord* event,
-    const HepMC3::GenParticle& part, int mom_index,
-    GHepStatus_t status, const TLorentzVector& v4 ) const;
 
 private:
 
@@ -62,5 +51,5 @@ private:
 };
 
 }      // genie namespace
-#endif // _MARLEY_GENERATOR_H
+#endif // _MARLEY_DEEXCITATION_H
 #endif // __GENIE_MARLEY_ENABLED__

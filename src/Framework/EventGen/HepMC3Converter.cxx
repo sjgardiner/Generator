@@ -163,10 +163,13 @@ namespace {
 
     { genie::EGHepStatus::kIStStableFinalState,
       { 1, "Final state", "Undecayed physical particle" } },
+
     { genie::EGHepStatus::kIStIntermediateState,
       { 23, "Intermediate state", "Temporary particle for internal use" } },
+
     { genie::EGHepStatus::kIStDecayedState,
       { 2, "Decayed state", "Decayed physical particle" } },
+
     { genie::EGHepStatus::kIStCorrelatedNucleon,
       { 22, "Correlated nucleon", "Spectator nucleon in a correlated pair" } },
 
@@ -177,25 +180,42 @@ namespace {
     { genie::EGHepStatus::kIStDISPreFragmHadronicState,
       { 24, "Prefragmentation", "Temporary prefragmentation hadronic state"
         " for deep inelastic scattering" } },
+
     { genie::EGHepStatus::kIStPreDecayResonantState,
       { 25, "Pre-decay resonance", "Temporary hadronic resonance"
         " before decay" } },
+
     { genie::EGHepStatus::kIStHadronInTheNucleus,
       { 26, "Hadron in the nucleus",
         "Input particle for intranuclear cascade" } },
 
-    // Code 27 reserved for future use as a marker for nuclei before
-    // de-excitations
+    { genie::EGHepStatus::kIStPreDeExNuclearRemnant,
+      { 27, "Pre-deexcitation nuclear remnant", "Nuclear remnant after"
+        " direct FSI cascade but before de-excitations" } },
+
+    { genie::EGHepStatus::kIStIntermediateDeExNuclearRemnant,
+      { 28, "Pre-deexcitation nuclear remnant", "Nuclear remnant after"
+        " direct FSI cascade but before de-excitations" } },
 
     // P.C.2
     { genie::EGHepStatus::kIStFinalStateNuclearRemnant,
       { 28, "Hadronic blob", "Pseudoparticle representing the"
         " final-state remnant nucleus" } },
+
     { genie::EGHepStatus::kIStNucleonClusterTarget,
       { 29, "Nucleon cluster", "Temporary multi-nucleon system for"
         " internal use" } },
+
     { genie::EGHepStatus::kIStFormZone,
       { 30, "Formation zone", "Hadron before formation zone free step" } },
+
+    { genie::EGHepStatus::kIStDeExFinalState,
+      { 31, "De-excitation final state", "REMOVE!" } },
+
+    { genie::EGHepStatus::kIStSpectator,
+      { 32, "FSI spectator", "The spectator particle in an"
+        " FSI cascade collision" } },
+
   };
 
   // Convert the contents of a TBits object into a string that can be stored in
