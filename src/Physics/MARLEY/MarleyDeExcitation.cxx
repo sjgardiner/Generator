@@ -19,6 +19,7 @@
 #include "Framework/Conventions/Constants.h"
 #include "Framework/EventGen/EventRecord.h"
 #include "Framework/EventGen/HepMC3Converter.h"
+#include "Framework/EventGen/EVGThreadException.h"
 #include "Framework/GHEP/GHepStatus.h"
 #include "Framework/GHEP/GHepFlags.h"
 #include "Framework/GHEP/GHepParticle.h"
@@ -40,6 +41,7 @@
 #include "HepMC3/GenVertex.h"
 
 // MARLEY includes
+#include "marley/Error.hh"
 #include "marley/NucleusDecayer.hh"
 
 using namespace genie;
@@ -78,8 +80,21 @@ void MarleyDeExcitation::ProcessEventRecord(GHepRecord* event) const
     = hepmc3_conv.ConvertToHepMC3( *ev_rec );
 
   // Run the de-excitation model on the event
-  auto* marley_gen = fMARLEY->GetMarleyGenerator();
-  marley_deex.process_event( *marley_event, *marley_gen );
+  try {
+    auto* marley_gen = fMARLEY->GetMarleyGenerator();
+    marley_deex.process_event( *marley_event, *marley_gen );
+  }
+  // If MARLEY runs into a problem, convert its exception into
+  // a GENIE EVGThreadException and rethrow while backing up the
+  // event generation thread
+  catch ( const marley::Error& err ) {
+    ev_rec->EventFlags()->SetBitNumber( genie::kDecayErr, true );
+    genie::exceptions::EVGThreadException exception;
+    exception.SetReason( err.what() );
+    exception.SwitchOnStepBack();
+    exception.SetReturnStep( 0 );
+    throw exception;
+  }
 
   // MARLEY will append new particles in the event, so start the loop
   // over the new additions by skipping all pre-existing particles
