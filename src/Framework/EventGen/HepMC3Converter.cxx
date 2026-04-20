@@ -199,21 +199,21 @@ namespace {
 
     // P.C.2
     { genie::EGHepStatus::kIStFinalStateNuclearRemnant,
-      { 28, "Hadronic blob", "Pseudoparticle representing the"
+      { 29, "Hadronic blob", "Pseudoparticle representing the"
         " final-state remnant nucleus" } },
 
     { genie::EGHepStatus::kIStNucleonClusterTarget,
-      { 29, "Nucleon cluster", "Temporary multi-nucleon system for"
+      { 30, "Nucleon cluster", "Temporary multi-nucleon system for"
         " internal use" } },
 
     { genie::EGHepStatus::kIStFormZone,
-      { 30, "Formation zone", "Hadron before formation zone free step" } },
+      { 31, "Formation zone", "Hadron before formation zone free step" } },
 
     { genie::EGHepStatus::kIStDeExFinalState,
-      { 31, "De-excitation final state", "REMOVE!" } },
+      { 32, "De-excitation final state", "REMOVE!" } },
 
     { genie::EGHepStatus::kIStSpectator,
-      { 32, "FSI spectator", "The spectator particle in an"
+      { 33, "FSI spectator", "The spectator particle in an"
         " FSI cascade collision" } },
 
   };
