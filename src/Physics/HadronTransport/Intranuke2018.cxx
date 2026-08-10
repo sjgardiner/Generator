@@ -422,10 +422,10 @@ double Intranuke2018::GenerateStep(GHepRecord*  /*evrec*/, GHepParticle* p) cons
 
   double d = -1.*L * TMath::Log(rnd->RndFsi().Rndm());
 
-  /*    LOG("Intranuke2018", pDEBUG)
+    LOG("Intranuke2018", pDEBUG)
     << "mode= " << fINukeMode << "; Mean free path = " << L << " fm / "
                               << "Generated path length = " << d << " fm";
-  */
+  
   return d;
 }
 //___________________________________________________________________________

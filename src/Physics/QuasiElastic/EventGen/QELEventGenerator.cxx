@@ -451,12 +451,16 @@ double QELEventGenerator::ComputeMaxXSec(const Interaction * in) const
         tgt.HitNucPosition());
 
       double costh0_max = genie::utils::CosTheta0Max( *interaction );
+      LOG("QELEvent", pINFO) << "pNi_next : " << pNi_next << " costh0_max: " << costh0_max;
 
       if ( prob > 0. && costh0_max > -1. ) max_momentum = pNi_next;
       else search_step /= 2.;
     }
 
     {
+      //double mom_step = max_momentum/100;
+      //for(int imom = 0; imom < 100; imom++ ){
+	//double local_max_momentum = (imom+1)*mom_step*2 - max_momentum;
         // Set the nucleon we're using to be upstream at max energy and unbound
         fNuclModel->SetMomentum3( TVector3(0., 0., -max_momentum) );
         fNuclModel->SetRemovalEnergy( 0. );
@@ -498,6 +502,7 @@ double QELEventGenerator::ComputeMaxXSec(const Interaction * in) const
                   double xs = genie::utils::ComputeFullQELPXSec(interaction,
                     fNuclModel, fXSecModel, costh, phi, dummy_Eb, kOnShell, fMinAngleEM, false);
 
+                  //LOG("QELEvent", pINFO) << "costh : " << costh << " phi: " << phi << " xs : " << xs;
                   if (xs > this_nuc_xsec_max){
                       phi_at_xsec_max = phi;
                       costh_at_xsec_max = costh;
@@ -520,11 +525,14 @@ double QELEventGenerator::ComputeMaxXSec(const Interaction * in) const
         }
         if (this_nuc_xsec_max > xsec_max) {
             xsec_max = this_nuc_xsec_max;
-            LOG("QELEvent", pINFO) << "best estimate for xsec_max = " << xsec_max;
+            LOG("QELEvent", pINFO) << "best estimate for xsec_max = " << xsec_max << " local_max_momentum: " << max_momentum 
+	      << " phi_at_xsec_max : " << phi_at_xsec_max  << " costh_at_xsec_max : " << costh_at_xsec_max;
         }
 
+      //}
         delete interaction;
     }
+    //exit(0);
     // Apply safety factor, since value retrieved from the cache might
     // correspond to a slightly different energy
     xsec_max *= fSafetyFactor;

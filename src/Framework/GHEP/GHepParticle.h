@@ -17,6 +17,7 @@
 
 #ifndef _GHEP_PARTICLE_H_
 #define _GHEP_PARTICLE_H_
+#include "Framework/Conventions/GBuild.h"
 
 #include <string>
 #include <iostream>

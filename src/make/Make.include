@@ -157,13 +157,13 @@ endif
 #                             APFEL
 #-------------------------------------------------------------------
 
-APFEL_LIBRARIES = 
+APFEL_LIBRARIES =
 APFEL_INCLUDES  =
 
-ifeq ($(strip $(GOPT_ENABLE_APFEL)),YES) 
+ifeq ($(strip $(GOPT_ENABLE_APFEL)),YES)
 
 APFEL_INCLUDES  = -I$(GOPT_WITH_APFEL_INC)
-APFEL_LIBRARIES = -L$(GOPT_WITH_APFEL_LIB) -lAPFEL 
+APFEL_LIBRARIES = -L$(GOPT_WITH_APFEL_LIB) -lAPFEL
 
 endif
 
@@ -180,7 +180,7 @@ INCL_INCLUDES  = -I$(GOPT_WITH_INCL_INC) -I$(GOPT_WITH_BOOST_INC)
 INCL_DFLAGS    = $(shell $(GOPT_WITH_INCL_LIB)/../bin/inclxx-config --dflags )
 INCL_LIBRARIES = -L$(GOPT_WITH_INCL_LIB)  $(shell $(GOPT_WITH_INCL_LIB)/../bin/inclxx-config --libs )
 
-BOOST_LIBRARIES = -L$(GOPT_WITH_BOOST_LIB) -lboost_program_options -lboost_timer -lboost_system -lboost_date_time
+BOOST_LIBRARIES = -L$(GOPT_WITH_BOOST_LIB) -lboost_program_options -lboost_system -lboost_date_time
 INCL_LIBRARIES := $(BOOST_LIBRARIES) $(FORT_LIBRARIES) $(INCL_LIBRARIES)
 
 endif
@@ -231,6 +231,51 @@ GEANT4_LIBRARIES := $(shell $(GOPT_WITH_GEANT4_LIB)/../bin/geant4-config --libs-
 endif
 
 #-------------------------------------------------------------------
+#                             hepmc3
+#-------------------------------------------------------------------
+
+HEPMC3_FLAGS     =
+HEPMC3_INCLUDES  =
+HEPMC3_LIBRARIES =
+
+ifeq ($(strip $(GOPT_ENABLE_HEPMC3_INTERFACE)),YES)
+
+# -cflags is a mixture of compiler flags and includes
+HEPMC3_CFLAGS = $(shell $(GOPT_WITH_HEPMC3_LIB)/../bin/HepMC3-config --cflags )
+
+HEPMC3_FLAGS   = $(filter-out -I%,$(HEPMC3_CFLAGS))
+HEPMC3_IFLAGS_ONLY = $(filter     -I%,$(HEPMC3_CFLAGS))
+
+#$(info --------- HEPMC3 flags and include path handling ---------)
+#$(info )
+#$(info HEPMC3_FLAGS=$(HEPMC3_FLAGS))
+#$(info )
+#$(info HEPMC3_IFLAGS_ONLY=$(HEPMC3_IFLAGS_ONLY))
+#$(info )
+
+# this might be -I/path/include/ or -I/path/include/HepMC3
+# really want the first
+HEPMC3_INCLUDES += $(HEPMC3_IFLAGS_ONLY)
+
+HEPMC3INCBASE = $(strip $(filter -I%include/HepMC3,$(HEPMC3_IFLAGS_ONLY)))
+#$(info HEPMC3INCBASE="$(HEPMC3INCBASE)")
+#$(info )
+ifneq ($(HEPMC3INCBASE),"")
+  #$(info HEPMC3INCBASE was non-blank)
+  # strip out specification of HepMC3
+  ALTHEPMC3INC := $(subst include/Geant4,include,$(HEPMC3INCBASE))
+  #$(info ALTHEPMC3INC=$(ALTHEPMC3INC))
+  #$(info )
+  #HEPMC3_INCLUDES +=  -DHEPMC3_INC_ALT_START $(ALTHEPMC3INC) -DHEPMC3_INC_ALT_END
+  HEPMC3_INCLUDES += $(ALTHEPMC3INC)
+  #$(info HEPMC3_INCLUDES=$(HEPMC3_INCLUDES))
+  #$(info )
+ endif
+
+HEPMC3_LIBRARIES := $(shell $(GOPT_WITH_HEPMC3_LIB)/../bin/HepMC3-config --libs)
+endif
+
+#-------------------------------------------------------------------
 # PYTHIA6
 #-------------------------------------------------------------------
 
@@ -250,7 +295,7 @@ endif
 
 PY6ROOT_LIBRARY = -lEGPythia6
 else
-  $(info GOPT_ENABLE_PYTHIA6 is NO)
+  #$(info GOPT_ENABLE_PYTHIA6 is NO)
 endif
 
 #-------------------------------------------------------------------
@@ -287,6 +332,21 @@ ROOT_LIBRARIES = $(shell root-config --glibs) \
                         -lMinuit -lGeom -lEG $(PY6ROOT_LIBRARY) -lGenVector -lMathMore
 ROOT_VERSION = $(shell root-config --version )
 ROOT_MAJOR   = $(shell root-config --version | cut -d. -f1 )
+
+#-------------------------------------------------------------------
+# MARLEY
+#-------------------------------------------------------------------
+
+MARLEY_LIBRARIES =
+MARLEY_INCLUDES  =
+
+ifeq ($(strip $(GOPT_ENABLE_MARLEY)),YES)
+
+MARLEY_INCLUDES  = -I$(GOPT_WITH_MARLEY_INC)
+MARLEY_FLAGS     = $(shell marley-config --cflags)
+MARLEY_LIBRARIES = -L$(GOPT_WITH_MARLEY_LIB)  $(shell marley-config --libs)
+
+endif
 
 #-------------------------------------------------------------------
 # PROFILING / DEBUGING OPTIONS
