@@ -973,18 +973,35 @@ std::shared_ptr< genie::EventRecord > genie::HepMC3Converter::RetrieveGHEP(
       if ( mommy_count > 0u ) mommy1 = mommy_vec.front()->id() - 1;
       if ( mommy_count > 1u ) mommy2 = mommy_vec.back()->id() - 1;
 
-      // Compatibility with GHEP: Primary lepton has the probe as its only mother
-      // Flag if this is a lepton and there are more than one mothers.
-      if( mommy_count > 1u && (std::abs(pdg) > 10 && std::abs(pdg) <= 16) ) {
-	mommy2 = DUMMY_PARTICLE_INDEX;
-	for( auto itr : mommy_vec ) {
-	  if( std::abs((*itr).pid()) > 10 && std::abs((*itr).pid()) <= 16 ) {
-	    mommy1 = (*itr).id() - 1;
-	    mommy2 = DUMMY_PARTICLE_INDEX;
-	    break;
-	  }
-	} // find out which mother in HepMC3 it is
-      } // ensure 1 mother of primary lepton
+      // Is there a probe mother?
+      bool probe_is_mother = false; int probe_mom = DUMMY_PARTICLE_INDEX;
+      for( auto itr : mommy_vec ) {
+	if( std::abs((*itr).pid()) > 10 && std::abs((*itr).pid()) <= 16 ) {
+	  probe_is_mother = true; 
+	  probe_mom = (*itr).id() - 1;
+	  break;
+	}
+      }
+      // The only daughter a probe has is the primary lepton.
+      if( probe_is_mother ) {
+	if( std::abs(pdg) > 10 && std::abs(pdg) <= 16 ){
+	  mommy1 = probe_mom;
+	  mommy2 = DUMMY_PARTICLE_INDEX;
+	} else {  // Strike the probe out.
+	  // Due to constness, we have to populate a new vector.
+	  std::vector<int> other_mommy_vec;
+	  for( auto itr : mommy_vec ) {
+	    int this_mom = (*itr).id() - 1;
+	    if( this_mom != probe_mom ) {
+	      other_mommy_vec.push_back( this_mom );
+	    }
+	  } // other mothers
+	  mommy1 = DUMMY_PARTICLE_INDEX;
+	  mommy2 = DUMMY_PARTICLE_INDEX;
+	  if ( other_mommy_vec.size() > 0u ) mommy1 = other_mommy_vec.front();
+	  if ( other_mommy_vec.size() > 1u ) mommy2 = other_mommy_vec.back();
+	}
+      } // probe mother handling
 
       // Nuclear binding energy pseudoparticles are recorded in the GENIE event
       // record as if they were primary (motherless). Ignore the vertex
@@ -1021,18 +1038,38 @@ std::shared_ptr< genie::EventRecord > genie::HepMC3Converter::RetrieveGHEP(
         }
       }
 
-      // Compatibility with GHEP: Probe has primary lepton as its only daughter
-      // Flag if this is a lepton and there are more than one daughters.
-      if( dau_count > 1u && (std::abs(pdg) > 10 && std::abs(pdg) <= 16) ) {
-	dau2 = DUMMY_PARTICLE_INDEX;
-	for( auto itr : dau_vec ) {
-	  if( std::abs((*itr).pid()) > 10 && std::abs((*itr).pid()) <= 16 ) {
-	    dau1 = (*itr).id() - 1;
-	    dau2 = DUMMY_PARTICLE_INDEX;
-	    break;
-	  }
-	} // find out which daughter in HepMC3 it is
-      } // ensure 1 daughter of probe
+      // Is there a primary lepton daughter?
+      bool prilep_is_daughter = false; int prilep_dau = DUMMY_PARTICLE_INDEX;
+      for( auto itr : dau_vec ) {
+	if( std::abs((*itr).pid()) > 10 && std::abs((*itr).pid()) <= 16 ) {
+	  prilep_is_daughter = true; 
+	  prilep_dau = (*itr).id() - 1;
+	  break;
+	}
+      }
+
+      // The only mother a primary lepton has is a probe.
+      if( prilep_is_daughter ) {
+	if( std::abs(pdg) > 10 && std::abs(pdg) <= 16 ){
+	  dau1 = prilep_dau;
+	  dau2 = prilep_dau;
+	} else {  // Strike the primary lepton out.
+	  // Due to constness, we have to populate a new vector.
+	  std::vector<int> other_dau_vec;
+	  for( auto itr : dau_vec ) {
+	    int this_dau = (*itr).id() - 1;
+	    if( this_dau != prilep_dau ) {
+	      other_dau_vec.push_back( this_dau );
+	    }
+	  } // other mothers
+	  dau1 = DUMMY_PARTICLE_INDEX;
+	  dau2 = DUMMY_PARTICLE_INDEX;
+	  if ( other_dau_vec.size() > 0u ) dau1 = other_dau_vec.front();
+	  if ( other_dau_vec.size() > 1u ) { dau2 = other_dau_vec.back(); }
+	  else { dau2 = dau1; }
+	}
+      } // primary lepton daughter handling
+
     }
 
     gevrec->AddParticle( pdg, status, mommy1, mommy2, dau1, dau2, p4.px(),
