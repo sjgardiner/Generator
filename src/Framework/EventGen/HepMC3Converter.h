@@ -21,6 +21,7 @@
 
 #include "Framework/Conventions/GBuild.h"
 #include "Framework/GHEP/GHepStatus.h"
+#include <cmath>
 #ifdef __GENIE_HEPMC3_INTERFACE_ENABLED__
 // Forward-declare needed HepMC3 classes here
 namespace HepMC3 {

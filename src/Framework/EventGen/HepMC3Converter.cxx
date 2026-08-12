@@ -604,6 +604,7 @@ std::shared_ptr< HepMC3::GenEvent > genie::HepMC3Converter::ConvertToHepMC3(
   // E.C.4
   double flux_avg_xsec = gevrec.FluxAvgXSec() / genie::units::picobarn;
   double flux_avg_xsec_err = gevrec.FluxAvgXSecErr() / genie::units::picobarn;
+  if( ! std::isfinite(flux_avg_xsec_err) ) { flux_avg_xsec_err = 1.0e+10 * flux_avg_xsec; }
 
   auto gen_xsec = std::make_shared< HepMC3::GenCrossSection >();
   gen_xsec->set_cross_section( flux_avg_xsec, flux_avg_xsec_err );
@@ -1133,6 +1134,25 @@ std::shared_ptr< genie::EventRecord > genie::HepMC3Converter::RetrieveGHEP(
     auto ps = static_cast< genie::KinePhaseSpace_t >(
       phase_space_ptr->value() );
     gevrec->SetDiffXSec( diff_xsec_ptr->value(), ps );
+  }
+
+  // Total inclusive xsec
+  // Convert from pb (HepMC3 convention) back to cm2 (which is implied in the setter)
+  auto incl_ptr = evt.attribute< HepMC3::DoubleAttribute >(
+      "tot_xs" );
+    if ( incl_ptr ) gevrec->SetTotInclXSec( incl_ptr->value() * genie::units::picobarn );
+
+  // Set the flux-averaged cross section appropriately.
+  if( evt.cross_section() ) {
+    if( evt.cross_section()->xsecs().size() > 0 ) {
+      gevrec->SetFluxAvgXSec( evt.cross_section()->xsecs().front() * genie::units::picobarn );
+    } else { gevrec->SetFluxAvgXSec( 0.0 ); }
+    if( evt.cross_section()->xsec_errs().size() > 0 ) {
+      gevrec->SetFluxAvgXSecErr( evt.cross_section()->xsec_errs().front() * genie::units::picobarn );
+    } else { gevrec->SetFluxAvgXSecErr( 0.0 ); }
+  } else {
+    gevrec->SetFluxAvgXSec( 0.0 );
+    gevrec->SetFluxAvgXSecErr( 0.0 );
   }
 
   genie::Interaction* itr = this->RetrieveInteraction( evt );
