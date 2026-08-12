@@ -44,7 +44,7 @@
                      except the final state particles.
 	       * `hepmc': [Assuming HepMC3 is enabled]
 	             A HepMC3 compliant text record.
-	       * `rev-hepmc': [Assuming HepMC3 is enabled]
+	       * `revhepmc': [Assuming HepMC3 is enabled]
 	             Reads in HepMC3 to GHEP.
               >>
 	      >> Experiment-specific formats:
@@ -94,7 +94,7 @@
                `ghad'                 -> *.ghad.dat
                `ginuke'               -> *.ginuke.root
 	       `hepmc'                -> *.hepmc.txt
-	       `rev-hepmc'            -> *.ghep.root
+	       `revhepmc'             -> *.ghep.root
            --seed
               Random number seed.
          --message-thresholds
@@ -505,7 +505,7 @@ void ConvertToGST(void)
   s_tree->Branch("t",	          &brKineT,	    "t/D"	    );
   s_tree->Branch("Q2",	          &brKineQ2,        "Q2/D"	    );
   s_tree->Branch("W",	          &brKineW,	    "W/D"	    );
-  s_tree->Branch("EvRF",	      &brEvRF,	    "EvRF/D"	    );
+  s_tree->Branch("EvRF",	  &brEvRF,	    "EvRF/D"	    );
   s_tree->Branch("Ev",	          &brEv,	    "Ev/D"	    );
   s_tree->Branch("pxv",	          &brPxv,	    "pxv/D"	    );
   s_tree->Branch("pyv",	          &brPyv,	    "pyv/D"	    );
