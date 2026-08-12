@@ -328,7 +328,7 @@ namespace {
 
 }
 //____________________________________________________________________________
-genie::HepMC3Converter::HepMC3Converter()
+genie::HepMC3Converter::HepMC3Converter() : fTuneLoaded(false)
 {
 
 }
@@ -946,6 +946,18 @@ std::shared_ptr< genie::EventRecord > genie::HepMC3Converter::RetrieveGHEP(
   const HepMC3::GenEvent& evt )
 {
   auto gevrec = std::make_shared< genie::EventRecord >();
+
+  // Build the tune.
+  if( !fTuneLoaded ) {
+    auto run_info = evt.run_info();
+    auto tune_ptr = run_info->attribute< HepMC3::StringAttribute >( "GENIE.XSecTune" );
+    if( tune_ptr ) {
+      genie::RunOpt* ro = genie::RunOpt::Instance();
+      ro->SetTuneName(tune_ptr->value());
+      ro->BuildTune();
+      fTuneLoaded = true;
+    }
+  } // loaded tune from hepmc
 
   // Retrieve and store the overall event weight
   double wgt = evt.weight();

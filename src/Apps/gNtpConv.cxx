@@ -3205,25 +3205,28 @@ void ConvertFromHepMC3()
 
   // figure out how many input events to analyse
   Long64_t nmax = (gOptN <= 0) ? std::numeric_limits<long long>::max() : gOptN;
-  
-  //-- open output file
-  NtpWriter ntpw(kNFGHEP);
-  ntpw.CustomizeFilename( gOptOutFileName );
-  ntpw.Initialize();
-
-  LOG("gntpc", pNOTICE) 
-       << "*** Saving GHEP event record to: " << gOptOutFileName;
 
   // Use HepMC3NtpWriter and HepMC3Converter to write out.
   std::shared_ptr<HepMC3Converter> hepmc_converter = 
     std::make_shared< HepMC3Converter >();
+  
+  //-- open output file
+  NtpWriter ntpw(kNFGHEP);
+  ntpw.CustomizeFilename( gOptOutFileName );
+
+  LOG("gntpc", pNOTICE) 
+       << "*** Saving GHEP event record to: " << gOptOutFileName;
 
   Long64_t ievent = 0;
   while( ! (reader.failed() || ievent >= nmax ) ) {
       HepMC3::GenEvent hepevt;
       reader.read_event(hepevt);
-      
+
       std::shared_ptr<EventRecord> event = hepmc_converter->RetrieveGHEP(hepevt);
+
+      // Initialise ntpw after first event, to get the tune right.
+      if( ievent == 0 ){ ntpw.Initialize(); }
+
       ntpw.AddEventRecord(ievent, event.get());
       ievent++;
   }

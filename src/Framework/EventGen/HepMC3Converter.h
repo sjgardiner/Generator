@@ -65,6 +65,10 @@ protected:
 
   std::shared_ptr< HepMC3::GenRunInfo > fRunInfo;
 
+private:
+  
+  bool fTuneLoaded;
+
 };
 
 } // genie namespace
