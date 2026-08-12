@@ -646,6 +646,10 @@ CPP_INCLUDES := \
     $(GENIE_INCLUDES) \
     $(PROFESSOR2_INCLUDES)
 
+ifeq ($(strip $(GOPT_ENABLE_HEPMC3_INTERFACE)),YES)
+    CPP_INCLUDES += $(HEPMC3_INCLUDES)
+endif
+
 ROOT_DICT_GEN_INCLUDES := \
     $(LINUX_SYS_INCLUDES) \
     $(XML_INCLUDES) \
@@ -663,6 +667,10 @@ LIBRARIES := $(SYSLIBS) \
              $(GSL_LIBRARIES) \
              $(GPROF_LIBRARIES) \
              $(EXTRALIBS)
+
+ifeq ($(strip $(GOPT_ENABLE_HEPMC3_INTERFACE)),YES)
+    LIBRARIES += $(HEPMC3_LIBRARIES)
+endif
 
 # Default compiler and preprocessor flags
 

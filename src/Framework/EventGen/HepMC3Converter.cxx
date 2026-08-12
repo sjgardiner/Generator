@@ -194,8 +194,8 @@ namespace {
         " direct FSI cascade but before de-excitations" } },
 
     { genie::EGHepStatus::kIStIntermediateDeExNuclearRemnant,
-      { 28, "Pre-deexcitation nuclear remnant", "Nuclear remnant after"
-        " direct FSI cascade but before de-excitations" } },
+      { 28, "De-exciting nuclear remnant", "Nuclear remnant after"
+        " direct FSI cascade, with de-excitations started but not concluded" } },
 
     // P.C.2
     { genie::EGHepStatus::kIStFinalStateNuclearRemnant,
@@ -973,6 +973,19 @@ std::shared_ptr< genie::EventRecord > genie::HepMC3Converter::RetrieveGHEP(
       if ( mommy_count > 0u ) mommy1 = mommy_vec.front()->id() - 1;
       if ( mommy_count > 1u ) mommy2 = mommy_vec.back()->id() - 1;
 
+      // Compatibility with GHEP: Primary lepton has the probe as its only mother
+      // Flag if this is a lepton and there are more than one mothers.
+      if( mommy_count > 1u && (std::abs(pdg) > 10 && std::abs(pdg) <= 16) ) {
+	mommy2 = DUMMY_PARTICLE_INDEX;
+	for( auto itr : mommy_vec ) {
+	  if( std::abs((*itr).pid()) > 10 && std::abs((*itr).pid()) <= 16 ) {
+	    mommy1 = (*itr).id() - 1;
+	    mommy2 = DUMMY_PARTICLE_INDEX;
+	    break;
+	  }
+	} // find out which mother in HepMC3 it is
+      } // ensure 1 mother of primary lepton
+
       // Nuclear binding energy pseudoparticles are recorded in the GENIE event
       // record as if they were primary (motherless). Ignore the vertex
       // relationships in this special case.
@@ -1007,6 +1020,19 @@ std::shared_ptr< genie::EventRecord > genie::HepMC3Converter::RetrieveGHEP(
           else dau2 = daughter->id() - 1;
         }
       }
+
+      // Compatibility with GHEP: Probe has primary lepton as its only daughter
+      // Flag if this is a lepton and there are more than one daughters.
+      if( dau_count > 1u && (std::abs(pdg) > 10 && std::abs(pdg) <= 16) ) {
+	dau2 = DUMMY_PARTICLE_INDEX;
+	for( auto itr : dau_vec ) {
+	  if( std::abs((*itr).pid()) > 10 && std::abs((*itr).pid()) <= 16 ) {
+	    dau1 = (*itr).id() - 1;
+	    dau2 = DUMMY_PARTICLE_INDEX;
+	    break;
+	  }
+	} // find out which daughter in HepMC3 it is
+      } // ensure 1 daughter of probe
     }
 
     gevrec->AddParticle( pdg, status, mommy1, mommy2, dau1, dau2, p4.px(),

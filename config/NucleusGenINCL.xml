@@ -82,6 +82,6 @@ hadronizationTime             double  yes        Hadronization time, in fm/c. Pa
 
   <param_set name="NoDeEx">
     <param type="string" name="inclxx-de-excitation" > OFF </param>
-  </param>
+  </param_set>
 
 </alg_conf>
