@@ -241,7 +241,7 @@ namespace {
 
   // Converts a TLorentzVector to a form suitable for storage as a HepMC3
   // attribute
-  std::shared_ptr< HepMC3::VectorDoubleAttribute > four_vector_to_attribute(
+  std::shared_ptr< HepMC3::PreciseVectorDoubleAttribute > four_vector_to_attribute(
     const TLorentzVector& vec4, bool convert_units = false )
   {
     // If needed, convert from GENIE's native position units (fm) to the ones
@@ -251,12 +251,12 @@ namespace {
     std::vector< double > temp_vec = { vec4.X() * conv_factor,
       vec4.Y() * conv_factor, vec4.Z() * conv_factor, vec4.T() };
 
-    return std::make_shared< HepMC3::VectorDoubleAttribute >( temp_vec );
+    return std::make_shared< HepMC3::PreciseVectorDoubleAttribute >( temp_vec );
   }
 
-  // Retrieves a TLorentzVector stored in a HepMC3::VectorDoubleAttribute
+  // Retrieves a TLorentzVector stored in a HepMC3::PreciseVectorDoubleAttribute
   TLorentzVector attribute_to_four_vector(
-    const HepMC3::VectorDoubleAttribute& attr, bool convert_units = false )
+    const HepMC3::PreciseVectorDoubleAttribute& attr, bool convert_units = false )
   {
     // If needed, convert from the position units we've chosen to use in HepMC
     // (cm) to GENIE's native position units (fm)
@@ -1305,7 +1305,7 @@ void genie::HepMC3Converter::StoreInteraction( const genie::Interaction& inter,
     evt.add_attribute( "GENIE.Interaction.HitNucleonP4",
       four_vector_to_attribute(tgt.HitNucP4(), false) );
     evt.add_attribute( "GENIE.Interaction.HitNucleonRadius",
-      std::make_shared< HepMC3::DoubleAttribute >(tgt.HitNucPosition()) );
+      std::make_shared< HepMC3::PreciseDoubleAttribute >(tgt.HitNucPosition()) );
   }
   if ( tgt.HitQrkIsSet() ) {
     evt.add_attribute( "GENIE.Interaction.HitQuarkPDG",
@@ -1345,7 +1345,7 @@ void genie::HepMC3Converter::StoreInteraction( const genie::Interaction& inter,
     evt.add_attribute( "GENIE.Interaction.KineVarLabels",
       std::make_shared< HepMC3::VectorIntAttribute >(kvar_labels) );
     evt.add_attribute( "GENIE.Interaction.KineVarValues",
-      std::make_shared< HepMC3::VectorDoubleAttribute >(kvar_values) );
+      std::make_shared< HepMC3::PreciseVectorDoubleAttribute >(kvar_values) );
   }
 
   // Store data members of the exclusive tag if they differ from their default
@@ -1453,14 +1453,14 @@ genie::Interaction* genie::HepMC3Converter::RetrieveInteraction(
   genie::InitialState istate( tgt_pdg, probe_pdg );
   genie::Target& tgt = *istate.TgtPtr();
 
-  auto probe_p4_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+  auto probe_p4_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
    "GENIE.Interaction.ProbeP4" );
   if ( probe_p4_ptr ) {
     TLorentzVector temp_p4 = attribute_to_four_vector( *probe_p4_ptr, false );
     istate.SetProbeP4( temp_p4 );
   }
 
-  auto tgt_p4_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+  auto tgt_p4_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
     "GENIE.Interaction.TargetP4" );
   if ( tgt_p4_ptr ) {
     TLorentzVector temp_p4 = attribute_to_four_vector( *tgt_p4_ptr, false );
@@ -1474,14 +1474,14 @@ genie::Interaction* genie::HepMC3Converter::RetrieveInteraction(
 
     tgt.SetHitNucPdg( hit_nuc_pdg_ptr->value() );
 
-    auto hit_nuc_p4_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+    auto hit_nuc_p4_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
      "GENIE.Interaction.HitNucleonP4" );
     if ( hit_nuc_p4_ptr ) {
       TLorentzVector temp_p4 = attribute_to_four_vector( *hit_nuc_p4_ptr, false );
       tgt.SetHitNucP4( temp_p4 );
     }
 
-    auto hit_nuc_radius_ptr = evt.attribute< HepMC3::DoubleAttribute >(
+    auto hit_nuc_radius_ptr = evt.attribute< HepMC3::PreciseDoubleAttribute >(
       "GENIE.Interaction.HitNucleonRadius" );
     if ( hit_nuc_radius_ptr ) {
       tgt.SetHitNucPosition( hit_nuc_radius_ptr->value() );
@@ -1519,14 +1519,14 @@ genie::Interaction* genie::HepMC3Converter::RetrieveInteraction(
 
   genie::Kinematics& kine = *inter->KinePtr();
 
-  auto fsl_p4_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+  auto fsl_p4_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
    "GENIE.Interaction.FSLeptonP4" );
   if ( fsl_p4_ptr ) {
     TLorentzVector temp_p4 = attribute_to_four_vector( *fsl_p4_ptr, false );
     kine.SetFSLeptonP4( temp_p4 );
   }
 
-  auto hs_p4_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+  auto hs_p4_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
    "GENIE.Interaction.HadSystP4" );
   if ( hs_p4_ptr ) {
     TLorentzVector temp_p4 = attribute_to_four_vector( *hs_p4_ptr, false );
@@ -1536,7 +1536,7 @@ genie::Interaction* genie::HepMC3Converter::RetrieveInteraction(
   // TODO: add error handling for when only one of these is set
   auto kv_label_ptr = evt.attribute< HepMC3::VectorIntAttribute >(
     "GENIE.Interaction.KineVarLabels" );
-  auto kv_value_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+  auto kv_value_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
     "GENIE.Interaction.KineVarValues" );
   if ( kv_label_ptr && kv_value_ptr ) {
     const auto& label_vec = kv_label_ptr->value();

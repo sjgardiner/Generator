@@ -3233,8 +3233,6 @@ void ConvertFromHepMC3()
       }
   }
 
-  // Remove the last empty event from failed reader
-
   //-- Save the output
   ntpw.Save();
 }

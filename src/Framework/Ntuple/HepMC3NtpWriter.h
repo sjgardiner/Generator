@@ -22,6 +22,7 @@
 #ifdef __GENIE_HEPMC3_INTERFACE_ENABLED__
 
 #include <memory>
+//#include <limits>
 
 #include "Framework/Ntuple/NtpWriterI.h"
 
