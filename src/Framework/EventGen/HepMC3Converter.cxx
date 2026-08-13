@@ -194,8 +194,8 @@ namespace {
         " direct FSI cascade but before de-excitations" } },
 
     { genie::EGHepStatus::kIStIntermediateDeExNuclearRemnant,
-      { 28, "Pre-deexcitation nuclear remnant", "Nuclear remnant after"
-        " direct FSI cascade but before de-excitations" } },
+      { 28, "De-exciting nuclear remnant", "Nuclear remnant after"
+        " direct FSI cascade, with de-excitations started but not concluded" } },
 
     // P.C.2
     { genie::EGHepStatus::kIStFinalStateNuclearRemnant,
@@ -241,7 +241,7 @@ namespace {
 
   // Converts a TLorentzVector to a form suitable for storage as a HepMC3
   // attribute
-  std::shared_ptr< HepMC3::VectorDoubleAttribute > four_vector_to_attribute(
+  std::shared_ptr< HepMC3::PreciseVectorDoubleAttribute > four_vector_to_attribute(
     const TLorentzVector& vec4, bool convert_units = false )
   {
     // If needed, convert from GENIE's native position units (fm) to the ones
@@ -251,12 +251,12 @@ namespace {
     std::vector< double > temp_vec = { vec4.X() * conv_factor,
       vec4.Y() * conv_factor, vec4.Z() * conv_factor, vec4.T() };
 
-    return std::make_shared< HepMC3::VectorDoubleAttribute >( temp_vec );
+    return std::make_shared< HepMC3::PreciseVectorDoubleAttribute >( temp_vec );
   }
 
-  // Retrieves a TLorentzVector stored in a HepMC3::VectorDoubleAttribute
+  // Retrieves a TLorentzVector stored in a HepMC3::PreciseVectorDoubleAttribute
   TLorentzVector attribute_to_four_vector(
-    const HepMC3::VectorDoubleAttribute& attr, bool convert_units = false )
+    const HepMC3::PreciseVectorDoubleAttribute& attr, bool convert_units = false )
   {
     // If needed, convert from the position units we've chosen to use in HepMC
     // (cm) to GENIE's native position units (fm)
@@ -328,7 +328,7 @@ namespace {
 
 }
 //____________________________________________________________________________
-genie::HepMC3Converter::HepMC3Converter()
+genie::HepMC3Converter::HepMC3Converter() : fTuneLoaded(false)
 {
 
 }
@@ -604,6 +604,7 @@ std::shared_ptr< HepMC3::GenEvent > genie::HepMC3Converter::ConvertToHepMC3(
   // E.C.4
   double flux_avg_xsec = gevrec.FluxAvgXSec() / genie::units::picobarn;
   double flux_avg_xsec_err = gevrec.FluxAvgXSecErr() / genie::units::picobarn;
+  if( ! std::isfinite(flux_avg_xsec_err) ) { flux_avg_xsec_err = 1.0e+10 * flux_avg_xsec; }
 
   auto gen_xsec = std::make_shared< HepMC3::GenCrossSection >();
   gen_xsec->set_cross_section( flux_avg_xsec, flux_avg_xsec_err );
@@ -946,6 +947,18 @@ std::shared_ptr< genie::EventRecord > genie::HepMC3Converter::RetrieveGHEP(
 {
   auto gevrec = std::make_shared< genie::EventRecord >();
 
+  // Build the tune.
+  if( !fTuneLoaded ) {
+    auto run_info = evt.run_info();
+    auto tune_ptr = run_info->attribute< HepMC3::StringAttribute >( "GENIE.XSecTune" );
+    if( tune_ptr ) {
+      genie::RunOpt* ro = genie::RunOpt::Instance();
+      ro->SetTuneName(tune_ptr->value());
+      ro->BuildTune();
+      fTuneLoaded = true;
+    }
+  } // loaded tune from hepmc
+
   // Retrieve and store the overall event weight
   double wgt = evt.weight();
   gevrec->SetWeight( wgt );
@@ -972,6 +985,36 @@ std::shared_ptr< genie::EventRecord > genie::HepMC3Converter::RetrieveGHEP(
       size_t mommy_count = mommy_vec.size();
       if ( mommy_count > 0u ) mommy1 = mommy_vec.front()->id() - 1;
       if ( mommy_count > 1u ) mommy2 = mommy_vec.back()->id() - 1;
+
+      // Is there a probe mother?
+      bool probe_is_mother = false; int probe_mom = DUMMY_PARTICLE_INDEX;
+      for( auto itr : mommy_vec ) {
+	if( std::abs((*itr).pid()) > 10 && std::abs((*itr).pid()) <= 16 ) {
+	  probe_is_mother = true; 
+	  probe_mom = (*itr).id() - 1;
+	  break;
+	}
+      }
+      // The only daughter a probe has is the primary lepton.
+      if( probe_is_mother ) {
+	if( std::abs(pdg) > 10 && std::abs(pdg) <= 16 ){
+	  mommy1 = probe_mom;
+	  mommy2 = DUMMY_PARTICLE_INDEX;
+	} else {  // Strike the probe out.
+	  // Due to constness, we have to populate a new vector.
+	  std::vector<int> other_mommy_vec;
+	  for( auto itr : mommy_vec ) {
+	    int this_mom = (*itr).id() - 1;
+	    if( this_mom != probe_mom ) {
+	      other_mommy_vec.push_back( this_mom );
+	    }
+	  } // other mothers
+	  mommy1 = DUMMY_PARTICLE_INDEX;
+	  mommy2 = DUMMY_PARTICLE_INDEX;
+	  if ( other_mommy_vec.size() > 0u ) mommy1 = other_mommy_vec.front();
+	  if ( other_mommy_vec.size() > 1u ) mommy2 = other_mommy_vec.back();
+	}
+      } // probe mother handling
 
       // Nuclear binding energy pseudoparticles are recorded in the GENIE event
       // record as if they were primary (motherless). Ignore the vertex
@@ -1007,6 +1050,39 @@ std::shared_ptr< genie::EventRecord > genie::HepMC3Converter::RetrieveGHEP(
           else dau2 = daughter->id() - 1;
         }
       }
+
+      // Is there a primary lepton daughter?
+      bool prilep_is_daughter = false; int prilep_dau = DUMMY_PARTICLE_INDEX;
+      for( auto itr : dau_vec ) {
+	if( std::abs((*itr).pid()) > 10 && std::abs((*itr).pid()) <= 16 ) {
+	  prilep_is_daughter = true; 
+	  prilep_dau = (*itr).id() - 1;
+	  break;
+	}
+      }
+
+      // The only mother a primary lepton has is a probe.
+      if( prilep_is_daughter ) {
+	if( std::abs(pdg) > 10 && std::abs(pdg) <= 16 ){
+	  dau1 = prilep_dau;
+	  dau2 = prilep_dau;
+	} else {  // Strike the primary lepton out.
+	  // Due to constness, we have to populate a new vector.
+	  std::vector<int> other_dau_vec;
+	  for( auto itr : dau_vec ) {
+	    int this_dau = (*itr).id() - 1;
+	    if( this_dau != prilep_dau ) {
+	      other_dau_vec.push_back( this_dau );
+	    }
+	  } // other mothers
+	  dau1 = DUMMY_PARTICLE_INDEX;
+	  dau2 = DUMMY_PARTICLE_INDEX;
+	  if ( other_dau_vec.size() > 0u ) dau1 = other_dau_vec.front();
+	  if ( other_dau_vec.size() > 1u ) { dau2 = other_dau_vec.back(); }
+	  else { dau2 = dau1; }
+	}
+      } // primary lepton daughter handling
+
     }
 
     gevrec->AddParticle( pdg, status, mommy1, mommy2, dau1, dau2, p4.px(),
@@ -1070,6 +1146,25 @@ std::shared_ptr< genie::EventRecord > genie::HepMC3Converter::RetrieveGHEP(
     auto ps = static_cast< genie::KinePhaseSpace_t >(
       phase_space_ptr->value() );
     gevrec->SetDiffXSec( diff_xsec_ptr->value(), ps );
+  }
+
+  // Total inclusive xsec
+  // Convert from pb (HepMC3 convention) back to cm2 (which is implied in the setter)
+  auto incl_ptr = evt.attribute< HepMC3::DoubleAttribute >(
+      "tot_xs" );
+    if ( incl_ptr ) gevrec->SetTotInclXSec( incl_ptr->value() * genie::units::picobarn );
+
+  // Set the flux-averaged cross section appropriately.
+  if( evt.cross_section() ) {
+    if( evt.cross_section()->xsecs().size() > 0 ) {
+      gevrec->SetFluxAvgXSec( evt.cross_section()->xsecs().front() * genie::units::picobarn );
+    } else { gevrec->SetFluxAvgXSec( 0.0 ); }
+    if( evt.cross_section()->xsec_errs().size() > 0 ) {
+      gevrec->SetFluxAvgXSecErr( evt.cross_section()->xsec_errs().front() * genie::units::picobarn );
+    } else { gevrec->SetFluxAvgXSecErr( 0.0 ); }
+  } else {
+    gevrec->SetFluxAvgXSec( 0.0 );
+    gevrec->SetFluxAvgXSecErr( 0.0 );
   }
 
   genie::Interaction* itr = this->RetrieveInteraction( evt );
@@ -1210,7 +1305,7 @@ void genie::HepMC3Converter::StoreInteraction( const genie::Interaction& inter,
     evt.add_attribute( "GENIE.Interaction.HitNucleonP4",
       four_vector_to_attribute(tgt.HitNucP4(), false) );
     evt.add_attribute( "GENIE.Interaction.HitNucleonRadius",
-      std::make_shared< HepMC3::DoubleAttribute >(tgt.HitNucPosition()) );
+      std::make_shared< HepMC3::PreciseDoubleAttribute >(tgt.HitNucPosition()) );
   }
   if ( tgt.HitQrkIsSet() ) {
     evt.add_attribute( "GENIE.Interaction.HitQuarkPDG",
@@ -1250,7 +1345,7 @@ void genie::HepMC3Converter::StoreInteraction( const genie::Interaction& inter,
     evt.add_attribute( "GENIE.Interaction.KineVarLabels",
       std::make_shared< HepMC3::VectorIntAttribute >(kvar_labels) );
     evt.add_attribute( "GENIE.Interaction.KineVarValues",
-      std::make_shared< HepMC3::VectorDoubleAttribute >(kvar_values) );
+      std::make_shared< HepMC3::PreciseVectorDoubleAttribute >(kvar_values) );
   }
 
   // Store data members of the exclusive tag if they differ from their default
@@ -1358,14 +1453,14 @@ genie::Interaction* genie::HepMC3Converter::RetrieveInteraction(
   genie::InitialState istate( tgt_pdg, probe_pdg );
   genie::Target& tgt = *istate.TgtPtr();
 
-  auto probe_p4_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+  auto probe_p4_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
    "GENIE.Interaction.ProbeP4" );
   if ( probe_p4_ptr ) {
     TLorentzVector temp_p4 = attribute_to_four_vector( *probe_p4_ptr, false );
     istate.SetProbeP4( temp_p4 );
   }
 
-  auto tgt_p4_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+  auto tgt_p4_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
     "GENIE.Interaction.TargetP4" );
   if ( tgt_p4_ptr ) {
     TLorentzVector temp_p4 = attribute_to_four_vector( *tgt_p4_ptr, false );
@@ -1379,14 +1474,14 @@ genie::Interaction* genie::HepMC3Converter::RetrieveInteraction(
 
     tgt.SetHitNucPdg( hit_nuc_pdg_ptr->value() );
 
-    auto hit_nuc_p4_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+    auto hit_nuc_p4_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
      "GENIE.Interaction.HitNucleonP4" );
     if ( hit_nuc_p4_ptr ) {
       TLorentzVector temp_p4 = attribute_to_four_vector( *hit_nuc_p4_ptr, false );
       tgt.SetHitNucP4( temp_p4 );
     }
 
-    auto hit_nuc_radius_ptr = evt.attribute< HepMC3::DoubleAttribute >(
+    auto hit_nuc_radius_ptr = evt.attribute< HepMC3::PreciseDoubleAttribute >(
       "GENIE.Interaction.HitNucleonRadius" );
     if ( hit_nuc_radius_ptr ) {
       tgt.SetHitNucPosition( hit_nuc_radius_ptr->value() );
@@ -1424,14 +1519,14 @@ genie::Interaction* genie::HepMC3Converter::RetrieveInteraction(
 
   genie::Kinematics& kine = *inter->KinePtr();
 
-  auto fsl_p4_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+  auto fsl_p4_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
    "GENIE.Interaction.FSLeptonP4" );
   if ( fsl_p4_ptr ) {
     TLorentzVector temp_p4 = attribute_to_four_vector( *fsl_p4_ptr, false );
     kine.SetFSLeptonP4( temp_p4 );
   }
 
-  auto hs_p4_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+  auto hs_p4_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
    "GENIE.Interaction.HadSystP4" );
   if ( hs_p4_ptr ) {
     TLorentzVector temp_p4 = attribute_to_four_vector( *hs_p4_ptr, false );
@@ -1441,7 +1536,7 @@ genie::Interaction* genie::HepMC3Converter::RetrieveInteraction(
   // TODO: add error handling for when only one of these is set
   auto kv_label_ptr = evt.attribute< HepMC3::VectorIntAttribute >(
     "GENIE.Interaction.KineVarLabels" );
-  auto kv_value_ptr = evt.attribute< HepMC3::VectorDoubleAttribute >(
+  auto kv_value_ptr = evt.attribute< HepMC3::PreciseVectorDoubleAttribute >(
     "GENIE.Interaction.KineVarValues" );
   if ( kv_label_ptr && kv_value_ptr ) {
     const auto& label_vec = kv_label_ptr->value();
