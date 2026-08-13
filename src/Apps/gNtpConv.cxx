@@ -3227,9 +3227,13 @@ void ConvertFromHepMC3()
       // Initialise ntpw after first event, to get the tune right.
       if( ievent == 0 ){ ntpw.Initialize(); }
 
-      ntpw.AddEventRecord(ievent, event.get());
-      ievent++;
+      if( !(reader.failed()) ) {
+	ntpw.AddEventRecord(ievent, event.get());
+	ievent++;
+      }
   }
+
+  // Remove the last empty event from failed reader
 
   //-- Save the output
   ntpw.Save();
