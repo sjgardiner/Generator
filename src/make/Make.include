@@ -662,6 +662,10 @@ LIBRARIES := $(SYSLIBS) \
              $(LOG_LIBRARIES) \
              $(GSL_LIBRARIES) \
              $(GPROF_LIBRARIES) \
+             $(INCL_LIBRARIES) \
+             $(GEANT4_LIBRARIES) \
+             $(HEPMC3_LIBRARIES) \
+             $(MARLEY_LIBRARIES) \
              $(EXTRALIBS)
 
 # Default compiler and preprocessor flags

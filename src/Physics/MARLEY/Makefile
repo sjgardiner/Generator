@@ -37,4 +37,16 @@ else
   $(info $(PACKAGE) not build against MARLEY)
 endif
 
+# MARLEY's own headers (marley/NuclearReaction.hh) unconditionally include
+# HepMC3/*.h, so this package needs the HepMC3 include path too, regardless
+# of whether any GENIE code in this package uses HepMC3 directly.
+ifeq ($(strip $(GOPT_ENABLE_HEPMC3_INTERFACE)),YES)
+  CXXFLAGS               += $(HEPMC3_FLAGS)
+  CPP_INCLUDES           += $(HEPMC3_INCLUDES)
+  ROOT_DICT_GEN_INCLUDES += $(HEPMC3_INCLUDES)
+  EXTRA_EXT_LIBS         += $(HEPMC3_LIBRARIES)
+else
+  $(info $(PACKAGE) not built against HepMC3)
+endif
+
 FORCE:
