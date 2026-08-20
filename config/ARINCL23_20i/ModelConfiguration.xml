@@ -154,8 +154,8 @@ University of Liverpool
   <param type="alg" name="XSecModel@genie::EventGenerator/MEC-NC">         genie::EmpiricalMECPXSec2015/Default  </param>
 
 
-  <param type="alg" name="XSecModel@genie::EventGenerator/MEC-CC-INCL">         genie::EmpiricalMECPXSecINCL/Default </param>
-  <param type="alg" name="XSecModel@genie::EventGenerator/MEC-NC-INCL">         genie::EmpiricalMECPXSecINCL/Default  </param>
+  <param type="alg" name="XSecModel@genie::EventGenerator/MEC-CC-INCL">         genie::SuSAv2MECPXSec/Default </param>
+  <param type="alg" name="XSecModel@genie::EventGenerator/MEC-NC-INCL">         genie::EmpiricalMECPXSec2015/Default  </param>
   <param type="alg" name="XSecModel@genie::EventGenerator/MEC-EM-INCL">         genie::EmpiricalMECPXSecINCL/Default  </param>
 
 
