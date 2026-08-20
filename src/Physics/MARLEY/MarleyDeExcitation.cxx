@@ -104,18 +104,31 @@ void MarleyDeExcitation::ProcessEventRecord(GHepRecord* event) const
   int num_original_genie_particles = event->GetEntries();
   const auto& marley_particles = marley_event->particles();
   int num_marley_particles = marley_particles.size();
+
+  // NucleusDecayer::process_event() restores the event's original momentum
+  // unit before returning (it saves old_p4_unit up front and calls
+  // event.set_units(old_p4_unit, ...) at the end), and that call rescales
+  // every particle currently in the event -- including the ones MARLEY just
+  // added while working internally in MeV -- to match. Since GENIE created
+  // this event in GeV, by this point it should already be back in GeV.
+  // Check the event's actual declared unit rather than assuming MeV: a
+  // blind MeV->GeV conversion here double-converts already-correct GeV
+  // values (confirmed empirically -- see debug trace from event 20).
+  double p4_scale = 1.0;
+  if ( marley_event->momentum_unit() == HepMC3::Units::MEV ) {
+    p4_scale = genie::units::MeV;
+  }
+
   for ( int p = num_original_genie_particles; p < num_marley_particles; ++p ) {
     // Convert the HepMC3 status code to the native GENIE one
     auto& mar_part = marley_particles.at( p );
     genie::GHepStatus_t status
       = hepmc3_conv.GetGHepParticleStatus( mar_part->status() );
 
-    // Get the particle 4-momentum, noting that we need to convert from
-    // MARLEY natural units (MeV) to GENIE natural units (GeV)
+    // Get the particle 4-momentum, already in GENIE's native GeV units
     const HepMC3::FourVector& mom4 = mar_part->momentum();
-    TLorentzVector p4( mom4.px() * genie::units::MeV,
-      mom4.py() * genie::units::MeV, mom4.pz() * genie::units::MeV,
-      mom4.e() * genie::units::MeV );
+    TLorentzVector p4( mom4.px() * p4_scale, mom4.py() * p4_scale,
+      mom4.pz() * p4_scale, mom4.e() * p4_scale );
 
     // Get the parent particle via the production vertex. We will use
     // it to assign a 4-position.
