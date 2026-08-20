@@ -16,6 +16,7 @@
 
 // GENIE includes
 #include "Physics/MARLEY/MarleyInterface.h"
+#include "Framework/Numerical/RandomGen.h"
 
 // MARLEY includes
 #include "marley/JSONConfig.hh"
@@ -62,6 +63,12 @@ void MarleyInterface::LoadConfig(void)
   full_path += "/data/evgen/marley/" + config_file_name;
   marley::JSONConfig jc( full_path );
   fMarleyGenerator = jc.create_generator();
+
+  // Seed the MARLEY random number generator using the GENIE seed
+  genie::RandomGen* rnd = RandomGen::Instance();
+  long int genie_seed = rnd->GetSeed();
+  uint_fast64_t marley_seed = static_cast< uint_fast64_t >( genie_seed );
+  fMarleyGenerator.reseed( marley_seed );
 }
 //____________________________________________________________________________
 marley::Generator* MarleyInterface::GetMarleyGenerator() const {
