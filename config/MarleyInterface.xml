@@ -8,4 +8,15 @@
 
   </param_set>
 
+  <!-- For MarleyDeExcitation: no primary interaction is generated, so
+       "reactions"/"source" are left null (MARLEY skips that setup and
+       just logs "Null reactions array..."/"Null source specification...").
+       Kept separate from Default so the full-interaction (MarleyGenerator)
+       pathway's myconfig.js is untouched. -->
+  <param_set name="DeExcitationOnly">
+
+     <param type="string" name="ConfigFileName"> deexcitation_only.js </param>
+
+  </param_set>
+
 </alg_conf>
