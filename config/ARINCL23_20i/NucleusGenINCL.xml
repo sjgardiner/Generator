@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+Tune-scoped override for ARINCL23_20i. Identical to the top-level
+config/NucleusGenINCL.xml "Default" param_set except inclxx-de-excitation,
+switched OFF here. genie::MarleyDeExcitation is wired in as the
+de-excitation step for all 8 of this tune's "Default"-generator-list
+channels (see EventGenerator.xml) instead of INCL's own built-in ABLA07 call.
+-->
+
+<alg_conf>
+
+  <param_set name="Default">
+      <param type="string" name="inclxx-data-dir"    >   ${INCLXX_DATA_DIR}/share/data </param>
+      <param type="string" name="inclxx-ablaxx-dir"  >   ${INCLXX_DATA_DIR}/share/de-excitation/ablaxx/upstream/data/G4ABLA3.0/ </param>
+      <param type="string" name="inclxx-abla07-dir"  >   ${INCLXX_DATA_DIR}/share/de-excitation/abla07/upstream/tables/ </param>
+      <param type="string" name="inclxx-geminixx-dir">   ${INCLXX_DATA_DIR}/share/de-excitation/geminixx/upstream/ </param>
+    <param type="string" name="inclxx-de-excitation" > OFF </param>
+    <param type="string" name="inclxx-potential" > IsospinEnergyPotential </param>
+    <param type="string" name="inclxx-pauli-block" > StrictStatisticalPauli </param>
+    <param type="string" name="local-energy-BB" > first-collision </param>
+    <param type="string" name="local-energy-pi" > first-collision </param>
+    <param type="double" name="hadronizationTime" > 0.0 </param>
+  </param_set>
+
+</alg_conf>
