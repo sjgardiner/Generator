@@ -23,16 +23,16 @@
    -->
 
   <priority msgstream="Messenger">             NOTICE </priority>
-  <priority msgstream="EventLoop">             DEBUG  </priority>
-  <priority msgstream="GCPlex">                DEBUG  </priority>
-  <priority msgstream="GSimFiles">             DEBUG  </priority>
-  <priority msgstream="MiniBooNE">             DEBUG  </priority>
+  <priority msgstream="EventLoop">             WARN  </priority>
+  <priority msgstream="GCPlex">                WARN  </priority>
+  <priority msgstream="GSimFiles">             WARN  </priority>
+  <priority msgstream="MiniBooNE">             WARN  </priority>
 
   <priority msgstream="AhrensNCEL">            WARN   </priority>
   <!-- EDIT: add notification for DM EL algorithm -->
   <priority msgstream="AhrensDMEL">            WARN   </priority>
 
-  <priority msgstream="AlgFactory">            INFO   </priority>
+  <priority msgstream="AlgFactory">            WARN   </priority>
   <priority msgstream="Algorithm">             WARN   </priority>
   <priority msgstream="AlgConfigPool">         WARN   </priority>
   <priority msgstream="AlvarezRusoCohPi">      WARN   </priority>
@@ -40,7 +40,7 @@
   <priority msgstream="SKXSec">                INFO   </priority>
   <priority msgstream="SKKinematics">          INFO   </priority>
   <priority msgstream="SKLepton">              INFO   </priority>
-  <priority msgstream="SKHadron">              DEBUG  </priority>
+  <priority msgstream="SKHadron">              WARN  </priority>
   <priority msgstream="BardinIMD">             NOTICE </priority>
   <priority msgstream="BaryonResList">         WARN   </priority>
   <priority msgstream="BaryonResUtils">        WARN   </priority>
@@ -69,8 +69,8 @@
   <priority msgstream="COHHadronicVtx">        WARN   </priority>
   <priority msgstream="COHKinematics">         WARN   </priority>
   <priority msgstream="DarkSectorDecayer">     NOTICE </priority>
-  <priority msgstream="DFRHadronicVtx">        DEBUG  </priority>
-  <priority msgstream="DFRKinematics">         DEBUG  </priority>
+  <priority msgstream="DFRHadronicVtx">        WARN  </priority>
+  <priority msgstream="DFRKinematics">         WARN  </priority>
   <priority msgstream="Decay">                 NOTICE </priority>
   <priority msgstream="DISSF">                 NOTICE </priority>
   <priority msgstream="DISXSec">               NOTICE </priority>
@@ -118,23 +118,27 @@
   <priority msgstream="IMDAnnihilation">       WARN   </priority>
   <priority msgstream="IntSel">                WARN </priority>
   <priority msgstream="IntLst">                NOTICE </priority>
-  <priority msgstream="Interaction">           NOTICE </priority>
+  <priority msgstream="Interaction">           ERROR </priority>
   <priority msgstream="Intranuke">             WARN   </priority>
   <priority msgstream="Intranuke2018">         WARN   </priority>
-  <priority msgstream="Intranuke2019">         WARN   </priority>
+  <priority msgstream="Intranuke2025">         WARN   </priority>
   <priority msgstream="HAIntranuke">           WARN   </priority>
   <priority msgstream="HAIntranuke2018">       WARN   </priority>
-  <priority msgstream="HAIntranuke2019">       WARN   </priority>
+  <priority msgstream="HAIntranuke2025">       WARN   </priority>
   <priority msgstream="HNIntranuke">           NOTICE </priority>
   <priority msgstream="HNIntranuke2018">       NOTICE </priority>
-  <priority msgstream="HNIntranuke2019">       NOTICE </priority>
+  <priority msgstream="HNIntranuke2025">       NOTICE </priority>
   <priority msgstream="INukeData">             NOTICE </priority>
   <priority msgstream="INukeData2018">         NOTICE </priority>
-  <priority msgstream="INukeData2019">         NOTICE </priority>
+  <priority msgstream="INukeData2025">         NOTICE </priority>
   <priority msgstream="INukeUtils">            NOTICE </priority>
   <priority msgstream="INukeUtils2018">        NOTICE </priority>
-  <priority msgstream="INukeUtils2019">        NOTICE </priority>
+  <priority msgstream="INukeUtils2025">        NOTICE </priority>
   <priority msgstream="HINCLCascadeIntranuke"> NOTICE </priority>
+  <priority msgstream="INCLCascadeIntranuke">  WARN </priority>
+  <priority msgstream="INCLNucleus">  WARN </priority>
+  <priority msgstream="INCLQELXSec">  DEBUG </priority>
+  <priority msgstream="NucleusGenHybridStruck">  NOTICE </priority>
   <priority msgstream="HG4BertCascIntranuke">  NOTICE </priority>
   <priority msgstream="INukeNucleonCorr">      NOTICE </priority>
   <priority msgstream="TwoBodyCollision">      NOTICE </priority>
@@ -156,7 +160,7 @@
   <priority msgstream="Nieves">                NOTICE </priority>
   <priority msgstream="NucDeEx">               WARN   </priority>
   <priority msgstream="NucleonDecay">          NOTICE </priority>
-  <priority msgstream="ResonanceDecay">        WARN </priority>
+  <priority msgstream="ResonanceDecay">        NOTICE </priority>
   <priority msgstream="NucleonP">              INFO   </priority>
   <priority msgstream="Nuclear">               NOTICE </priority>
   <priority msgstream="Numerical">             INFO   </priority>
@@ -167,7 +171,7 @@
   <priority msgstream="NuEKinematics">         INFO   </priority>
   <priority msgstream="PartonModel">           INFO   </priority>
   <priority msgstream="PauliBlock">            NOTICE </priority>
-  <priority msgstream="ParticleDecayer">       NOTICE </priority>
+  <priority msgstream="ParticleDecayer">       WARN   </priority>
   <priority msgstream="PaschLal">              INFO   </priority>
   <priority msgstream="PythiaDec">             WARN </priority>
   <priority msgstream="Pythia6Decay">          WARN </priority>
@@ -180,7 +184,7 @@
   <priority msgstream="PhysUtil">              WARN   </priority>
   <priority msgstream="QELXSec">               NOTICE </priority>
   <priority msgstream="QELCharmXSec">          NOTICE </priority>
-  <priority msgstream="QELEvent">              NOTICE </priority>
+  <priority msgstream="QELEvent">              ERROR </priority>
   <priority msgstream="QELHadronicVtx">        WARN   </priority>
   <priority msgstream="QELKinematics">         WARN   </priority>
   <priority msgstream="RESXSec">               INFO   </priority>

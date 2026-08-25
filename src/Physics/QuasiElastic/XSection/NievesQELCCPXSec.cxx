@@ -352,7 +352,7 @@ double NievesQELCCPXSec::Integral(const Interaction * in) const
   // let the cross section integrator do all of the work. It's smart
   // enough to handle free nucleon vs. nuclear targets, different
   // nuclear models (including the local Fermi gas model), etc.
-  if ( fXSecIntegrator->Id().Name() == "genie::NewQELXSec" ) {
+  if ( fXSecIntegrator->Id().Name() == "genie::NewQELXSec" || fXSecIntegrator->Id().Name() == "genie::INCLQELXSec" ) {
     return fXSecIntegrator->Integrate(this, in);
   }
   else {

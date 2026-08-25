@@ -11,7 +11,7 @@
 \created  November 20, 2004
 
 \cpright  Copyright (c) 2003-2025, The GENIE Collaboration
-          For the full text of the license visit http://copyright.genie-mc.org  
+          For the full text of the license visit http://copyright.genie-mc.org
 */
 //____________________________________________________________________________
 
@@ -36,7 +36,13 @@ typedef enum EGHepStatus {
    kIStPreDecayResonantState      = 13,
    kIStHadronInTheNucleus         = 14,   /* hadrons inside the nucleus: marked for hadron transport modules to act on */
    kIStFinalStateNuclearRemnant   = 15,   /* low energy nuclear fragments entering the record collectively as a 'hadronic blob' pseudo-particle */
-   kIStNucleonClusterTarget       = 16    // for composite nucleons before phase space decay
+   kIStNucleonClusterTarget       = 16,    // for composite nucleons before phase space decay
+   kIStPreDeExNuclearRemnant      = 17,   /* remnant nucleus before de-excitation */
+   kIStDeExFinalState             = 18,   /* generator-level final state: particles from de-excitation */
+   kIStSpectator                  = 19,   /* the spectator particle in FSI collision */
+   kIStFormZone                   = 20,   // for hadrons about to traverse their formation zone
+   kIStIntermediateDeExNuclearRemnant = 21, // Nucleus at an intermediate de-excitation stage
+
 }
 GHepStatus_t;
 

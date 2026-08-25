@@ -536,6 +536,16 @@ void GHepParticle::AssertIsKnownParticle(void) const
 {
   TParticlePDG * p = PDGLibrary::Instance()->Find(fPdgCode);
   if(!p) {
+#ifdef __GENIE_INCL_ENABLED__
+    int S = (fPdgCode/int(1e7))%10;
+    if(S != 0){
+      PDGLibrary::Instance()->AddHypernucleus(fPdgCode);
+      return;
+    } else if(fPdgCode > int(1e9)) {
+      PDGLibrary::Instance()->AddVirtualCluster(fPdgCode);
+      return;
+    }
+#endif
     LOG("GHepParticle", pFATAL)
       << "\n** You are attempting to insert particle with PDG code = "
       << fPdgCode << " into the event record."

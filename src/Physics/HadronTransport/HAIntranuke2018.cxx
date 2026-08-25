@@ -334,6 +334,8 @@ INukeFateHA_t HAIntranuke2018::HadronFateHA(const GHepParticle * p) const
                    frac_cmp;  //suarez edit, cmp
 
        double r = tf * rnd->RndFsi().Rndm();
+
+       std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << "  " << frac_cex << " " << frac_inel << " " << frac_abs << " " << frac_pipro << "  " << tf << std::endl;
 #ifdef __GENIE_LOW_LEVEL_MESG_ENABLED__
        LOG("HAIntranuke2018", pDEBUG) << "r = " << r << " (max = " << tf << ")";
 #endif

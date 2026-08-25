@@ -8,6 +8,8 @@
 */
 //____________________________________________________________________________
 
+#include "Framework/Conventions/GBuild.h"
+
 #include <algorithm>
 #include <sstream>
 
@@ -18,7 +20,13 @@
 #include "Framework/Messenger/Messenger.h"
 #include "Framework/Registry/Registry.h"
 #include "Framework/Utils/StringUtils.h"
+#include "Framework/Algorithm/AlgConfigPool.h"
 #include "Physics/Decay/Decayer.h"
+
+#ifdef __GENIE_INCL_ENABLED__
+#include "G4INCLParticleSpecies.hh"
+#endif
+
 
 using std::count;
 using std::ostringstream;
@@ -100,6 +108,17 @@ bool Decayer::IsUnstable(int pdg_code) const
     // At this point we decay only baryon resonances
     //
     bool decay = utils::res::IsBaryonResonance(pdg_code);
+#ifdef __GENIE_INCL_ENABLED__
+    if(fINCLHadronTranspMode){
+      LOG("Decay", pDEBUG) << "Decay hadron resonance before running INCL FSI mode!";
+      bool incl_unstable = false;
+      G4INCL::ParticleSpecies pSpec(pdg_code);
+      if(pSpec.theType == G4INCL::UnknownParticle && std::abs(pdg_code) > 99){ //  FIXME: need to be checked: leptons and fundamental paricles have pdg code < 100 
+        incl_unstable = true;
+      }
+      decay = incl_unstable;
+    }
+#endif
     return decay;
   }
   else {
@@ -162,6 +181,21 @@ void Decayer::LoadConfig(void)
 
   // Allow user to specify a list of particles to be decayed
   //
+#ifdef __GENIE_INCL_ENABLED__
+  fINCLHadronTranspMode = false;
+  AlgConfigPool * conf_pool = AlgConfigPool::Instance();
+  Registry * gpl = conf_pool->GlobalParameterList();
+  RgAlg xsec_alg = gpl->GetAlg("HadronTransp-Model");
+  bool fDeltaTransp = true;
+  //bool fDeltaTransp = gpl->GetBool("DeltaTransp-Enable");
+  LOG("Decay", pDEBUG) << xsec_alg;
+  if(xsec_alg.name == "genie::INCLCascadeIntranuke" && fDeltaTransp){
+      fINCLHadronTranspMode = true;
+  }
+#endif
+
+
+
   RgKeyList klist = GetConfig().FindKeys("DecayParticleWithCode=");
   RgKeyList::const_iterator kiter = klist.begin();
   for( ; kiter != klist.end(); ++kiter) {

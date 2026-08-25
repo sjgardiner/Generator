@@ -42,6 +42,10 @@
    	       * `rootracker_mock_data': 
                      As the `rootracker' format but hiddes all information
                      except the final state particles.
+	       * `hepmc': [Assuming HepMC3 is enabled]
+	             A HepMC3 compliant text record.
+	       * `revhepmc': [Assuming HepMC3 is enabled]
+	             Reads in HepMC3 to GHEP.
               >>
 	      >> Experiment-specific formats:
               >>
@@ -89,6 +93,8 @@
                `nuance_tracker'       -> *.gtrac_legacy.dat
                `ghad'                 -> *.ghad.dat
                `ginuke'               -> *.ginuke.root
+	       `hepmc'                -> *.hepmc.txt
+	       `revhepmc'             -> *.ghep.root
            --seed
               Random number seed.
          --message-thresholds
@@ -168,6 +174,13 @@
 #include "Physics/BeamHNL/HNLFluxContainer.h"
 #endif
 
+#ifdef __GENIE_HEPMC3_INTERFACE_ENABLED__
+#include "Framework/EventGen/HepMC3Converter.h"
+#include "Framework/Ntuple/HepMC3NtpWriter.h"
+#include "HepMC3/ReaderAscii.h"
+#include <limits>
+#endif
+
 //define __GHAD_NTP__
 
 using std::string;
@@ -192,6 +205,10 @@ void   ConvertToGTracker         (void);
 void   ConvertToGRooTracker      (void);
 void   ConvertToGHad             (void);
 void   ConvertToGINuke           (void);
+#ifdef __GENIE_HEPMC3_INTERFACE_ENABLED__
+void   ConvertToHepMC3           (void);
+void   ConvertFromHepMC3         (void);
+#endif
 void   GetCommandLineArgs        (int argc, char ** argv);
 void   PrintSyntax               (void);
 string DefaultOutputFile         (void);
@@ -215,7 +232,9 @@ typedef enum EGNtpcFmt {
   kConvFmt_t2k_tracker,
   kConvFmt_nuance_tracker,
   kConvFmt_ghad,
-  kConvFmt_ginuke
+  kConvFmt_ginuke,
+  kConvFmt_hepmc,
+  kConvFmt_revhepmc,
 } GNtpcFmt_t;
 
 //input options (from command line arguments):
@@ -288,6 +307,18 @@ int main(int argc, char ** argv)
 	ConvertToGINuke();         
 	break;
 
+#ifdef __GENIE_HEPMC3_INTERFACE_ENABLED__
+   case (kConvFmt_hepmc) :
+
+        ConvertToHepMC3();
+	break;
+
+   case (kConvFmt_revhepmc) :
+
+        ConvertFromHepMC3();
+	break;
+#endif
+
    default:
      LOG("gntpc", pFATAL)
           << "Invalid output format [" << gOptOutFileFormat << "]";
@@ -353,6 +384,8 @@ void ConvertToGST(void)
   double brPyv         = 0;      // Neutrino py @ LAB
   double brPzv         = 0;      // Neutrino pz @ LAB
   double brEn          = 0;      // Initial state hit nucleon energy @ LAB
+  double brPn          = 0;      // Initial state hit nucleon p @ LAB
+  double brCosthn      = 0;      // Initial state hit nucleon cos(theta)p @ LAB
   double brPxn         = 0;      // Initial state hit nucleon px @ LAB
   double brPyn         = 0;      // Initial state hit nucleon py @ LAB
   double brPzn         = 0;      // Initial state hit nucleon pz @ LAB
@@ -382,6 +415,16 @@ void ConvertToGST(void)
   int    brNiK0        = 0;      // Nu. of `primary' K0's + \bar{K0}'s 
   int    brNiEM        = 0;      // Nu. of `primary' gammas and e-/e+ 
   int    brNiOther     = 0;      // Nu. of other `primary' hadron shower particles
+  int    brNpar        = 0;      // Nu. of paritcle in event record
+  int    brPDG_evtre   [kNPmax]; // Pdg    of paritcle in event record
+  int    brFirstMother_evtre[kNPmax]; // Index  of first mother of paritcle in event record
+  int    brLastMother_evtre[kNPmax]; // Index  of last mother of paritcle in event record
+  int    brStatus_evtre[kNPmax]; // Status of paritcle in event record
+  double brPx_evtre[kNPmax];     // Px     of paritcle in event record
+  double brPy_evtre[kNPmax];     // Py     of paritcle in event record
+  double brPz_evtre[kNPmax];     // Pz     of paritcle in event record
+  double brE_evtre[kNPmax];      // E      of paritcle in event record
+  double brE_exci;               // E      of remnant excited energy
   int    brNf          = 0;      // Nu. of final state particles in hadronic system
   int    brPdgf  [kNPmax];       // Pdg code of k^th final state particle in hadronic system
   double brEf    [kNPmax];       // Energy     of k^th final state particle in hadronic system @ LAB
@@ -462,12 +505,14 @@ void ConvertToGST(void)
   s_tree->Branch("t",	          &brKineT,	    "t/D"	    );
   s_tree->Branch("Q2",	          &brKineQ2,        "Q2/D"	    );
   s_tree->Branch("W",	          &brKineW,	    "W/D"	    );
-  s_tree->Branch("EvRF",	      &brEvRF,	    "EvRF/D"	    );
+  s_tree->Branch("EvRF",	  &brEvRF,	    "EvRF/D"	    );
   s_tree->Branch("Ev",	          &brEv,	    "Ev/D"	    );
   s_tree->Branch("pxv",	          &brPxv,	    "pxv/D"	    );
   s_tree->Branch("pyv",	          &brPyv,	    "pyv/D"	    );
   s_tree->Branch("pzv",	          &brPzv,	    "pzv/D"	    );
   s_tree->Branch("En",	          &brEn,	    "En/D"	    );
+  s_tree->Branch("pn",	          &brPn,	    "pn/D"	    );
+  s_tree->Branch("cthn",	  &brCosthn,	    "cthn/D"	    );
   s_tree->Branch("pxn",	          &brPxn,	    "pxn/D"	    );
   s_tree->Branch("pyn",	          &brPyn,	    "pyn/D"	    );
   s_tree->Branch("pzn",	          &brPzn,	    "pzn/D"	    );
@@ -497,6 +542,16 @@ void ConvertToGST(void)
   s_tree->Branch("nik0",          &brNiK0,	    "nik0/I"	    );
   s_tree->Branch("niem",          &brNiEM,	    "niem/I"	    );
   s_tree->Branch("niother",       &brNiOther,       "niother/I"     );
+  s_tree->Branch("npar",	  &brNpar,	    "npar/I"	    );
+  s_tree->Branch("pdg_evtre",	           brPDG_evtre,	    "pdg_evtre[npar]/I"   );
+  s_tree->Branch("first_mother_evtre",	   brFirstMother_evtre,	    "first_mother_evtre[npar]/I");
+  s_tree->Branch("last_mother_evtre",	   brLastMother_evtre,	    "last_mother_evtre[npar]/I");
+  s_tree->Branch("status_evtre",	   brStatus_evtre,	    "status_evtre[npar]/I");
+  s_tree->Branch("px_evtre",	   brPx_evtre,	    "px_evtre[npar]/D");
+  s_tree->Branch("py_evtre",	   brPy_evtre,	    "py_evtre[npar]/D");
+  s_tree->Branch("pz_evtre",	   brPz_evtre,	    "pz_evtre[npar]/D");
+  s_tree->Branch("E_evtre",	   brE_evtre,	    "E_evtre[npar]/D");
+  s_tree->Branch("E_exci",	   &brE_exci,	    "E_exci/D");
   s_tree->Branch("ni",	         &brNi,	            "ni/I"	    );
   s_tree->Branch("pdgi",          brPdgi,	    "pdgi[ni]/I"   );
   s_tree->Branch("resc",          brResc,	    "resc[ni]/I"   );
@@ -767,9 +822,6 @@ void ConvertToGST(void)
     bool study_hadsyst = (is_qel || is_res || is_dis || is_coh || is_dfr || is_mec || is_singlek || is_hnl);
     
     //
-    TObjArrayIter piter(&event);
-    GHepParticle * p = 0;
-    int ip=-1;
 
     //
     // Extract the final state system originating from the hadronic vertex 
@@ -778,6 +830,31 @@ void ConvertToGST(void)
 
     LOG("gntpc", pDEBUG) << "Extracting final state hadronic system";
 
+    TObjArrayIter piter1(&event);
+    GHepParticle * pp = 0;
+    brNpar=0;
+    while( (pp = (GHepParticle *) piter1.Next())){
+      brPDG_evtre[brNpar] = pp->Pdg();
+      brFirstMother_evtre[brNpar] = pp->FirstMother();
+      brLastMother_evtre[brNpar] = pp->LastMother();
+      brStatus_evtre[brNpar] = pp->Status();
+      brPx_evtre[brNpar] = pp->P4()->Px();
+      brPy_evtre[brNpar] = pp->P4()->Py();
+      brPz_evtre[brNpar] = pp->P4()->Pz();
+      brE_evtre[brNpar] = pp->P4()->E();
+      brNpar++;
+      if(pp->Status() == kIStNucleonTarget){
+ //       pp->X4()->Print();
+	      vtx = pp->X4();
+      }
+      if(pp->Status() == kIStPreDeExNuclearRemnant){
+        brE_exci = pp->P4()->M() - pp->Mass();
+      }
+    }
+
+    TObjArrayIter piter(&event);
+    GHepParticle * p = 0;
+    int ip=-1;
     vector<int> final_had_syst;
     while( (p = (GHepParticle *) piter.Next()) && study_hadsyst)
     {
@@ -984,6 +1061,8 @@ void ConvertToGST(void)
     brPyv        = k1.Py();  
     brPzv        = k1.Pz();  
     brEn         = (hitnucl) ? p1.Energy() : 0;      
+    brPn         = (hitnucl) ? p1.P() : 0;      
+    brCosthn         = (hitnucl) ? TMath::Cos( p1.Vect().Angle(k1.Vect()) ) : 0;      
     brPxn        = (hitnucl) ? p1.Px()     : 0;      
     brPyn        = (hitnucl) ? p1.Py()     : 0;      
     brPzn        = (hitnucl) ? p1.Pz()     : 0;            
@@ -3061,6 +3140,103 @@ TTree * tEvtTree = new TTree("ginuke","GENIE INuke Summary Tree");
 
   LOG("gntpc", pINFO) << "\nDone converting GENIE's GHEP ntuple";
 }
+#ifdef __GENIE_HEPMC3_INTERFACE_ENABLED__
+//____________________________________________________________________________________
+// GENIE GHEP EVENT TREE -> HepMC3 ASCII FORMAT
+//____________________________________________________________________________________
+void ConvertToHepMC3()
+{
+  //-- open the ROOT file and get the TTree & its header
+  TFile fin(gOptInpFileName.c_str(),"READ");
+  TTree *           tree = 0;
+  NtpMCTreeHeader * thdr = 0;
+  tree = dynamic_cast <TTree *>           ( fin.Get("gtree")  );
+  thdr = dynamic_cast <NtpMCTreeHeader *> ( fin.Get("header") );
+        
+  // Before adding to the event record: make sure tune name is got from the EventRecord
+  std::string tune_name = (thdr->tune).GetString().Data();
+  RunOpt::Instance()->SetTuneName(tune_name);
+  RunOpt::Instance()->BuildTune();
+  LOG("gntpc", pINFO) << "Input tree header: " << *thdr;
+   
+  //-- get mc record
+  NtpMCEventRecord * mcrec = 0;
+  tree->SetBranchAddress("gmcrec", &mcrec);
+        
+  //-- figure out how many events to analyze
+  Long64_t nmax = (gOptN<0) ?
+       tree->GetEntries() : TMath::Min(tree->GetEntries(), gOptN);
+  if (nmax<0) {
+    LOG("gntpc", pERROR) << "Number of events = 0";
+    return;
+  }
+  LOG("gntpc", pNOTICE) << "*** Analyzing: " << nmax << " events";
+
+  // Use HepMC3NtpWriter and HepMC3Converter to write out.
+  std::shared_ptr<HepMC3NtpWriter> hepmc_ntp_writer = 
+    std::make_shared< HepMC3NtpWriter >();
+  hepmc_ntp_writer->CustomizeFilename( gOptOutFileName );
+  hepmc_ntp_writer->Initialize();
+
+  LOG("gntpc", pNOTICE) 
+       << "*** Saving HepMC3 ASCII record to: " << gOptOutFileName;
+  
+  //-- event loop
+  for(Long64_t iev = 0; iev < nmax; iev++) {
+    tree->GetEntry(iev);
+    NtpMCRecHeader rec_header = mcrec->hdr;
+    EventRecord *  event      = mcrec->event;
+
+    LOG("gntpc", pINFO) << rec_header;
+    LOG("gntpc", pINFO) << *event;
+    hepmc_ntp_writer->AddEventRecord(iev, event);
+  } // end event loop
+
+  // Save the generated MC events
+  hepmc_ntp_writer->Save();
+}
+//____________________________________________________________________________________
+// HepMC3 ASCII FORMAT -> GENIE GHEP EVENT TREE
+//____________________________________________________________________________________
+void ConvertFromHepMC3()
+{
+  //-- open the input ASCII file
+  HepMC3::ReaderAscii reader(gOptInpFileName.c_str());
+
+  // figure out how many input events to analyse
+  Long64_t nmax = (gOptN <= 0) ? std::numeric_limits<long long>::max() : gOptN;
+
+  // Use HepMC3NtpWriter and HepMC3Converter to write out.
+  std::shared_ptr<HepMC3Converter> hepmc_converter = 
+    std::make_shared< HepMC3Converter >();
+  
+  //-- open output file
+  NtpWriter ntpw(kNFGHEP);
+  ntpw.CustomizeFilename( gOptOutFileName );
+
+  LOG("gntpc", pNOTICE) 
+       << "*** Saving GHEP event record to: " << gOptOutFileName;
+
+  Long64_t ievent = 0;
+  while( ! (reader.failed() || ievent >= nmax ) ) {
+      HepMC3::GenEvent hepevt;
+      reader.read_event(hepevt);
+
+      std::shared_ptr<EventRecord> event = hepmc_converter->RetrieveGHEP(hepevt);
+
+      // Initialise ntpw after first event, to get the tune right.
+      if( ievent == 0 ){ ntpw.Initialize(); }
+
+      if( !(reader.failed()) ) {
+	ntpw.AddEventRecord(ievent, event.get());
+	ievent++;
+      }
+  }
+
+  //-- Save the output
+  ntpw.Save();
+}
+#endif
 //____________________________________________________________________________________
 // FUNCTIONS FOR PARSING CMD-LINE ARGUMENTS 
 //____________________________________________________________________________________
@@ -3111,6 +3287,16 @@ void GetCommandLineArgs(int argc, char ** argv)
     else if (fmt == "nuance_tracker" )       { gOptOutFileFormat = kConvFmt_nuance_tracker;        }
     else if (fmt == "ghad")                  { gOptOutFileFormat = kConvFmt_ghad;                  }
     else if (fmt == "ginuke")                { gOptOutFileFormat = kConvFmt_ginuke;                }
+#ifdef __GENIE_HEPMC3_INTERFACE_ENABLED__
+    else if (fmt == "hepmc")                 { gOptOutFileFormat = kConvFmt_hepmc;                 }
+    else if (fmt == "revhepmc")              { gOptOutFileFormat = kConvFmt_revhepmc;              }
+#else
+    else if (fmt == "hepmc" || fmt == "revhepmc") {
+    LOG("gntpc", pFATAL) << "Requested HepMC3 compliant format " << fmt << " but HepMC3 is not enabled."
+			 << " GENIE will produce an exception and exit."
+			 << "\n\tFor HepMC3, please rebuild GENIE against the HepMC3 libraries and configure GENIE with the `--enable-hepmc3' flag.";
+    }
+#endif
     else                                     { gOptOutFileFormat = kConvFmt_undef;                 }
 
     if(gOptOutFileFormat == kConvFmt_undef) {
@@ -3197,6 +3383,10 @@ string DefaultOutputFile(void)
   else if (gOptOutFileFormat == kConvFmt_nuance_tracker       ) { ext = "gtrac_legacy.dat"; }
   else if (gOptOutFileFormat == kConvFmt_ghad                 ) { ext = "ghad.dat";         }
   else if (gOptOutFileFormat == kConvFmt_ginuke               ) { ext = "ginuke.root";      }
+#ifdef __GENIE_HEPMC3_INTERFACE_ENABLED__
+  else if (gOptOutFileFormat == kConvFmt_hepmc                ) { ext = "hepmc.txt";        }
+  else if (gOptOutFileFormat == kConvFmt_revhepmc             ) { ext = "ghep.root";        }
+#endif
 
   string inpname = gOptInpFileName;
   unsigned int L = inpname.length();
