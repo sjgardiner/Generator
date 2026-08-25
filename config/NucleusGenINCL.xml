@@ -14,7 +14,6 @@ inclxx-de-excitation          string  yes        options for deexcitation model 
                                                  - ABLA07
                                                  - ABLAXX
                                                  - GEMINIXX
-                                                 - OFF
 inclxx-potential              string  yes        options for potential energy                      IsospinEnergyPotential
                                                  - IsospinEnergyPotential 
                                                  - IsospinEnergySmoothPotential 
@@ -37,51 +36,60 @@ local-energy-BB               string  yes        options for local energy pi-N c
 hadronizationTime             double  yes        Hadronization time, in fm/c. Particles            0.0
                                                  emerging from collisions are forbidden
                                                  to recollide within this time.
+cluster-algorithm             string  yes        cluster-algorithm                                 intercomparison
+                                                 - intercomparison
+                                                 - none
 .............................................................................................................
 -->
 
 <alg_conf>
   <param_set name="Default">
-      <param type="string" name="inclxx-data-dir"    >   ${INCLXX_DATA_DIR}/share/data </param>
-      <param type="string" name="inclxx-ablaxx-dir"  >   ${INCLXX_DATA_DIR}/share/de-excitation/ablaxx/upstream/data/G4ABLA3.0/ </param>
-      <param type="string" name="inclxx-abla07-dir"  >   ${INCLXX_DATA_DIR}/share/de-excitation/abla07/upstream/tables/ </param>
-      <param type="string" name="inclxx-geminixx-dir">   ${INCLXX_DATA_DIR}/share/de-excitation/geminixx/upstream/ </param>
-    <param type="string" name="inclxx-de-excitation" > ABLA07 </param>
-    <param type="string" name="inclxx-potential" > IsospinEnergyPotential </param>
-    <param type="string" name="inclxx-pauli-block" > StrictStatisticalPauli </param>
-    <param type="string" name="local-energy-BB" > first-collision </param>
-    <param type="string" name="local-energy-pi" > first-collision </param>
-    <param type="double" name="hadronizationTime" > 0.0 </param>
+      <param type="string" name="inclxx-data-dir"    >   ${INCLXX_DATA_DIR}/data </param>
+      <param type="string" name="inclxx-ablaxx-dir"  >   ${INCLXX_DATA_DIR}/de-excitation/ablaxx/upstream/data/G4ABLA3.0/ </param>
+      <param type="string" name="inclxx-abla07-dir"  >   ${INCLXX_DATA_DIR}/de-excitation/abla07/upstream/tables/ </param>
+      <param type="string" name="inclxx-geminixx-dir">   ${INCLXX_DATA_DIR}/de-excitation/geminixx/upstream/ </param>
+      <param type="string" name="inclxx-de-excitation" > ABLAXX </param>
+      <param type="string" name="inclxx-potential" > IsospinEnergyPotential </param>
+      <param type="string" name="inclxx-pauli-block" > StrictStatisticalPauli </param>
+      <param type="string" name="local-energy-BB" > first-collision </param>
+      <param type="string" name="local-energy-pi" > first-collision </param>
+      <param type="double" name="hadronizationTime" > 0.0 </param>
+      <param type="string" name="cluster-algorithm" > intercomparison </param>
+  </param_set>
+  
+  <param_set name="Default-Legacy">
+      <param type="string" name="inclxx-data-dir"    >   ${INCLXX_DATA_DIR}/data </param>
+      <param type="string" name="inclxx-ablaxx-dir"  >   ${INCLXX_DATA_DIR}/de-excitation/ablaxx/upstream/data/G4ABLA3.0/ </param>
+      <param type="string" name="inclxx-abla07-dir"  >   ${INCLXX_DATA_DIR}/de-excitation/abla07/upstream/tables/ </param>
+      <param type="string" name="inclxx-geminixx-dir">   ${INCLXX_DATA_DIR}/de-excitation/geminixx/upstream/ </param>
+      <param type="string" name="inclxx-de-excitation" > ABLA07 </param>
+      <param type="string" name="inclxx-potential" > IsospinEnergyPotential </param>
+      <param type="string" name="inclxx-pauli-block" > StrictStatisticalPauli </param>
+      <param type="string" name="local-energy-BB" > first-collision </param>
+      <param type="string" name="local-energy-pi" > first-collision </param>
+      <param type="double" name="hadronizationTime" > 0.0 </param>
   </param_set>
 
   <param_set name="Never">
-      <param type="string" name="inclxx-data-dir"    >   ${INCLXX_DATA_DIR}/share/data </param>
-      <param type="string" name="inclxx-ablaxx-dir"  >   ${INCLXX_DATA_DIR}/share/de-excitation/ablaxx/upstream/data/G4ABLA3.0/ </param>
-      <param type="string" name="inclxx-abla07-dir"  >   ${INCLXX_DATA_DIR}/share/de-excitation/abla07/upstream/tables/ </param>
-      <param type="string" name="inclxx-geminixx-dir">   ${INCLXX_DATA_DIR}/share/de-excitation/geminixx/upstream/ </param>
-    <param type="string" name="inclxx-de-excitation" > ABLA07 </param>
-    <param type="string" name="inclxx-potential" > IsospinEnergyPotential </param>
-    <param type="string" name="inclxx-pauli-block" > StrictStatisticalPauli </param>
     <param type="string" name="local-energy-BB" > never </param>
     <param type="string" name="local-energy-pi" > never </param>
-    <param type="double" name="hadronizationTime" > 0.0 </param>
   </param_set>
 
   <param_set name="Always">
-      <param type="string" name="inclxx-data-dir"    >   ${INCLXX_DATA_DIR}/share/data </param>
-      <param type="string" name="inclxx-ablaxx-dir"  >   ${INCLXX_DATA_DIR}/share/de-excitation/ablaxx/upstream/data/G4ABLA3.0/ </param>
-      <param type="string" name="inclxx-abla07-dir"  >   ${INCLXX_DATA_DIR}/share/de-excitation/abla07/upstream/tables/ </param>
-      <param type="string" name="inclxx-geminixx-dir">   ${INCLXX_DATA_DIR}/share/de-excitation/geminixx/upstream/ </param>
-    <param type="string" name="inclxx-de-excitation" > ABLA07 </param>
-    <param type="string" name="inclxx-potential" > IsospinEnergyPotential </param>
-    <param type="string" name="inclxx-pauli-block" > StrictStatisticalPauli </param>
     <param type="string" name="local-energy-BB" > always </param>
     <param type="string" name="local-energy-pi" > always </param>
-    <param type="double" name="hadronizationTime" > 0.0 </param>
   </param_set>
 
+  <param_set name="clusterNone">
+    <param type="string" name="local-energy-BB" > first-collision </param>
+    <param type="string" name="local-energy-pi" > first-collision </param>
+    <param type="string" name="cluster-algorithm" > none </param>
+  </param_set>
+
+  <!--
   <param_set name="NoDeEx">
     <param type="string" name="inclxx-de-excitation" > OFF </param>
   </param_set>
+  -->
 
 </alg_conf>

@@ -9,15 +9,20 @@ Configurable Parameters:
 .....................................................................................................
 Name               Type     Optional   Comment                          Default
 .....................................................................................................
-CCFormFactorsAlg   alg      No         QEL-CC form factors algorithm
-NCFormFactorsAlg   alg      No         QEL-NC form factors algorithm
-EMFormFactorsAlg   alg      No         QEL-EM form factors algorithm
-XSec-Integrator    alg      No
-CabibboAngle       double   No         Cabibbo angle                    CommonParam[CKM]
-PauliBlockerAlg    alg      No         PauliBlocking algorithm
-FortranTensorModel string   No         Specifies which fortran model to use
-DoRotate_qAlong_z  bool     Yes        Rotates system so q is along z
-QEL-CC-XSecScale   double   Yes        Scaling factor                   GPL value
+QEL-CC-XSecScale     double Yes        Scaling factor                   GPL value
+CCFormFactorsAlg     alg    No         QEL-CC form factors algorithm
+NCFormFactorsAlg     alg    No         QEL-NC form factors algorithm
+EMFormFactorsAlg     alg    No         QEL-EM form factors algorithm
+XSec-Integrator      alg    No
+IntegralNuclearModel alg
+IntegralNucleonBindingMode string
+TensorModel          string No         Type of hadron tensor           Noemi-hadron-tensor
+                                         Options:
+                                            - Noemi-hadron-tensor
+                                            - Noemi-hadron-tensor-cc
+PauliBlockerAlg      alg    No         PauliBlocking algorithm
+DoPauliBlocking      bool   Yes        Do Pauli blocking               true
+DoRotate_qAlong_z    bool   Yes        Rotates system so q is along z
 
 
 .....................................................................................................
@@ -40,7 +45,7 @@ IntegralNucleonBindingMode           alg      No
     <param type="alg"  name="IntegralNuclearModel"> genie::SpectralFunc/Default </param>
     <param type="string" name="IntegralNucleonBindingMode"> UseNuclearModel </param>
 
-    <param type="string" name="TensorModel"> Noemi fortran </param> 
+    <param type="string" name="TensorModel"> Noemi-hadron-tensor </param> 
 
     <param type="alg"  name="PauliBlockerAlg"> genie::PauliBlocker/Default </param>
     <param type="bool" name="DoPauliBlocking"> true </param>
@@ -61,7 +66,6 @@ IntegralNucleonBindingMode           alg      No
      <param type="alg"  name="CCFormFactorsAlg"> genie::LwlynSmithFFCC/ZExp </param>
   </param_set>
 
-
   <param_set name="ZExp_minerva">
     <param type="alg"  name="CCFormFactorsAlg"> genie::LwlynSmithFFCC/ZExp_minerva </param>
   </param_set>   
@@ -70,6 +74,25 @@ IntegralNucleonBindingMode           alg      No
     <param type="alg"  name="CCFormFactorsAlg"> genie::LwlynSmithFFCC/ZExp_lqcd </param>
   </param_set>      
 
+  <param_set name="ZExp_incl">
+    <param type="alg"  name="XSec-Integrator">      genie::INCLQELXSec/Default            </param>
+    <param type="alg"  name="IntegralNucleusGen">   genie::NucleusGenHybridStruck/Default </param>
+    <param type="alg"  name="IntegralNuclearModel"> genie::NuclearModelMap/Default        </param>
+    <param type="alg"  name="CCFormFactorsAlg">     genie::LwlynSmithFFCC/ZExp            </param>
+  </param_set>
 
+  <param_set name="ZExp_incl_minerva">
+    <param type="alg"  name="XSec-Integrator">      genie::INCLQELXSec/Default            </param>
+    <param type="alg"  name="IntegralNucleusGen">   genie::NucleusGenHybridStruck/Default </param>
+    <param type="alg"  name="IntegralNuclearModel"> genie::NuclearModelMap/Default        </param>
+    <param type="alg"  name="CCFormFactorsAlg">     genie::LwlynSmithFFCC/ZExp_minerva    </param>
+  </param_set>
+
+  <param_set name="ZExp_incl_lqcd">
+    <param type="alg"  name="XSec-Integrator">      genie::INCLQELXSec/Default            </param>
+    <param type="alg"  name="IntegralNucleusGen">   genie::NucleusGenHybridStruck/Default </param>
+    <param type="alg"  name="IntegralNuclearModel"> genie::NuclearModelMap/Default        </param>
+    <param type="alg"  name="CCFormFactorsAlg">     genie::LwlynSmithFFCC/ZExp_lcqd       </param>
+  </param_set>
 
 </alg_conf>
