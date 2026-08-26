@@ -8,9 +8,6 @@
 #pragma link C++ namespace genie;
 #pragma link C++ namespace genie::utils::nuclear;
 
-//#pragma extra_include "Physics/NuclearState/NuclearModel.h";
-//#pragma extra_include "Physics/NuclearState/NuclearModelI.h";
-
 #pragma link C++ class genie::NuclearModel;
 #pragma link C++ class genie::NuclearModelI;
 #pragma link C++ class genie::SpectralFunc;

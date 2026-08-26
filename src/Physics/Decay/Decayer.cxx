@@ -25,6 +25,7 @@
 
 #ifdef __GENIE_INCL_ENABLED__
 #include "G4INCLParticleSpecies.hh"
+#include "Framework/ParticleData/PDGUtils.h"
 #endif
 
 
@@ -109,14 +110,35 @@ bool Decayer::IsUnstable(int pdg_code) const
     //
     bool decay = utils::res::IsBaryonResonance(pdg_code);
 #ifdef __GENIE_INCL_ENABLED__
-    if(fINCLHadronTranspMode){
-      LOG("Decay", pDEBUG) << "Decay hadron resonance before running INCL FSI mode!";
-      bool incl_unstable = false;
+    if (fINCLHadronTranspMode) {
+      // INCL FSI mode: decide based on whether INCL can propagate this particle.
+      //   1. INCL knows it           -> don't decay, INCL handles it.
+      //   2. INCL doesn't know it, but it's a real hadron not disabled by the
+      //      user (e.g. via DecayParticleWithCode=NNN false in CommonDecay.xml)
+      //                              -> force-decay before INCL.
+      //   3. Fundamental particle (|pdg|<100), ion, or user-disabled
+      //                              -> leave alone.
       G4INCL::ParticleSpecies pSpec(pdg_code);
-      if(pSpec.theType == G4INCL::UnknownParticle && std::abs(pdg_code) > 99){ //  FIXME: need to be checked: leptons and fundamental paricles have pdg code < 100 
-        incl_unstable = true;
+      bool incl_can_propagate  = (pSpec.theType != G4INCL::UnknownParticle);
+      bool is_fundamental      = std::abs(pdg_code) < 100;  // leptons, gauge bosons, etc.
+      bool is_ion              = pdg::IsIon(pdg_code);
+      bool user_disabled_decay = fParticlesNotToDecay.ExistsInPDGCodeList(pdg_code);
+
+      if (incl_can_propagate) {
+        decay = false;
+      } else if (!is_fundamental && !is_ion && !user_disabled_decay) {
+        decay = true;
+      } else {
+        decay = false;
       }
-      decay = incl_unstable;
+
+      LOG("Decay", pDEBUG)
+        << "INCL FSI mode: pdg=" << pdg_code
+        << " incl_known=" << incl_can_propagate
+        << " fundamental=" << is_fundamental
+        << " ion=" << is_ion
+        << " user_disabled=" << user_disabled_decay
+        << " -> decay=" << decay;
     }
 #endif
     return decay;
@@ -185,12 +207,12 @@ void Decayer::LoadConfig(void)
   fINCLHadronTranspMode = false;
   AlgConfigPool * conf_pool = AlgConfigPool::Instance();
   Registry * gpl = conf_pool->GlobalParameterList();
-  RgAlg xsec_alg = gpl->GetAlg("HadronTransp-Model");
-  bool fDeltaTransp = true;
-  //bool fDeltaTransp = gpl->GetBool("DeltaTransp-Enable");
-  LOG("Decay", pDEBUG) << xsec_alg;
-  if(xsec_alg.name == "genie::INCLCascadeIntranuke" && fDeltaTransp){
-      fINCLHadronTranspMode = true;
+  RgAlg fsi_alg = gpl->GetAlg("HadronTransp-Model");
+  bool delta_transp = gpl->GetBoolDef("DeltaTransp-Enable", true);
+  LOG("HadronTransp", pDEBUG) << "FSI alg: " << fsi_alg
+                              << ", DeltaTransp: " << delta_transp;
+  if (fsi_alg.name == "genie::INCLCascadeIntranuke" && delta_transp) {
+    fINCLHadronTranspMode = true;
   }
 #endif
 

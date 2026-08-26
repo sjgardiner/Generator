@@ -23,15 +23,13 @@ namespace G4INCL {
   {
     std::vector<GENIEParticleRecord>::iterator ip;
     for(ip = genie_evtrec->begin(); ip != genie_evtrec->end(); ip++){
-      if(ip->Status() == 14){
+      if(ip->Status() == genie::kIStHadronInTheNucleus){
         ip->setID(int(hitParticle->getID()));
         hitParticle->setType(ip->Type());
         hitParticle->setMomentum(ip->P3());
-        std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << "  " << hitParticle->getPosition().print() << std::endl;
         hitParticle->setPosition(ip->X3());
-        std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << "  " << hitParticle->getPosition().print() << std::endl;
-        std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << " position radius difference: " << hitParticle->getPosition().mag() - ip->X3().mag() << std::endl;
         hitParticle->adjustEnergyFromMomentum();
+        theNucleus->setS(theNucleus->getS() + hitParticle->getS());
       }
     }
     fs->addModifiedParticle(hitParticle);

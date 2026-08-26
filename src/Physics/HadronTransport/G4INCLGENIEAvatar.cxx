@@ -38,7 +38,7 @@ namespace G4INCL {
 
   G4INCL::IChannel* GENIEAvatar::getChannel() {
 
-    // TODO: using genie event record to fill final states of INCL
+    // using genie event record to fill final states of INCL
     // the initial states is hit nucleons, (for MEC channel, initial states
     // is NN cluster)
     // the final states should be hadron in nucleus
@@ -56,14 +56,12 @@ namespace G4INCL {
   void GENIEAvatar::preInteraction() {
 
 
-    if((*genie_evtrec)[0].ScatteringType() != 10){
+    if((*genie_evtrec)[0].ScatteringType() != genie::kScMEC){
       int index = 0;
       double lepton_initial_energy = 0;
       ThreeVector leptonInitialMom;
       std::vector<GENIEParticleRecord>::iterator ip;
       for(ip = genie_evtrec->begin(); ip != genie_evtrec->end(); ip++){
-        //std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << "  " << ip->ID() << " "
-        //  << ip->Pdg() << " " << ip->Mass() << " " << std::sqrt(ip->P3().mag()*ip->P3().mag() + ip->Mass()*ip->Mass()) << std::endl;
         if(ip->RecordCode() == kProbe){
           lepton_initial_energy = std::sqrt(ip->P3().mag2() + ip->Mass()*ip->Mass());
           leptonInitialMom = ip->P3();
@@ -125,8 +123,6 @@ namespace G4INCL {
       }
       boostVector = local_mom / local_energy;
     }
-
-
   }
 
   void GENIEAvatar::postInteractionHybridModel(FinalState *fs){
@@ -150,9 +146,7 @@ namespace G4INCL {
 
     for(ParticleIter i=modifiedAndCreated.begin(), e=modifiedAndCreated.end(); i!=e; ++i ){
       double Qval = (*i)->getEmissionQValueCorrection(theNucleus->getA(),theNucleus->getZ(),theNucleus->getS());
-      std::cout << "DEBUG: " << "put into potential : " << (*i)->print() << std::endl;
       bool success = this->putIntoPotential(Qval, (*i));
-      std::cout << "DEBUG: " << "put into potential : " << (*i)->print() << std::endl;
       (*i)->rpCorrelate();
       if(!success){
         fs->reset();
@@ -168,10 +162,10 @@ namespace G4INCL {
     std::vector<GENIEParticleRecord>::iterator ip;
     ParticleIter imc = modifiedAndCreated.begin();
     for(ip = genie_evtrec->begin(); ip != genie_evtrec->end(); ip++){
-      if(ip->Status() == 14 || ip->Status() == 13){
-        //ThreeVector p_mom = (*imc)->getMomentum();
-        //ip->setMomentum(p_mom);
-        //ip->setMass((*imc)->getMass());
+      if(ip->Status() == genie::kIStHadronInTheNucleus || ip->Status() == genie::kIStPreDecayResonantState){
+        ThreeVector p_mom = (*imc)->getMomentum();
+        ip->setMomentum(p_mom);
+        ip->setMass((*imc)->getMass());
         imc++;
       }
       index++;
@@ -181,7 +175,6 @@ namespace G4INCL {
     // to be emitted later).
     for(ParticleIter i=created.begin(), e=created.end(); i!=e; ++i ){
       if(((*i)->isPion() || (*i)->isKaon() || (*i)->isAntiKaon()) && (*i)->getPosition().mag() > theNucleus->getSurfaceRadius(*i)) {
-        std::cout << "DEBUG: " << " out well makeParticipant : " << (*i)->print() << std::endl;
         (*i)->makeParticipant();
         (*i)->setOutOfWell();
         fs->addOutgoingParticle(*i);
@@ -209,12 +202,10 @@ namespace G4INCL {
       return; // Interaction is blocked. Return an empty final state.
     }
 
-    std::cout << "DEBUG: " <<__FILE__ << ": Pauli: Allowed!" << std::endl;
 
 
     // Test CDPP blocking
     bool isCDPPBlocked = Pauli::isCDPPBlocked(created, theNucleus);
-    std::cout << "DEBUG: " <<__FILE__ << ": CDPP " << isCDPPBlocked << std::endl;
     if(isCDPPBlocked) {
 
       // Restore the state of the initial particles
@@ -222,7 +213,6 @@ namespace G4INCL {
 
       // Delete newly created particles
       for(ParticleIter i=created.begin(), e=created.end(); i!=e; ++i ){
-        std::cout << "DEBUG: " <<__FILE__ << ": CDPP " << (*i)->print() << std::endl;
         delete *i;
       }
 
@@ -233,17 +223,13 @@ namespace G4INCL {
       return; // Interaction is blocked. Return an empty final state.
     }
 
-    std::cout << "DEBUG: " <<__FILE__ << ": CDPP: Allowed!" << std::endl;
 
     // If all went well, try to bring particles inside the nucleus...
     for(ParticleIter i=modifiedAndCreated.begin(), e=modifiedAndCreated.end(); i!=e; ++i ){
       // ...except for pions beyond their surface radius.
       if((*i)->isOutOfWell()) continue;
 
-      const bool successBringParticlesInside = InteractionAvatar::bringParticleInside(*i);
-      if( !successBringParticlesInside ) {
-        std::cout << "DEBUG: " <<__FILE__ << ": Failed to bring particle inside the nucleus!" << std::endl;
-      }
+      //const bool successBringParticlesInside = InteractionAvatar::bringParticleInside(*i);
     }
 
     // Collision accepted!
@@ -284,7 +270,6 @@ namespace G4INCL {
           if((*i)->isTargetSpectator()) {
             theNucleus->getStore()->getBook().incrementCascading();
           }
-          std::cout << "DEBUG: " << "makeParticipant : " << (*i)->print() << std::endl;
           (*i)->makeParticipant();
         }
       }
@@ -318,11 +303,6 @@ namespace G4INCL {
     // If there is no Nucleus, just return
     if(!theNucleus) return;
 
-    // using genie nuclear model for primary vertex
-    // only put the final 
-    //
-    std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << " fHybridModel  " << fHybridModel << std::endl;
-
     if(fHybridModel){
       return this->postInteractionHybridModel(fs);
     }
@@ -332,7 +312,6 @@ namespace G4INCL {
     // to be emitted later).
     for(ParticleIter i=created.begin(), e=created.end(); i!=e; ++i ){
       if(((*i)->isPion() || (*i)->isKaon() || (*i)->isAntiKaon()) && (*i)->getPosition().mag() > theNucleus->getSurfaceRadius(*i)) {
-        std::cout << "DEBUG: " << " out well makeParticipant : " << (*i)->print() << std::endl;
         (*i)->makeParticipant();
         (*i)->setOutOfWell();
         fs->addOutgoingParticle(*i);
@@ -370,12 +349,10 @@ namespace G4INCL {
       return; // Interaction is blocked. Return an empty final state.
     }
 
-    std::cout << "DEBUG: " <<__FILE__ << ": Pauli: Allowed!" << std::endl;
 
 
     // Test CDPP blocking
     bool isCDPPBlocked = Pauli::isCDPPBlocked(created, theNucleus);
-    std::cout << "DEBUG: " <<__FILE__ << ": CDPP " << isCDPPBlocked << std::endl;
     if(isCDPPBlocked) {
 
       // Restore the state of the initial particles
@@ -383,7 +360,6 @@ namespace G4INCL {
 
       // Delete newly created particles
       for(ParticleIter i=created.begin(), e=created.end(); i!=e; ++i ){
-        std::cout << "DEBUG: " <<__FILE__ << ": CDPP " << (*i)->print() << std::endl;
         delete *i;
       }
 
@@ -394,17 +370,13 @@ namespace G4INCL {
       return; // Interaction is blocked. Return an empty final state.
     }
 
-    std::cout << "DEBUG: " <<__FILE__ << ": CDPP: Allowed!" << std::endl;
 
     // If all went well, try to bring particles inside the nucleus...
     for(ParticleIter i=modifiedAndCreated.begin(), e=modifiedAndCreated.end(); i!=e; ++i ){
       // ...except for pions beyond their surface radius.
       if((*i)->isOutOfWell()) continue;
 
-      const bool successBringParticlesInside = InteractionAvatar::bringParticleInside(*i);
-      if( !successBringParticlesInside ) {
-        std::cout << "DEBUG: " <<__FILE__ << ": Failed to bring particle inside the nucleus!" << std::endl;
-      }
+      //const bool successBringParticlesInside = InteractionAvatar::bringParticleInside(*i);
     }
 
 
@@ -417,7 +389,7 @@ namespace G4INCL {
         ip->setMomentum(leptonMom);
         ip->setMass(std::sqrt(std::max(leptonE*leptonE - leptonMom.mag2(), 0.)));
       }
-      else if(ip->Status() == 14 || ip->Status() == 13){
+      else if(ip->Status() == genie::kIStHadronInTheNucleus || ip->Status() == genie::kIStPreDecayResonantState){
         ThreeVector p_mom = (*imc)->getMomentum();
         ip->setMomentum(p_mom);
         ip->setMass((*imc)->getMass());
@@ -463,7 +435,6 @@ namespace G4INCL {
           if((*i)->isTargetSpectator()) {
             theNucleus->getStore()->getBook().incrementCascading();
           }
-          std::cout << "DEBUG: " << "makeParticipant : " << (*i)->print() << std::endl;
           (*i)->makeParticipant();
         }
       }
@@ -479,6 +450,7 @@ namespace G4INCL {
   }
 
   bool GENIEAvatar::enforceEnergyConservation(FinalState * const fs){
+    (void) fs;
     // Set up the violationE calculation
     violationEFunctor = new ViolationLeptonEMomentumFunctor(theNucleus, modifiedAndCreated, leptonE, leptonMom, boostVector, oldTotalEnergy, true);
     const RootFinder::Solution theSolution = RootFinder::solve(violationEFunctor, 1.0);
@@ -651,7 +623,6 @@ namespace G4INCL {
           theParticle->setPotentialEnergy(v);
           theParticle->setMomentum(theMomentumDirection); // keep the same direction
           theParticle->adjustMomentumFromEnergy();
-          std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << "  potential energy: " << v << std::endl;
           return v - thePotential->computePotentialEnergy(theParticle);
         }
         void cleanUp(const bool /*success*/) const {}

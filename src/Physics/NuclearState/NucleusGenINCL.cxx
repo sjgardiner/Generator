@@ -14,7 +14,7 @@
 
 \cpright  Copyright (c) 2003-2024, The GENIE Collaboration
           For the full text of the license visit http://copyright.genie-mc.org
-
+          
 */
 //____________________________________________________________________________
 
@@ -107,9 +107,7 @@ void NucleusGenINCL::GenerateCluster(GHepRecord * evrec) const{
   tgt.SetHitNucPdg(nucleon_cluster->Pdg());
 
   INCLNucleus *incl_nucleus = INCLNucleus::Instance();
-  incl_nucleus->initialize(&tgt);
   incl_nucleus->reset(&tgt);
-  incl_nucleus->initialize(&tgt);
 
   std::shared_ptr<G4INCL::Cluster> incl_cluster =  incl_nucleus->getHitNNCluster();
   G4INCL::Nucleus *nucleus =  incl_nucleus->getNuclues();
@@ -153,7 +151,7 @@ void NucleusGenINCL::GenerateCluster(GHepRecord * evrec) const{
   LOG("NucleusGenINCL", pINFO) << cluster_energy;
 
   //G4INCL::ThreeVector cluster_mom = incl_cluster->getMomentum();
-  TLorentzVector p4nclust   (   cluster_mom.getX() / 1000.,
+  TLorentzVector p4nclust   (   cluster_mom.getX() / 1000.,    
       cluster_mom.getY() / 1000.,
       cluster_mom.getZ() / 1000.,
       cluster_energy / 1000.   );
@@ -166,16 +164,14 @@ void NucleusGenINCL::GenerateCluster(GHepRecord * evrec) const{
 }
 
 //___________________________________________________________________________
-//  using INCL model to get the position and momentum of
+//  using INCL model to get the position and momentum of 
 //  Hit  nucleon
 void NucleusGenINCL::setInitialStateVertex(GHepRecord * evrec) const{
 
   // get the target and use it to initialize the incl nucleus
   Target* tgt = evrec->Summary()->InitState().TgtPtr();
   INCLNucleus *incl_nucleus = INCLNucleus::Instance();
-  incl_nucleus->initialize(tgt);
   incl_nucleus->reset(tgt);
-  incl_nucleus->initialize(tgt);
 
 // generate a vtx and set it to all GHEP physical particles
   Interaction * interaction = evrec->Summary();
@@ -184,17 +180,14 @@ void NucleusGenINCL::setInitialStateVertex(GHepRecord * evrec) const{
   if(!nucltgt){
     vtx.SetXYZ(0.,0.,0.);
   }else{
-    double A = nucltgt->A();
-
-  const ProcessInfo & proc_info = interaction->ProcInfo();
-  bool is_coh = proc_info.IsCoherentProduction() || proc_info.IsCoherentElastic();
-  bool is_ve  = proc_info.IsInverseMuDecay() ||
+    const ProcessInfo & proc_info = interaction->ProcInfo();
+    bool is_coh = proc_info.IsCoherentProduction() || proc_info.IsCoherentElastic();
+    bool is_ve  = proc_info.IsInverseMuDecay() ||
     proc_info.IsIMDAnnihilation() ||
     proc_info.IsNuElectronElastic() ||
     proc_info.IsGlashowResonance() ||
     proc_info.IsPhotonResonance() ||
     proc_info.IsPhotonCoherent();
-
 
   if(is_coh||is_ve) {
     // ** For COH or ve- set a vertex positon on the nuclear boundary
@@ -253,15 +246,6 @@ void NucleusGenINCL::setInitialStateMomentum(GHepRecord * evrec) const{
   // initialize INCL nucleus model
   // INCL nucleus model sample all nucleons with r-p correlation
   INCLNucleus *incl_nucleus = INCLNucleus::Instance();
-//  G4INCL::Nucleus *incl_nuc = incl_nucleus->getNuclues();
-//  TLorentzVector p4tgt;
-//  p4tgt.SetPx(incl_nuc->getMomentum().getX() / 1000.);
-//  p4tgt.SetPy(incl_nuc->getMomentum().getY() / 1000. );
-//  p4tgt.SetPz(incl_nuc->getMomentum().getZ() / 1000. );
-//  p4tgt.SetE(incl_nuc->getEnergy() / 1000.);
-//  init_state->SetTgtP4(p4tgt);
-//  nucleus->SetMomentum(p4tgt);
-
 
   // get a random nucleon with respect to the isospin of evrec->HitNucleon();
   // the removal energy maybe not necessary
@@ -320,11 +304,6 @@ void NucleusGenINCL::setTargetNucleusRemnant(GHepRecord * evrec)const{
   int fd = nucleus->FirstDaughter();
   int ld = nucleus->LastDaughter();
 
-  INCLNucleus *incl_nucleus = INCLNucleus::Instance();
-
-  G4INCL::Nucleus *incl_nuc = incl_nucleus->getNuclues();
-
-
   for(int id = fd; id <= ld; id++) {
 
     // compute A,Z for final state nucleus & get its PDG code and its mass
@@ -355,10 +334,6 @@ void NucleusGenINCL::setTargetNucleusRemnant(GHepRecord * evrec)const{
   }
 
   double Mi = nucleus->Mass();
-//  Px = incl_nuc->getMomentum().getX()/1000. - Px;
-//  Py = incl_nuc->getMomentum().getY()/1000. - Py;
-//  Pz = incl_nuc->getMomentum().getZ()/1000. - Pz;
-//  E = incl_nuc->getEnergy()/1000. - E;
 
   Px *= -1;
   Py *= -1;
@@ -416,7 +391,7 @@ void NucleusGenINCL::GenerateNucleon(Interaction* interaction, ResamplingHitNucl
   // Call the GenerateNucleon will reset the INCLNucleus and generate a new nucleus
   if(! interaction->InitState().Tgt().IsNucleus()) return;
   Target* tgt = interaction->InitState().TgtPtr();
-  flag_isRadius = true; // initialize true
+  flag_isRadius = true; // initialize true 
   if(resampling_mode == isOrigin){
     tgt->SetHitNucPosition(0.);
     flag_isRadius = false;
@@ -431,9 +406,7 @@ void NucleusGenINCL::GenerateNucleon(Interaction* interaction, ResamplingHitNucl
   }
   else if(resampling_mode == BothRPResamping){
     INCLNucleus *incl_nucleus = INCLNucleus::Instance();
-    incl_nucleus->initialize(tgt);
     incl_nucleus->reset(tgt);
-    incl_nucleus->initialize(tgt);
     TVector3 vertex_pos = incl_nucleus->getHitNucleonPosition();
     double radius = vertex_pos.Mag();
     tgt->SetHitNucPosition( radius );
@@ -450,6 +423,7 @@ bool NucleusGenINCL::isRPValid(double r, double p, const Target & tgt) const {
 }
 
 void NucleusGenINCL::SetHitNucleonOnShellMom(TVector3 p3) const {
+  (void) p3;
 
 }
 
@@ -486,8 +460,8 @@ void NucleusGenINCL::LoadConfig(void)
   LOG("NucleusGenINCL", pINFO) << this->expandEnvironmentPath(geminixxpath);
 
   std::string deExType;
-  G4INCL::DeExcitationType deExcitationType;
-  GetParamDef( "inclxx-de-excitation", deExType, std::string("ABLA07") );
+  G4INCL::DeExcitationType deExcitationType = G4INCL::DeExcitationABLA07;
+  GetParamDef( "inclxx-de-excitation", deExType, std::string(""));
   LOG("NucleusGenINCL", pINFO) << "inclxx-de-excitation : " << deExType;
   if(!deExType.compare("ABLA07")){
     deExcitationType = G4INCL::DeExcitationABLA07;
@@ -495,8 +469,6 @@ void NucleusGenINCL::LoadConfig(void)
     deExcitationType = G4INCL::DeExcitationABLAXX;
   } else if(!deExType.compare("GEMINIXX")) {
     deExcitationType = G4INCL::DeExcitationGEMINIXX;
-  } else if(!deExType.compare("OFF")) {
-    deExcitationType = G4INCL::DeExcitationNone;
   } else {
     std::stringstream ss;
     ss<< "########################################################\n"
@@ -585,6 +557,18 @@ void NucleusGenINCL::LoadConfig(void)
   double hadronizationTime = 0.0;
   GetParamDef( "hadronizationTime", hadronizationTime, 0.0);
 
+
+  // set the Cluster Algorithm
+  std::string clusterAlgorithmString = "intercomparison";
+  G4INCL::ClusterAlgorithmType clusterAlgorithmType = G4INCL::IntercomparisonClusterAlgorithm;
+  GetParamDef( "cluster-algorithm", clusterAlgorithmString, std::string("intercomparison"));
+  if(!clusterAlgorithmString.compare("intercomparison")){
+    clusterAlgorithmType = G4INCL::IntercomparisonClusterAlgorithm;
+  }
+  else if(!clusterAlgorithmString.compare("none")){
+    clusterAlgorithmType = G4INCL::NoClusterAlgorithm;
+  }
+
   INCLNucleus *incl_nucleus = INCLNucleus::Instance();
   incl_nucleus->setINCLXXDataFilePath(this->expandEnvironmentPath(inclxxpath));
   incl_nucleus->setABLAXXDataFilePath(this->expandEnvironmentPath(ablaxxpath));
@@ -598,6 +582,9 @@ void NucleusGenINCL::LoadConfig(void)
   incl_nucleus->setLocalEnergyBBType(localEnergyTypeBB);
   incl_nucleus->setLocalEnergyPiType(localEnergyTypepi);
   incl_nucleus->setHadronizationTime(hadronizationTime);
+
+  incl_nucleus->setClusterAlgorithmType(clusterAlgorithmType);
+  incl_nucleus->setClusterAlgorithmString(clusterAlgorithmString);
 
   incl_nucleus->configure();
 }

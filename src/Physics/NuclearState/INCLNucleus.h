@@ -12,7 +12,7 @@
 
   \created  Oct. 2024
 
-  \cpright  Copyright (c) 2003-2024, The GENIE Collaboration
+  \cpright  Copyright (c) 2003-2026, The GENIE Collaboration
   For the full text of the license visit http://copyright.genie-mc.org
 
 */
@@ -58,52 +58,31 @@ namespace genie {
 
     public: 
       static INCLNucleus * Instance (void);
-      void initialize(const Target * tgt);
       void reset(const Target * tgt);
       void configure();
 
+      // TODO: these function is related to single nucleon, might need to refactor it
       TVector3 getHitNucleonPosition();
       TVector3 getHitNucleonMomentum();
       double   getHitNucleonEnergy();
       double   getHitNucleonMass();
       double   getMass();
       double   getRemovalEnergy();
-      G4INCL::Nucleus * getNuclues();
-      G4INCL::StandardPropagationModel * getPropagationModel();
 
-      void setHitParticle(const int pdg, TVector3 &posi);
-      void setHitNNCluster(const int pdg1, const int pdg2, TVector3 &posi);
+
+      //============================================================
+      G4INCL::Config *getConfig(){return theConfig_;}
+      G4INCL::StandardPropagationModel * getPropagationModel();
+      G4INCL::Nucleus * getNuclues();
       G4INCL::Particle *getHitParticle();
       std::shared_ptr<G4INCL::Cluster>  getHitNNCluster();
-
-      G4INCL::Config *getConfig(){return theConfig_;}
-
-//      bool     nextNucleonIndex(int pdg){
-//	if(pdg::IsProton(pdg)){
-//	  nucleon_index_++;
-//	  if(nucleon_index_ >= nucleus_->getZ())
-//	    return false;
-//	}
-//	else{
-//	  nucleon_index_++;
-//	  if(nucleon_index_ >= nucleus_->getA())
-//	    return false;
-//	}
-//	hitNucleon_ = nucleus_->getStore()->getParticles().at(nucleon_index_);
-//	return true;
-//      }
-//      void     initNucleonIndex(int pdg){
-//	if(pdg::IsProton(pdg)){
-//	  nucleon_index_ = 0;
-//	}
-//	else{
-//	  nucleon_index_ = nucleus_->getZ();
-//	}
-//	hitNucleon_ = nucleus_->getStore()->getParticles().at(nucleon_index_);
-//      }
-
       double getMaxUniverseRadius() {return maxUniverseRadius_;}
 
+
+      // void setHitParticle(const int pdg, TVector3 &posi);
+      void setHitNNCluster(const int pdg1, const int pdg2, TVector3 &posi);
+
+      // set INCL configurations
       void setINCLXXDataFilePath(std::string str){ INCLXXDataFilePath_ = str; }
       void setABLAXXDataFilePath(std::string str){ ablaxxDataFilePath_ = str; }
       void setABLA07DataFilePath(std::string str){ abla07DataFilePath_ = str; }
@@ -116,6 +95,12 @@ namespace genie {
       void setLocalEnergyBBType(G4INCL::LocalEnergyType type) {localEnergyTypeBB_ = type;}
       void setLocalEnergyPiType(G4INCL::LocalEnergyType type) {localEnergyTypePi_ = type;}
       void setHadronizationTime(const double t) { hadronizationTime_=t; }
+      void setClusterAlgorithmType(const G4INCL::ClusterAlgorithmType c){
+        clusterAlgorithmType_ = c;
+      }
+      void setClusterAlgorithmString(const std::string str){
+        clusterAlgorithmString_ = str;
+      }
 
 
       bool isRPValid(double r, double p);
@@ -134,36 +119,32 @@ namespace genie {
     private:
       INCLNucleus();
       ~INCLNucleus();
+      void initialize(const Target * tgt);
       void initUniverseRadius(const int A, const int Z);
       G4INCL::Particle* getNucleon(const int pdg);
       std::shared_ptr<G4INCL::Cluster> getNNCluster(const int pdg1, const int pdg2);
       static INCLNucleus *fInstance;
 
-      //TVector3 v3_; // position of initial nucleon 
-      //TVector3 p3_; // fermi momentum of initial nucleon
-      double  energy_; // off-shell energy of initial nucleon
       G4INCL::Config *theConfig_;
       G4INCL::Nucleus *nucleus_;
       G4INCL::Particle *hitNucleon_;
       // NN cluster for MEC channel
       std::shared_ptr<G4INCL::Cluster>  clusterNN_;
-//      const int maxClusterMass = 2;
-//      G4INCL::Particle *selectedParticles[maxClusterMass];
 
-
-
-      G4INCL::StandardPropagationModel *propagationModel_;
-      G4INCL::CascadeAction *cascadeAction_;
-      const G4INCL::NuclearDensity *theDensityForLepton;
-      const G4INCL::NuclearDensity *theDensity;
-      const G4INCL::NuclearPotential::INuclearPotential *thePotential;
-
+      // index of nucleon inside nucleus
+      // 1p1h, 2p2h, might need NpNh
       int nucleon_index_;
       int cluster_index1_;
       int cluster_index2_;
 
+
+      G4INCL::StandardPropagationModel *propagationModel_;
+      // TODO: Using official GENIE action
+      // G4INCL::CascadeAction *cascadeAction_;
+      const G4INCL::NuclearDensity *theDensity;
+      const G4INCL::NuclearPotential::INuclearPotential *thePotential;
+
       double maxUniverseRadius_;
-      // double maxInteractionDistance_;
       double minRemnantSize_;
       double hadronizationTime_;
 
@@ -179,6 +160,8 @@ namespace genie {
 
       G4INCL::LocalEnergyType localEnergyTypeBB_;
       G4INCL::LocalEnergyType localEnergyTypePi_;
+      std::string clusterAlgorithmString_;
+      G4INCL::ClusterAlgorithmType clusterAlgorithmType_;
 
       NuclearModel_t model_type_;
   };

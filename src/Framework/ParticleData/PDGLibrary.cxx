@@ -223,40 +223,53 @@ bool PDGLibrary::AddDarkSector()
 //____________________________________________________________________________
 #ifdef __GENIE_INCL_ENABLED__
 void PDGLibrary::AddHypernucleus(int pdg_hypernucleus){
-  // int pdg_hypernucleus,
-  // get the ragular ion from pdg database
-  int pdg_ion = pdg_hypernucleus - int(1e7);
-  TParticlePDG *ion = fDatabasePDG->GetParticle(pdg_ion);
-  const double mass = ion->Mass();
-  const char* name = ion->GetName();
-  const int charge = ion->Charge(); // hyper-nuclei have the same charge with ions
-  // name/title and mass of hyper-nucleus
-  std::string hypernucl_name = std::string(name) + "L";
-  double      hypernucl_mass = mass + 0.18; // FIXME the mass of hyper-nuclei is higher than the ion; this is a rough estimation.
-  TParticlePDG *hypernucleus = fDatabasePDG->GetParticle(pdg_hypernucleus);
-  if(!hypernucleus){
-    LOG("PDG", pINFO) << "Adding hyper-nucleus: " << hypernucl_name << " => " << pdg_hypernucleus;
-    fDatabasePDG->AddParticle(hypernucl_name.c_str(), hypernucl_name.c_str(), hypernucl_mass, true, 0, charge, "HyperIon", pdg_hypernucleus);
-  }
-  else{
-    LOG("PDG", pINFO) << "Find hyper-nucleus " << hypernucl_name << "(" << pdg_hypernucleus <<") in PDG library!";
+  if (fDatabasePDG->GetParticle(pdg_hypernucleus)) {
+    LOG("PDG", pINFO) << "Hyper-nucleus (" << pdg_hypernucleus
+                      << ") already in PDG library";
     return;
   }
+  int abs_pdg = std::abs(pdg_hypernucleus);
+  int S = (abs_pdg / 10000000) % 10;
+  if (S != 1) {
+    LOG("PDG", pFATAL)
+      << "Hypernucleus with strangeness S=" << S
+      << " (PDG=" << pdg_hypernucleus << ") not supported. Only S=1 is handled.";
+    exit(1);
+  }
+  int sign = (pdg_hypernucleus < 0) ? -1 : 1;     // sign for particle and anti-particle
+  int pdg_ion = sign * (abs_pdg - S * 10000000);  // strip strangeness digit(s)
+
+  TParticlePDG *ion = fDatabasePDG->GetParticle(pdg_ion);
+  if (!ion) {
+    LOG("PDG", pFATAL) << "Base ion " << pdg_ion
+                       << " not found for hypernucleus " << pdg_hypernucleus;
+    exit(1);
+  }
+
+  // m(hypernucleus) ≈ m(ion) + S*(m_Λ - m_N); ignores Λ binding energy.
+  const double dm_lambda_n = 0.17608; // GeV, m_Λ - m_n
+  double hypernucl_mass = ion->Mass() + S * dm_lambda_n;
+
+  std::string name = std::string(ion->GetName()) + "_L" + std::to_string(S);
+  LOG("PDG", pINFO) << "Adding hyper-nucleus: " << name << " => " << pdg_hypernucleus;
+  fDatabasePDG->AddParticle(name.c_str(), name.c_str(), hypernucl_mass,
+                            true, 0, ion->Charge(), "HyperIon", pdg_hypernucleus);
 }
+//____________________________________________________________________________
 void PDGLibrary::AddVirtualCluster(int pdg_virtual){
+  if (fDatabasePDG->GetParticle(pdg_virtual)) {
+    LOG("PDG", pINFO) << "Virtual cluster (" << pdg_virtual
+                      << ") already in PDG library";
+    return;
+  }
   int A = (pdg_virtual/10)%1000;
   int Z = (pdg_virtual/10000)%1000;
-  double virtual_cluster_mass = A*genie::constants::kNucleonMass; // au: atomic mass; me: electron mass
+  double virtual_cluster_mass = A*genie::constants::kNucleonMass;
   int charge = Z;
-  TParticlePDG *virtualcluster = fDatabasePDG->GetParticle(pdg_virtual);
-  if(!virtualcluster){
-    LOG("PDG", pINFO) << "Adding virtual cluster => " << pdg_virtual;
-    fDatabasePDG->AddParticle("VCluster", "VCluster", virtual_cluster_mass, true, 0, charge, "VirtualCluster", pdg_virtual);
-  }
-  else{
-    LOG("PDG", pINFO) << "Find virtual cluster (" << pdg_virtual << ") in PDG library!";
-    return;
-  }
+  std::string name = "VCluster_Z" + std::to_string(Z) + "_A" + std::to_string(A);
+  LOG("PDG", pINFO) << "Adding virtual cluster: " << name << " => " << pdg_virtual;
+  fDatabasePDG->AddParticle(name.c_str(), name.c_str(), virtual_cluster_mass,
+                            true, 0, charge, "VirtualCluster", pdg_virtual);
 }
 #endif
 //____________________________________________________________________________

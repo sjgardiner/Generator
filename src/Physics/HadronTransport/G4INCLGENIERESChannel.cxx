@@ -23,10 +23,11 @@ namespace G4INCL {
   void GENIERESChannel::fillFinalState(FinalState *fs)
   {
 
+
     std::vector<GENIEParticleRecord>::iterator ip;
     for(ip = genie_evtrec->begin(); ip != genie_evtrec->end(); ip++){
-      if(ip->Status() == 14 || ip->Status() == 13){
-        if(abs(ip->Pdg()) > 1000){
+      if(ip->Status() == genie::kIStHadronInTheNucleus || ip->Status() == genie::kIStPreDecayResonantState){
+        if(abs(ip->Pdg()) > 1000){ // is not meson
           ip->setID(int(hitParticle->getID()));
           hitParticle->setType(ip->Type());
           hitParticle->setMass(ip->Mass());

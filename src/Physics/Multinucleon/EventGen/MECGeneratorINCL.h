@@ -3,15 +3,21 @@
 
 \class    genie::MECGeneratorINCL
 
-\brief    Simulate the primary MEC interaction
+\brief    INCL-aware MEC primary-interaction generator.
 
-\author   Costas Andreopoulos <c.andreopoulos \at cern.ch>
-          University of Liverpool
+          Derives from MECGenerator. Overrides only the two methods that
+          touch the nuclear model (GenerateFermiMomentum and
+          GenerateNSVInitialHadrons) plus LoadConfig. Everything else --
+          ProcessEventRecord dispatch, AddTargetRemnant, all
+          Select*LeptonKinematics, AddFinalStateLepton, RecoilNucleonCluster,
+          DecayNucleonCluster, NucleonClusterConstituents -- is inherited
+          from MECGenerator and stays automatically in sync with future
+          changes to the base class.
 
-          Steve Dytman <dytman+ \at pitt.edu>
-          Pittsburgh University
+\author   Liang Liu <liangliu \at fnal.gov>
+          Fermi National Accelerator Laboratory
 
-\created  Sep. 22, 2008
+\created  October 17, 2024
 
 \cpright  Copyright (c) 2003-2024, The GENIE Collaboration
           For the full text of the license visit http://copyright.genie-mc.org
@@ -21,76 +27,41 @@
 #include "Framework/Conventions/GBuild.h"
 #ifdef __GENIE_INCL_ENABLED__
 
-
 #ifndef _MEC_GENERATOR_INCL_H_
 #define _MEC_GENERATOR_INCL_H_
 
-#include <TGenPhaseSpace.h>
-#include "Framework/Utils/Range1.h"
-
-#include "Framework/EventGen/EventRecordVisitorI.h"
-#include "Framework/ParticleData/PDGCodeList.h"
-#include "Physics/NuclearState/NucleusGenI.h"
+#include "Physics/Multinucleon/EventGen/MECGenerator.h"
 
 namespace genie {
 
-class Interaction;
-class NuclearModelI;
-class XSecAlgorithmI;
+class NucleusGenI;
 
-class MECGeneratorINCL : public EventRecordVisitorI {
+class MECGeneratorINCL : public MECGenerator {
 
 public :
   MECGeneratorINCL();
   MECGeneratorINCL(string config);
- ~MECGeneratorINCL();
+  virtual ~MECGeneratorINCL();
 
-  // implement the EventRecordVisitorI interface
-  void ProcessEventRecord (GHepRecord * event) const;
+  // ProcessEventRecord, Configure(const Registry &), Configure(string)
+  // are all inherited unchanged from MECGenerator.
 
-  // overload the Algorithm::Configure() methods to load private data
-  // members from configuration options
-  void Configure(const Registry & config);
-  void Configure(string config);
+protected:
+
+  // Overrides: the two methods that depend on the nuclear model, plus
+  // LoadConfig to additionally wire fNucleusGen.
+  void LoadConfig                    (void) override;
+  void GenerateFermiMomentum         (GHepRecord * event) const override;
+  void GenerateNSVInitialHadrons     (GHepRecord * event) const override;
 
 private:
 
-  void    LoadConfig                        (void);
-  void    AddNucleonCluster                 (GHepRecord * event) const;
-  void    AddTargetRemnant                  (GHepRecord * event) const;
-  void    GenerateFermiMomentum             (GHepRecord * event) const;
-  void    SelectEmpiricalKinematics         (GHepRecord * event) const;
-  void    AddFinalStateLepton               (GHepRecord * event) const;
-  void    RecoilNucleonCluster              (GHepRecord * event) const;
-  void    DecayNucleonCluster               (GHepRecord * event) const;
-  void    SelectNSVLeptonKinematics         (GHepRecord * event) const;
-  void    SelectSuSALeptonKinematics        (GHepRecord * event) const;
-  void    SelectMartiniLeptonKinematics     (GHepRecord * event) const;
-  void    GenerateNSVInitialHadrons         (GHepRecord * event) const;
-  PDGCodeList NucleonClusterConstituents    (int pdgc)           const;
-
-  // Helper function that computes the maximum differential cross section
-  // in the kPSTlctl phase space
-  double GetXSecMaxTlctl( const Interaction & inter, const Range1D_t & Tl_range, const Range1D_t & ctl_range ) const;
-
-  mutable const XSecAlgorithmI * fXSecModel;
-  mutable TGenPhaseSpace         fPhaseSpaceGenerator;
-  const NucleusGenI   *  fNucleusGen;  ///< nucleus generator
-
-  double fSafetyFactor ; 
-  int fFunctionCalls ; 
-  double fRelTolerance ; // Relative tolerance 
-  int fMinScanPointsTmu ; 
-  int fMinScanPointsCosth ; 
-  
-  double fQ3Max;
-
-  // Tolerate this maximum percent deviation above the calculated maximum cross
-  // section when sampling lepton kinematics for the SuSAv2-MEC model.
-  double fSuSAMaxXSecDiffTolerance;
+  const NucleusGenI * fNucleusGen;   ///< INCL-aware nucleus generator
+                                     ///  (position + momentum + binding 4-momentum
+                                     ///   for the di-nucleon cluster)
 };
 
 }      // genie namespace
-#endif // _MEC_GENERATOR_INCL_H_
 
+#endif // _MEC_GENERATOR_INCL_H_
 #endif // __GENIE_INCL_ENABLED__

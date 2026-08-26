@@ -38,7 +38,7 @@ class MECGenerator : public EventRecordVisitorI {
 public :
   MECGenerator();
   MECGenerator(string config);
- ~MECGenerator();
+  virtual ~MECGenerator();
 
   // implement the EventRecordVisitorI interface
   void ProcessEventRecord (GHepRecord * event) const;
@@ -48,12 +48,16 @@ public :
   void Configure(const Registry & config);
   void Configure(string config);
 
-private:
+protected:
 
-  void    LoadConfig                        (void);
+  // Protected constructor for derived classes (e.g. MECGeneratorINCL) to register
+  // under their own algorithm name while reusing this base initialization.
+  MECGenerator(string name, string config);
+
+  virtual void    LoadConfig                        (void);
   void    AddNucleonCluster                 (GHepRecord * event) const;
   void    AddTargetRemnant                  (GHepRecord * event) const;
-  void    GenerateFermiMomentum             (GHepRecord * event) const;
+  virtual void    GenerateFermiMomentum             (GHepRecord * event) const;
   void    SelectEmpiricalKinematics         (GHepRecord * event) const;
   void    AddFinalStateLepton               (GHepRecord * event) const;
   void    RecoilNucleonCluster              (GHepRecord * event) const;
@@ -61,12 +65,12 @@ private:
   void    SelectNSVLeptonKinematics         (GHepRecord * event) const;
   void    SelectSuSALeptonKinematics        (GHepRecord * event) const;
   void    SelectMartiniLeptonKinematics     (GHepRecord * event) const;
-  void    GenerateNSVInitialHadrons         (GHepRecord * event) const;
-  PDGCodeList NucleonClusterConstituents    (int pdgc)           const;
+  virtual void    GenerateNSVInitialHadrons         (GHepRecord * event) const;
+  virtual PDGCodeList NucleonClusterConstituents    (int pdgc)           const;
 
   // Helper function that computes the maximum differential cross section
   // in the kPSTlctl phase space
-  double GetXSecMaxTlctl( const Interaction & inter, const Range1D_t & Tl_range, const Range1D_t & ctl_range ) const;
+  virtual double GetXSecMaxTlctl( const Interaction & inter, const Range1D_t & Tl_range, const Range1D_t & ctl_range ) const;
 
   mutable const XSecAlgorithmI * fXSecModel;
   mutable TGenPhaseSpace         fPhaseSpaceGenerator;

@@ -18,7 +18,11 @@
 #pragma link C++ class genie::MartiniQELHadronTensorModel;
 #pragma link C++ class genie::SuSAv2QELHadronTensorModel;
 
-#pragma link C++ class genie::Rank2LorentzTensorI;
+//#pragma link C++ class genie::Rank2LorentzTensorI;
+#pragma link C++ class genie::Rank2LorentzTensor;
+#pragma link C++ class genie::NucleonTensor;
+#pragma link C++ class genie::IASingleNucleonTensor;
+
 #pragma link C++ class genie::HadronTensorInterfaceI;
 #pragma link C++ class genie::HadronTensorFortInterface;
 

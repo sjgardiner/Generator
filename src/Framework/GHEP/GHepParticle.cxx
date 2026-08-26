@@ -537,11 +537,12 @@ void GHepParticle::AssertIsKnownParticle(void) const
   TParticlePDG * p = PDGLibrary::Instance()->Find(fPdgCode);
   if(!p) {
 #ifdef __GENIE_INCL_ENABLED__
-    int S = (fPdgCode/int(1e7))%10;
+    int abs_pdg = std::abs(fPdgCode);
+    int S = (abs_pdg / 10000000) % 10;
     if(S != 0){
       PDGLibrary::Instance()->AddHypernucleus(fPdgCode);
       return;
-    } else if(fPdgCode > int(1e9)) {
+    } else if (abs_pdg > 1000000000) {
       PDGLibrary::Instance()->AddVirtualCluster(fPdgCode);
       return;
     }

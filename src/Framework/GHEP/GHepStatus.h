@@ -87,6 +87,21 @@ class GHepStatus {
      case kIStNucleonClusterTarget:
            return  "[nucleon cluster target]";
            break;
+     case kIStPreDeExNuclearRemnant:
+           return  "[remnant nucleus before de-excitation]";
+	   break;
+     case kIStDeExFinalState:
+           return  "[particle from nuclear de-excitation]";
+           break;
+     case kIStSpectator:
+           return  "[spectator nucleon]";
+           break;
+     case kIStFormZone:
+           return  "[particle about to traverse its formation zone]";
+           break;
+     case kIStIntermediateDeExNuclearRemnant:
+           return  "[remnant nucleus at intermediate de-excitation stage]";
+           break;
      default:  break;
      }
      return "[-]";

@@ -7,12 +7,22 @@
 #include "Framework/GHEP/GHepParticle.h"
 #include "G4INCLThreeVector.hh"
 #include "G4INCLParticleType.hh"
+#include "Framework/Conventions/Units.h"
 
 namespace G4INCL {
   /*
    * Convert GENIE Event Record to INCL Style
    *
    */
+  enum G4INCLFinalStateType {
+    kUnknownType = -9,
+    kComposite = -7,
+    kMother    = -6,
+    kCreated   = -5,
+    kDestroyed = -4,
+    kOutgoing  = -3,
+    kModified  = -2
+  };
 
   enum GENIERecordCode {
     kUnknown = -1,
@@ -22,6 +32,52 @@ namespace G4INCL {
     kRemnant,
     kFinalStateLepton,
     kHadron
+  };
+
+
+  struct INCLRecord{
+    int global_index;        // Each particles in INCLXX will have a unique ID, it is a global index for every simulation run.
+    int pdgid;	       // PDG ID of particles in INCLXX
+    int mother_index;        // mother index of particles in each event
+    int local_index;         // local index of particles in each event
+    G4INCLFinalStateType fsType; 
+    TLorentzVector p4mom;
+    TLorentzVector p4posi;
+    G4INCL::ParticleType theType;   // INCL Particle type
+
+    INCLRecord(int g_id, int p_id, int m_id, int l_id, G4INCLFinalStateType fst):
+      global_index(g_id),
+      pdgid(p_id),
+      mother_index(m_id),
+      local_index(l_id),
+      fsType(fst){}
+    INCLRecord(int g_id, int p_id, int m_id, int l_id, G4INCLFinalStateType fst, TLorentzVector mom, TLorentzVector posi):
+      global_index(g_id),
+      pdgid(p_id),
+      mother_index(m_id),
+      local_index(l_id),
+      fsType(fst),
+      p4mom(mom),
+      p4posi(posi){}
+    INCLRecord(int g_id, int p_id, int m_id, int l_id, G4INCLFinalStateType fst, TLorentzVector mom, TLorentzVector posi, G4INCL::ParticleType pType):
+      global_index(g_id),
+      pdgid(p_id),
+      mother_index(m_id),
+      local_index(l_id),
+      fsType(fst),
+      p4mom(mom),
+      p4posi(posi), 
+      theType(pType){}
+  };
+
+
+  class GENIEINCLUtil {
+    public:
+      static int INCLPDG_to_GHEPPDG(int pdg, int A, int Z, int S);
+    private:
+      // Prevent instantiation — this is a "namespace as class" idiom
+      GENIEINCLUtil() = delete;
+      ~GENIEINCLUtil() = delete;
   };
 
   class GENIEParticleRecord {
@@ -66,6 +122,8 @@ namespace G4INCL {
       ParticleType fPType;           ///< INCL particle type
       GENIERecordCode fGenieRecordCode;
 
+      static constexpr double MeV = genie::units::MeV;
+      static constexpr double GeV = genie::units::GeV;
 
 
       ParticleType PDG_to_INCLType(int pdg) const {

@@ -37,6 +37,10 @@ namespace G4INCL {
         return theParticleList;
       }
 
+      std::vector<GENIEParticleRecord> *getEventRecord() {
+        return genie_evtrec;
+      }
+
       std::string dump() const;
     private:
       Particle *particle1;
@@ -133,26 +137,26 @@ namespace G4INCL {
         private:
           /// \brief List of final-state particles.
           ParticleList finalParticles;
-          /// \brief CM particle momenta, as determined by the channel.
-          std::vector<ThreeVector> particleMomenta;
-          /// \brief Total energy before the interaction.
-          double initialEnergy;
-          /// \brief Pointer to the nucleus
-          Nucleus *theNucleus;
-
-          /// \brief True if we should use local energy
-          const bool shouldUseLocalEnergy;
-
           /// \brief energy of final state lepton
           double &leptonEnergy;
           /// \brief momentum of final state lepton
           ThreeVector &leptonMomentum;
+          /// \brief Total energy before the interaction.
+          double initialEnergy;
+          /// \brief Pointer to the nucleus
+          Nucleus *theNucleus;
+          /// \brief Pointer to the boost vector
+          ThreeVector const &boostVector;
+          /// \brief True if we should use local energy
+          const bool shouldUseLocalEnergy;
+          /// \brief CM particle momenta, as determined by the channel.
+          std::vector<ThreeVector> particleMomenta;
+
+
 
           /// \brief CM momentum of final state lepton
           ThreeVector leptonMomentumCM;
 
-          /// \brief Pointer to the boost vector
-          ThreeVector const &boostVector;
 
           Lepton *lepton;
 

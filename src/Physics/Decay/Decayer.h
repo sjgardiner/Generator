@@ -53,11 +53,11 @@ protected:
   virtual void InhibitDecay  (int pdgc, TDecayChannel * dc=0) const = 0;
   virtual void UnInhibitDecay(int pdgc, TDecayChannel * dc=0) const = 0;
 
-  bool        fGenerateWeighted;    ///< generate weighted or unweighted decays?
-  bool        fRunBefHadroTransp;   ///< is invoked before or after FSI?
-  PDGCodeList fParticlesToDecay;    ///< list of particles to be decayed
-  PDGCodeList fParticlesNotToDecay; ///< list of particles for which decay is inhibited
-  bool        fINCLHadronTranspMode;
+  bool        fGenerateWeighted;     ///< generate weighted or unweighted decays?
+  bool        fRunBefHadroTransp;    ///< is invoked before or after FSI?
+  PDGCodeList fParticlesToDecay;     ///< list of particles to be decayed
+  PDGCodeList fParticlesNotToDecay;  ///< list of particles for which decay is inhibited
+  bool        fINCLHadronTranspMode; ///< Hadron transport mode INCL uses 
 
 };
 

@@ -25,7 +25,7 @@ namespace G4INCL {
     int cluster_index = 0;
     std::vector<GENIEParticleRecord>::iterator ip;
     for(ip = genie_evtrec->begin(); ip != genie_evtrec->end(); ip++){
-      if(ip->Status() == 14){
+      if(ip->Status() == genie::kIStHadronInTheNucleus){
         ip->setID(int(particles.at(cluster_index)->getID()));
         particles.at(cluster_index)->setType(ip->Type());
         particles.at(cluster_index)->setMomentum(ip->P3());

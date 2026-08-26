@@ -1,7 +1,31 @@
-#include "Physics/HadronTensors/Rank2LorentzTensorI.h"
+//____________________________________________________________________________
+/*!
 
-std::complex<double> genie::Rank2LorentzTensorI::Contract(
-  const genie::Rank2LorentzTensorI& other) const
+\class    genie::Rank2LorentzTensor
+
+\brief    Abstract interface for an object that computes the elements of a rank
+          2 Lorentz tensor \f$A^{\mu\nu}\f$.
+
+\author   Steven Gardiner <gardiner \at fnal.gov>
+          Liang Liu <liangliu \at fnal.gov>
+          Fermi National Accelerator Laboratory
+
+\created  January 17, 2019
+
+\updated  May 06, 2026
+
+\cpright  Copyright (c) 2003-2026, The GENIE Collaboration
+          For the full text of the license visit http://copyright.genie-mc.org
+          or see $GENIE/LICENSE
+*/
+//____________________________________________________________________________
+
+
+#include "Physics/HadronTensors/Rank2LorentzTensor.h"
+#include "Framework/Messenger/Messenger.h"
+
+std::complex<double> genie::Rank2LorentzTensor::Contract(
+  const genie::Rank2LorentzTensor& other) const
 {
   std::complex<double> sum(0., 0.);
   for (int m = 0; m < 4; ++m) {
@@ -15,7 +39,7 @@ std::complex<double> genie::Rank2LorentzTensorI::Contract(
   return sum;
 }
 
-double genie::Rank2LorentzTensorI::LeviCivitaProduct(genie::TensorIndex_t mu,
+double genie::Rank2LorentzTensor::LeviCivitaProduct(genie::TensorIndex_t mu,
   genie::TensorIndex_t nu, const TLorentzVector& p1, const TLorentzVector& p2)
   const
 {
@@ -28,7 +52,7 @@ double genie::Rank2LorentzTensorI::LeviCivitaProduct(genie::TensorIndex_t mu,
 
   bool set_alpha = false;
   bool set_beta = false;
-  genie::TensorIndex_t alpha, beta;
+  genie::TensorIndex_t alpha = genie::kTIdx_Time, beta = genie::kTIdx_Time; // initialize
   for (int k = 0; k < 4; ++k) {
     genie::TensorIndex_t index = indices[k];
     if (mu != index && nu != index) {
@@ -44,7 +68,8 @@ double genie::Rank2LorentzTensorI::LeviCivitaProduct(genie::TensorIndex_t mu,
   }
 
   if ( !(set_alpha && set_beta) ) {
-    // TODO: ERROR!
+    LOG("HadronTensors", pFATAL) << "alpha and beta not set";
+    exit(1);
   }
 
   // See http://www.cpluscode.org/p/physics-c.html
@@ -66,7 +91,7 @@ double genie::Rank2LorentzTensorI::LeviCivitaProduct(genie::TensorIndex_t mu,
 
 // Slight convention change with the fortran wrapper SF model, need different
 // convention for the levi civita tensor
-double genie::Rank2LorentzTensorI::LeviCivitaProductSF(genie::TensorIndex_t mu,
+double genie::Rank2LorentzTensor::LeviCivitaProductSF(genie::TensorIndex_t mu,
   genie::TensorIndex_t nu, const TLorentzVector& p1, const TLorentzVector& p2)
   const
 {
@@ -87,7 +112,7 @@ double genie::Rank2LorentzTensorI::LeviCivitaProductSF(genie::TensorIndex_t mu,
 
   bool set_alpha = false;
   bool set_beta = false;
-  genie::TensorIndex_t alpha, beta;
+  genie::TensorIndex_t alpha = genie::kTIdx_Time, beta = genie::kTIdx_Time;  // initialize
   for (int k = 0; k < 4; ++k) {
     genie::TensorIndex_t index = indices[k];
     if (mu != index && nu != index) {
@@ -103,7 +128,8 @@ double genie::Rank2LorentzTensorI::LeviCivitaProductSF(genie::TensorIndex_t mu,
   }
 
   if ( !(set_alpha && set_beta) ) {
-    // TODO: ERROR!
+    LOG("HadronTensors", pFATAL) << "alpha and beta not set";
+    exit(1);
   }
   
   int levi_civita_sign = (mu - nu) * (mu - alpha) * (mu - beta) * (nu - alpha) * (nu - beta) * (alpha - beta) / 12;

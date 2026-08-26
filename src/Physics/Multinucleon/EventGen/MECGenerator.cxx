@@ -62,6 +62,12 @@ EventRecordVisitorI("genie::MECGenerator", config)
 
 }
 //___________________________________________________________________________
+MECGenerator::MECGenerator(string name, string config) :
+EventRecordVisitorI(name, config)
+{
+
+}
+//___________________________________________________________________________
 MECGenerator::~MECGenerator()
 {
 
@@ -112,6 +118,17 @@ void MECGenerator::ProcessEventRecord(GHepRecord * event) const
       // for this...
       this -> DecayNucleonCluster(event);
   }
+#ifdef MARTINI_MEC
+  else if (fXSecModel->Id().Name() == "genie::MartiniEricsonChanfrayMarteauMECPXSec2024") {
+      this -> SelectMartiniLeptonKinematics(event);
+      this -> AddTargetRemnant(event);
+      this -> GenerateNSVInitialHadrons(event);
+      // Note: this method in `MECTensor/MECTensorGenerator.cxx` appeared to be a straight
+      // copy of an earlier version of the `DecayNucleonCluster` method here - but, watch
+      // for this...
+      this -> DecayNucleonCluster(event);
+  }
+#endif
   else {
       LOG("MECGenerator",pFATAL) <<
           "ProcessEventRecord >> Cannot calculate kinematics for " <<
@@ -185,6 +202,7 @@ void MECGenerator::GenerateFermiMomentum(GHepRecord * event) const
 
   // generate a Fermi momentum for each nucleon
 
+  assert(fNuclModel);
   Target tgt(target_nucleus->Pdg());
   PDGCodeList pdgv = this->NucleonClusterConstituents(nucleon_cluster->Pdg());
   assert(pdgv.size()==2);
@@ -1141,8 +1159,8 @@ void MECGenerator::SelectMartiniLeptonKinematics(GHepRecord* event) const
   // mode (this is important for EM interactions since the differential
   // cross section blows up as Q^2 --> 0)
   double Q2min = genie::controls::kMinQ2Limit; // CC/NC limit
-  if ( interaction->ProcInfo().IsEM() ) Q2min = genie::utils::kinematics
-    ::electromagnetic::kMinQ2Limit; // EM limit
+  if ( interaction->ProcInfo().IsEM() )
+    Q2min = genie::utils::kinematics::electromagnetic::kMinQ2Limit; // EM limit
 
   LOG("MEC", pDEBUG) << "Q2min = " << Q2min;
 
@@ -1282,7 +1300,8 @@ void MECGenerator::SelectMartiniLeptonKinematics(GHepRecord* event) const
 
         // Find out if we should use a pn initial state
         double myrand_pn = rnd->RndKine().Rndm();
-        double pnFraction = 1.;
+        double pnFraction = dynamic_cast< const MartiniEricsonChanfrayMarteauMECPXSec2024* >( fXSecModel )
+          ->PairRatio( interaction );
 
         LOG("MEC", pINFO) << "Test for pn: "
           << "; xsec = " << XSec << "; pn_fraction = " << pnFraction
@@ -1291,15 +1310,14 @@ void MECGenerator::SelectMartiniLeptonKinematics(GHepRecord* event) const
         double myrand_pp = rnd->RndKine().Rndm();
         double ppFraction = 0 ;
 
-	if ( interaction->ProcInfo().IsEM() ) {
-      // calculate ppFraction in the EM case
-	  ppFraction = dynamic_cast< const SuSAv2MECPXSec* >( fXSecModel )
-          ->PairRatio( interaction ,"ppFraction");
+	      if ( interaction->ProcInfo().IsEM() ) {
+          // calculate ppFraction in the EM case
+	        ppFraction = dynamic_cast< const SuSAv2MECPXSec* >( fXSecModel )->PairRatio( interaction ,"ppFraction");
 
-      LOG("MEC", pINFO) << "Test for pp: "
-                        << "; xsec = " << XSec << "; pp_fraction = " << ppFraction
-                        << "; random number val = " << myrand_pp;
-	}
+          LOG("MEC", pINFO) << "Test for pp: "
+            << "; xsec = " << XSec << "; pp_fraction = " << ppFraction
+            << "; random number val = " << myrand_pp;
+	      }
 
         if ( myrand_pn <= pnFraction ) {
           // yes it is, add a PN initial state to event record
@@ -1503,6 +1521,7 @@ void MECGenerator::GenerateNSVInitialHadrons(GHepRecord * event) const
         // Nieves et al. would use a local Fermi gas here, not this, but ok.
         // so momentum from global Fermi gas, local Fermi gas, or spectral function
         // and removal energy ~0.025 GeV, correlated with density, or from SF distribution
+        assert(fNuclModel);
         tgt.SetHitNucPdg(pdgv[0]);
         fNuclModel->GenerateNucleon(tgt);
         p31i = fNuclModel->Momentum3();
@@ -1603,7 +1622,13 @@ void MECGenerator::LoadConfig(void)
     fNuclModel = 0;
     RgKey nuclkey = "NuclearModel";
     fNuclModel = dynamic_cast<const NuclearModelI *> (this->SubAlg(nuclkey));
-    assert(fNuclModel);
+    // Note: do not assert here. Derived classes (e.g. MECGeneratorINCL) may
+    // legitimately run without fNuclModel because they override the methods
+    // that would use it. Methods that need fNuclModel assert at use site.
+    if(!fNuclModel) {
+      LOG("MEC", pINFO) << "No NuclearModel sub-algorithm configured "
+                        << "(ok if a derived class supplies its own nucleus generator).";
+    }
 
     GetParamDef( "MaxXSec-SafetyFactor", fSafetyFactor, 1.6 ) ;
     GetParam( "MaxXSec-FunctionCalls", fFunctionCalls ) ;

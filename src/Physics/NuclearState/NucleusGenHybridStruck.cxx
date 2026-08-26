@@ -98,18 +98,13 @@ void NucleusGenHybridStruck::setInitialStateVertex(GHepRecord * evrec) const{
     fVertexGenerator->ProcessEventRecord(evrec);
 #ifdef __GENIE_INCL_ENABLED__
     if(fINCLFSI){
-      // find the closet nucleon in INCL as the struck nucleon
-      // get the target and use it to initialize the incl nucleus
       Target* tgt = evrec->Summary()->InitState().TgtPtr();
       INCLNucleus *incl_nucleus = INCLNucleus::Instance();
-      incl_nucleus->initialize(tgt);
+      // TODO: simplify this initialization
+      // initialization will randomly pick a nucleon as a hit nucleon
+      // it will be replaced by GENIE simulation later
+      // in the hitParticle->setPosition(ip->X3()); in G4INCLGENIEQELChannel.cxx
       incl_nucleus->reset(tgt);
-      incl_nucleus->initialize(tgt);
-      //this->setINCLVertex(evrec);
-      // Get the position of hit nucelon
-      // GHepParticle * nucleon = evrec->HitNucleon();
-      // TVector3 posi = nucleon->X4()->Vect();
-      //incl_nucleus->setHitParticle(nucleon->Pdg(), posi);
     }
   }
 #endif
@@ -153,9 +148,7 @@ void NucleusGenHybridStruck::setClusterVertex(GHepRecord * evrec) const{
     tgt.SetHitNucPdg(nucleon_cluster->Pdg());
 
     INCLNucleus *incl_nucleus = INCLNucleus::Instance();
-    incl_nucleus->initialize(&tgt);
     incl_nucleus->reset(&tgt);
-    incl_nucleus->initialize(&tgt);
 
     std::shared_ptr<G4INCL::Cluster> incl_cluster =  incl_nucleus->getHitNNCluster();
     LOG("NucleusGenINCL", pINFO) << incl_cluster->print();
@@ -189,9 +182,7 @@ void NucleusGenHybridStruck::setClusterVertex(GHepRecord * evrec) const{
       // get the target and use it to initialize the incl nucleus
       Target* tgt = evrec->Summary()->InitState().TgtPtr();
       INCLNucleus *incl_nucleus = INCLNucleus::Instance();
-      incl_nucleus->initialize(tgt);
       incl_nucleus->reset(tgt);
-      incl_nucleus->initialize(tgt);
       // Get the position of hit nucelon
       GHepParticle * nucleon = evrec->HitNucleon();
       TVector3 posi = nucleon->X4()->Vect();
@@ -499,9 +490,7 @@ TVector3 NucleusGenHybridStruck::GetVertex(Interaction* interaction) const{
   if(fINCLVertex){
     // randomly pick up a nucleon from INCL nucleus as the struck nucleon
     INCLNucleus *incl_nucleus = INCLNucleus::Instance();
-    incl_nucleus->initialize(tgt);
     incl_nucleus->reset(tgt);
-    incl_nucleus->initialize(tgt);
     TVector3 vertex_pos = incl_nucleus->getHitNucleonPosition();
     return vertex_pos;
 

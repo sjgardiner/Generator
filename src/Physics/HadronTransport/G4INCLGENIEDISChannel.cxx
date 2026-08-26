@@ -7,6 +7,7 @@
 #include "G4INCLParticleTable.hh"
 #include "G4INCLCrossSections.hh"
 #include "G4INCLGlobals.hh"
+#include "Framework/ParticleData/PDGCodes.h"
 
 namespace G4INCL {
 
@@ -25,8 +26,8 @@ namespace G4INCL {
     std::vector<GENIEParticleRecord>::iterator ip;
 
     for(ip = genie_evtrec->begin(); ip != genie_evtrec->end(); ip++){
-      if(ip->Status() == 14){
-        if(ip->Pdg() == 2112 || ip->Pdg() == 2212){
+      if(ip->Status() == genie::kIStHadronInTheNucleus){
+        if(ip->Pdg() == genie::kPdgNeutron || ip->Pdg() == genie::kPdgProton){
           ip->setID(int(hitParticle->getID()));
           hitParticle->setType(ip->Type());
           hitParticle->setMomentum(ip->P3());
