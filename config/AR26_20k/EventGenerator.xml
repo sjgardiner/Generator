@@ -48,7 +48,7 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
 
   <param_set name="DMELv0">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   12                                                    </param>
+     <param type="int"    name="NModules">   11                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                   </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                        </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                             </param>
@@ -57,16 +57,15 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
      <param type="alg"    name="Module-5">   genie::QELHadronicSystemGenerator/Default             </param>
      <param type="alg"    name="Module-6">   genie::PauliBlocker/Default                           </param>
      <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/BeforeHadronTransport  </param>
-     <param type="alg"    name="Module-8">   genie::NucDeExcitationSim/Default                     </param>
-     <param type="alg"    name="Module-9">   genie::HadronTransporter/Default                      </param>
-     <param type="alg"    name="Module-10">  genie::NucBindEnergyAggregator/Default                </param>
-     <param type="alg"    name="Module-11">  genie::UnstableParticleDecayer/AfterHadronTransport   </param>
+     <param type="alg"    name="Module-8">   genie::HadronTransporter/Default                      </param>
+     <param type="alg"    name="Module-9">  genie::NucBindEnergyAggregator/Default                </param>
+     <param type="alg"    name="Module-10">  genie::UnstableParticleDecayer/AfterHadronTransport   </param>
      <param type="alg"    name="ILstGen">    genie::DMELInteractionListGenerator/DM-Default        </param>
   </param_set>
 
   <param_set name="DMELv2">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   12                                                    </param>
+     <param type="int"    name="NModules">   11                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                   </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                        </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                             </param>
@@ -75,42 +74,39 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
      <param type="alg"    name="Module-5">   genie::QELHadronicSystemGenerator/Default             </param>
      <param type="alg"    name="Module-6">   genie::PauliBlocker/Default                           </param>
      <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/BeforeHadronTransport  </param>
-     <param type="alg"    name="Module-8">   genie::NucDeExcitationSim/Default                     </param>
-     <param type="alg"    name="Module-9">   genie::HadronTransporter/Default                      </param>
-     <param type="alg"    name="Module-10">  genie::NucBindEnergyAggregator/Default                </param>
-     <param type="alg"    name="Module-11">  genie::UnstableParticleDecayer/AfterHadronTransport   </param>
+     <param type="alg"    name="Module-8">   genie::HadronTransporter/Default                      </param>
+     <param type="alg"    name="Module-9">  genie::NucBindEnergyAggregator/Default                </param>
+     <param type="alg"    name="Module-10">  genie::UnstableParticleDecayer/AfterHadronTransport   </param>
      <param type="alg"    name="ILstGen">    genie::DMELInteractionListGenerator/DM-Default        </param>
   </param_set>
 
   <param_set name="DMDISv0">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   10                                                    </param>
+     <param type="int"    name="NModules">   9                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                   </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                        </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                             </param>
      <param type="alg"    name="Module-3">   genie::DMDISKinematicsGenerator/NC-Default            </param>
      <param type="alg"    name="Module-4">   genie::DMDISOutgoingDarkGenerator/Default             </param>
      <param type="alg"    name="Module-5">   genie::DISHadronicSystemGenerator/Default             </param>
-     <param type="alg"    name="Module-6">   genie::NucDeExcitationSim/Default                     </param>
-     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                      </param>
-     <param type="alg"    name="Module-8">   genie::NucBindEnergyAggregator/Default                </param>
-     <param type="alg"    name="Module-9">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
+     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                      </param>
+     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default                </param>
+     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
      <param type="alg"    name="ILstGen">    genie::DMDISInteractionListGenerator/DM-Default       </param>
   </param_set>
 
     <param_set name="DMDISv2">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   10                                                    </param>
+     <param type="int"    name="NModules">   9                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                   </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                        </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                             </param>
      <param type="alg"    name="Module-3">   genie::DMDISKinematicsGenerator/NC-Default            </param>
      <param type="alg"    name="Module-4">   genie::DMDISOutgoingDarkGenerator/Default             </param>
      <param type="alg"    name="Module-5">   genie::DISHadronicSystemGenerator/Default             </param>
-     <param type="alg"    name="Module-6">   genie::NucDeExcitationSim/Default                     </param>
-     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                      </param>
-     <param type="alg"    name="Module-8">   genie::NucBindEnergyAggregator/Default                </param>
-     <param type="alg"    name="Module-9">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
+     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                      </param>
+     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default                </param>
+     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
      <param type="alg"    name="ILstGen">    genie::DMDISInteractionListGenerator/DM-Default       </param>
   </param_set>
 
@@ -121,15 +117,14 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
 
   <param_set name="QEL-CC">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   8                                                    </param>
+     <param type="int"    name="NModules">   7                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
      <param type="alg"    name="Module-2">   genie::QELEventGeneratorSM/Default                   </param>
      <param type="alg"    name="Module-3">   genie::UnstableParticleDecayer/BeforeHadronTransport </param>
-     <param type="alg"    name="Module-4">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-5">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-6">   genie::NucBindEnergyAggregator/Default               </param>
-     <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-4">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-5">   genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-6">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::QELInteractionListGenerator/CC-Default        </param>
    </param_set>
    -->
@@ -142,16 +137,15 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
   <!--
   <param_set name="QEL-CC">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   9                                                    </param>
+     <param type="int"    name="NModules">   8                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
      <param type="alg"    name="Module-2">   genie::QELEventGenerator/Default                     </param>
      <param type="alg"    name="Module-3">   genie::PauliBlocker/Default                          </param>
      <param type="alg"    name="Module-4">   genie::UnstableParticleDecayer/BeforeHadronTransport </param>
-     <param type="alg"    name="Module-5">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default               </param>
-     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-5">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-6">   genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::QELInteractionListGenerator/CC-Default        </param>
    </param_set>
    -->
@@ -160,20 +154,19 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
 
    <param_set name="QEL-CC">
       <param type="string" name="VldContext"> </param>
-      <param type="int"    name="NModules">   6                                                    </param>
+      <param type="int"    name="NModules">   5                                                    </param>
       <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
       <param type="alg"    name="Module-1">   genie::QELEventGeneratorINCL/Hybrid                  </param>
       <param type="alg"    name="Module-2">   genie::UnstableParticleDecayer/BeforeHadronTransport </param>
-      <param type="alg"    name="Module-3">   genie::NucDeExcitationSim/Default                    </param>
-      <param type="alg"    name="Module-4">   genie::HadronTransporter/Default                     </param>
-      <param type="alg"    name="Module-5">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+      <param type="alg"    name="Module-3">   genie::HadronTransporter/Default                     </param>
+      <param type="alg"    name="Module-4">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
       <param type="alg"    name="ILstGen">    genie::QELInteractionListGenerator/CC-Default        </param>
   </param_set>
 
 
   <param_set name="QEL-NC">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   11                                                   </param>
+     <param type="int"    name="NModules">   10                                                   </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::NucleusGenerator/Default                      </param>
      <param type="alg"    name="Module-2">   genie::QELKinematicsGenerator/NC-Default             </param>
@@ -181,41 +174,38 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
      <param type="alg"    name="Module-4">   genie::QELHadronicSystemGenerator/Default            </param>
      <param type="alg"    name="Module-5">   genie::PauliBlocker/Default                          </param>
      <param type="alg"    name="Module-6">   genie::UnstableParticleDecayer/BeforeHadronTransport </param>
-     <param type="alg"    name="Module-7">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-8">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-9">   genie::NucBindEnergyAggregator/Default               </param>
-     <param type="alg"    name="Module-10">  genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-8">   genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-9">  genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::QELInteractionListGenerator/NC-Default        </param>
   </param_set>
 
   <param_set name="RES-NC">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   9                                                    </param>
+     <param type="int"    name="NModules">   8                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                   </param>
      <param type="alg"    name="Module-1">   genie::NucleusGenerator/Default                      </param>
      <param type="alg"    name="Module-2">   genie::RESKinematicsGenerator/RES                     </param>
      <param type="alg"    name="Module-3">   genie::RESPrimaryLeptonGenerator/Default              </param>
      <param type="alg"    name="Module-4">   genie::RESHadronicSystemGenerator/Default        </param>
-     <param type="alg"    name="Module-5">   genie::NucDeExcitationSim/Default                     </param>
-     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                      </param>
-     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default                </param>
-     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
+     <param type="alg"    name="Module-5">   genie::HadronTransporter/Default                      </param>
+     <param type="alg"    name="Module-6">   genie::NucBindEnergyAggregator/Default                </param>
+     <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
      <param type="alg"    name="ILstGen">    genie::RESInteractionListGenerator/NC-Default         </param>
   </param_set>
 
 
   <param_set name="RES-CC">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   9                                                    </param>
+     <param type="int"    name="NModules">   8                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                   </param>
      <param type="alg"    name="Module-1">   genie::NucleusGenerator/Default                      </param>
      <param type="alg"    name="Module-2">   genie::RESKinematicsGenerator/RES                     </param>
      <param type="alg"    name="Module-3">   genie::RESPrimaryLeptonGenerator/Default              </param>
      <param type="alg"    name="Module-4">   genie::RESHadronicSystemGenerator/Default        </param>
-     <param type="alg"    name="Module-5">   genie::NucDeExcitationSim/Default                     </param>
-     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                      </param>
-     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default                </param>
-     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
+     <param type="alg"    name="Module-5">   genie::HadronTransporter/Default                      </param>
+     <param type="alg"    name="Module-6">   genie::NucBindEnergyAggregator/Default                </param>
+     <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
      <param type="alg"    name="ILstGen">    genie::RESInteractionListGenerator/CC-Default         </param>
   </param_set>
 
@@ -227,21 +217,20 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
    <!-- EMQE generator for SuSA-1p1h which is loosely based on the MEC-CC generator -->
    <param_set name="QEL-EM">
       <param type="string" name="VldContext"> </param>
-      <param type="int"    name="NModules">   7                                                    </param>
+      <param type="int"    name="NModules">   6                                                    </param>
       <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
       <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
       <param type="alg"    name="Module-2">   genie::QELEventGeneratorSuSA/Default            </param>
       <param type="alg"    name="Module-3">   genie::UnstableParticleDecayer/BeforeHadronTransport </param>
-      <param type="alg"    name="Module-4">   genie::NucDeExcitationSim/Default                    </param>
-      <param type="alg"    name="Module-5">   genie::HadronTransporter/Default                     </param>
-      <param type="alg"    name="Module-6">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+      <param type="alg"    name="Module-4">   genie::HadronTransporter/Default                     </param>
+      <param type="alg"    name="Module-5">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
       <param type="alg"    name="ILstGen">    genie::QELInteractionListGenerator/EM-Default        </param>
   </param_set>
 
   <!-- "old" style QEL-EM event generation...
   <param_set name="QEL-EM">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   12                                                   </param>
+     <param type="int"    name="NModules">   11                                                   </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                            </param>
@@ -250,57 +239,67 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
      <param type="alg"    name="Module-5">   genie::QELHadronicSystemGenerator/Default            </param>
      <param type="alg"    name="Module-6">   genie::PauliBlocker/Default                          </param>
      <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/BeforeHadronTransport </param>
-     <param type="alg"    name="Module-8">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-9">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-10">  genie::NucBindEnergyAggregator/Default               </param>
-     <param type="alg"    name="Module-11">  genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-8">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-9">  genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-10">  genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::QELInteractionListGenerator/EM-Default        </param>
   </param_set>
   -->
 
+  <param_set name="QEL-EM-INCL">
+     <param type="string" name="VldContext"> </param>
+     <param type="int"    name="NModules">   10                                                   </param>
+     <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
+     <param type="alg"    name="Module-1">   genie::NucleusGenerator/Default                      </param>
+     <param type="alg"    name="Module-2">   genie::QELKinematicsGenerator/EM-Default             </param>
+     <param type="alg"    name="Module-3">   genie::QELPrimaryLeptonGenerator/Default             </param>
+     <param type="alg"    name="Module-4">   genie::QELHadronicSystemGenerator/Default            </param>
+     <param type="alg"    name="Module-5">   genie::PauliBlocker/Default                          </param>
+     <param type="alg"    name="Module-6">   genie::UnstableParticleDecayer/BeforeHadronTransport </param>
+     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-8">  genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-9">  genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="ILstGen">    genie::QELInteractionListGenerator/EM-Default        </param>
+  </param_set>
 
   <param_set name="QEL-CC-LAMBDA">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   9                                                    </param>
+     <param type="int"    name="NModules">   7                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
-     <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
-     <param type="alg"    name="Module-2">   genie::FermiMover/Default                            </param>
-     <param type="alg"    name="Module-3">   genie::QELKinematicsGenerator/CC-Lambda-Default       </param>
-     <param type="alg"    name="Module-4">   genie::QELPrimaryLeptonGenerator/Default             </param>
-     <param type="alg"    name="Module-5">   genie::QELHadronicSystemGenerator/Default            </param>
-     <param type="alg"    name="Module-6">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-1">   genie::NucleusGenerator/Default                      </param>
+     <param type="alg"    name="Module-2">   genie::QELKinematicsGenerator/CC-Lambda-Default       </param>
+     <param type="alg"    name="Module-3">   genie::QELPrimaryLeptonGenerator/Default             </param>
+     <param type="alg"    name="Module-4">   genie::QELHadronicSystemGenerator/Default            </param>
+     <param type="alg"    name="Module-5">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-6">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::QELInteractionListGenerator/CC-Lambda-Default  </param>
   </param_set>
 
   <param_set name="DIS-NC">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   9                                                    </param>
+     <param type="int"    name="NModules">   8                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::NucleusGenerator/Default                  </param>
      <param type="alg"    name="Module-2">   genie::DISKinematicsGenerator/NC-Default             </param>
      <param type="alg"    name="Module-3">   genie::DISPrimaryLeptonGenerator/Default             </param>
      <param type="alg"    name="Module-4">   genie::DISHadronicSystemGenerator/Default            </param>
-     <param type="alg"    name="Module-5">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default               </param>
-     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-5">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-6">   genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::DISInteractionListGenerator/NC-Default        </param>
   </param_set>
 
   <param_set name="DIS-CC">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   9                                                    </param>
+     <param type="int"    name="NModules">   8                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::NucleusGenerator/Default                  </param>
      <param type="alg"    name="Module-2">   genie::DISKinematicsGenerator/CC-Default             </param>
      <param type="alg"    name="Module-3">   genie::DISPrimaryLeptonGenerator/Default             </param>
      <param type="alg"    name="Module-4">   genie::DISHadronicSystemGenerator/Default            </param>
-     <param type="alg"    name="Module-5">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default               </param>
-     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-5">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-6">   genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::DISInteractionListGenerator/CC-Default        </param>
   </param_set>
 
@@ -308,33 +307,62 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
 
   <param_set name="DIS-EM">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   10                                                   </param>
+     <param type="int"    name="NModules">   9                                                   </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                            </param>
      <param type="alg"    name="Module-3">   genie::DISKinematicsGenerator/EM-Default             </param>
      <param type="alg"    name="Module-4">   genie::DISPrimaryLeptonGenerator/Default             </param>
      <param type="alg"    name="Module-5">   genie::DISHadronicSystemGenerator/Default            </param>
-     <param type="alg"    name="Module-6">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-8">   genie::NucBindEnergyAggregator/Default               </param>
-     <param type="alg"    name="Module-9">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::DISInteractionListGenerator/EM-Default        </param>
   </param_set>
 
+
+  <param_set name="DIS-EM-INCL">
+     <param type="string" name="VldContext"> </param>
+     <param type="int"    name="NModules">   8                                                   </param>
+     <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
+     <param type="alg"    name="Module-1">   genie::NucleusGenerator/Default                       </param>
+     <param type="alg"    name="Module-2">   genie::DISKinematicsGenerator/EM-Default             </param>
+     <param type="alg"    name="Module-3">   genie::DISPrimaryLeptonGenerator/Default             </param>
+     <param type="alg"    name="Module-4">   genie::DISHadronicSystemGenerator/Default            </param>
+     <param type="alg"    name="Module-5">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-6">   genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="ILstGen">    genie::DISInteractionListGenerator/EM-Default        </param>
+  </param_set>
+
+
   <param_set name="RES-EM">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   10                                                    </param>
+     <param type="int"    name="NModules">   9                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                   </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                        </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                             </param>
      <param type="alg"    name="Module-3">   genie::RESKinematicsGenerator/RES                     </param>
      <param type="alg"    name="Module-4">   genie::RESPrimaryLeptonGenerator/Default              </param>
      <param type="alg"    name="Module-5">   genie::RESHadronicSystemGenerator/Default             </param>
-     <param type="alg"    name="Module-6">   genie::NucDeExcitationSim/Default                     </param>
-     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                      </param>
-     <param type="alg"    name="Module-8">   genie::NucBindEnergyAggregator/Default                </param>
-     <param type="alg"    name="Module-9">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
+     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                      </param>
+     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default                </param>
+     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
+     <param type="alg"    name="ILstGen">    genie::RESInteractionListGenerator/EM-Default         </param>
+  </param_set>
+
+
+  <param_set name="RES-EM-INCL">
+     <param type="string" name="VldContext"> </param>
+     <param type="int"    name="NModules">   8                                                    </param>
+     <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                   </param>
+     <param type="alg"    name="Module-1">   genie::NucleusGenerator/Default                        </param>
+     <param type="alg"    name="Module-2">   genie::RESKinematicsGenerator/RES                     </param>
+     <param type="alg"    name="Module-3">   genie::RESPrimaryLeptonGenerator/Default              </param>
+     <param type="alg"    name="Module-4">   genie::RESHadronicSystemGenerator/Default             </param>
+     <param type="alg"    name="Module-5">   genie::HadronTransporter/Default                      </param>
+     <param type="alg"    name="Module-6">   genie::NucBindEnergyAggregator/Default                </param>
+     <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/AfterHadronTransport   </param>
      <param type="alg"    name="ILstGen">    genie::RESInteractionListGenerator/EM-Default         </param>
   </param_set>
 
@@ -342,22 +370,21 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
 
   <param_set name="QEL-CC-CHARM">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   9                                                    </param>
+     <param type="int"    name="NModules">   8                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                            </param>
      <param type="alg"    name="Module-3">   genie::QELKinematicsGenerator/CC-Charm-Default       </param>
      <param type="alg"    name="Module-4">   genie::QELPrimaryLeptonGenerator/Default             </param>
      <param type="alg"    name="Module-5">   genie::QELHadronicSystemGenerator/Default            </param>
-     <param type="alg"    name="Module-6">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::QELInteractionListGenerator/CC-Charm-Default  </param>
   </param_set>
 
   <param_set name="DIS-CC-SINGLEK">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   10                                                   </param>
+     <param type="int"    name="NModules">   9                                                   </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/NucOnShell                         </param>
@@ -365,26 +392,24 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
      <param type="alg"    name="Module-4">   genie::SKPrimaryLeptonGenerator/Default              </param>
      <param type="alg"    name="Module-5">   genie::SKHadronicSystemGenerator/Default             </param>
      <param type="alg"    name="Module-6">   genie::PauliBlocker/Default                          </param>
-     <param type="alg"    name="Module-7">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-8">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-9">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::SKInteractionListGenerator/Default            </param>
   </param_set>
 
 
   <param_set name="DIS-CC-CHARM">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   10                                                   </param>
+     <param type="int"    name="NModules">   9                                                   </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                            </param>
      <param type="alg"    name="Module-3">   genie::DISKinematicsGenerator/CC-Charm-Default       </param>
      <param type="alg"    name="Module-4">   genie::DISPrimaryLeptonGenerator/Default             </param>
      <param type="alg"    name="Module-5">   genie::DISHadronicSystemGenerator/Charm              </param>
-     <param type="alg"    name="Module-6">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-8">   genie::NucBindEnergyAggregator/Default               </param>
-     <param type="alg"    name="Module-9">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::DISInteractionListGenerator/CC-Charm-Default  </param>
   </param_set>
 
@@ -465,6 +490,18 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
      <param type="alg"    name="Module-4">   genie::UnstableParticleDecayer/AfterHadronTransport </param>
      <param type="alg"    name="ILstGen">    genie::MECInteractionListGenerator/EM-Default       </param>
   </param_set>
+
+
+  <param_set name="MEC-EM-INCL">
+     <param type="string" name="VldContext"> </param>
+     <param type="int"    name="NModules">   4                                                   </param>
+     <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                 </param>
+     <param type="alg"    name="Module-1">   genie::MECGeneratorINCL/NucleusGenINCL                         </param>
+     <param type="alg"    name="Module-2">   genie::HadronTransporter/Default                    </param>
+     <param type="alg"    name="Module-3">   genie::UnstableParticleDecayer/AfterHadronTransport </param>
+     <param type="alg"    name="ILstGen">    genie::MECInteractionListGenerator/EM-Default       </param>
+  </param_set>
+
 
 
 
@@ -565,7 +602,7 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
   <!-- Boosted Dark Matter Event Generation -->
     <param_set name="DMEL">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   12                                                    </param>
+     <param type="int"    name="NModules">   11                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                            </param>
@@ -574,26 +611,24 @@ XSecModel                   alg     Yes  Cross section model used at the thread 
      <param type="alg"    name="Module-5">   genie::QELHadronicSystemGenerator/Default            </param>
      <param type="alg"    name="Module-6">   genie::PauliBlocker/Default                          </param>
      <param type="alg"    name="Module-7">   genie::UnstableParticleDecayer/BeforeHadronTransport </param>
-     <param type="alg"    name="Module-8">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-9">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-10">  genie::NucBindEnergyAggregator/Default               </param>
-     <param type="alg"    name="Module-11">  genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-8">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-9">  genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-10">  genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::DMELInteractionListGenerator/DM-Default        </param>
   </param_set>
 
   <param_set name="DMDIS">
      <param type="string" name="VldContext"> </param>
-     <param type="int"    name="NModules">   10                                                    </param>
+     <param type="int"    name="NModules">   9                                                    </param>
      <param type="alg"    name="Module-0">   genie::InitialStateAppender/Default                  </param>
      <param type="alg"    name="Module-1">   genie::VertexGenerator/Default                       </param>
      <param type="alg"    name="Module-2">   genie::FermiMover/Default                            </param>
      <param type="alg"    name="Module-3">   genie::DMDISKinematicsGenerator/NC-Default             </param>
      <param type="alg"    name="Module-4">   genie::DMDISOutgoingDarkGenerator/Default             </param>
      <param type="alg"    name="Module-5">   genie::DISHadronicSystemGenerator/Default            </param>
-     <param type="alg"    name="Module-6">   genie::NucDeExcitationSim/Default                    </param>
-     <param type="alg"    name="Module-7">   genie::HadronTransporter/Default                     </param>
-     <param type="alg"    name="Module-8">   genie::NucBindEnergyAggregator/Default               </param>
-     <param type="alg"    name="Module-9">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
+     <param type="alg"    name="Module-6">   genie::HadronTransporter/Default                     </param>
+     <param type="alg"    name="Module-7">   genie::NucBindEnergyAggregator/Default               </param>
+     <param type="alg"    name="Module-8">   genie::UnstableParticleDecayer/AfterHadronTransport  </param>
      <param type="alg"    name="ILstGen">    genie::DMDISInteractionListGenerator/DM-Default        </param>
   </param_set>
 

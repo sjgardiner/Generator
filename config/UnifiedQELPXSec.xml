@@ -68,7 +68,11 @@ IntegralNucleonBindingMode           alg      No
 
   <param_set name="ZExp_minerva">
     <param type="alg"  name="CCFormFactorsAlg"> genie::LwlynSmithFFCC/ZExp_minerva </param>
-  </param_set>   
+  </param_set>
+
+  <param_set name="ZExp_minervaNature">
+    <param type="alg"  name="CCFormFactorsAlg"> genie::LwlynSmithFFCC/ZExp_minervaNature </param>
+  </param_set>
 
   <param_set name="ZExp_lqcd">
     <param type="alg"  name="CCFormFactorsAlg"> genie::LwlynSmithFFCC/ZExp_lqcd </param>
@@ -86,6 +90,13 @@ IntegralNucleonBindingMode           alg      No
     <param type="alg"  name="IntegralNucleusGen">   genie::NucleusGenHybridStruck/Default </param>
     <param type="alg"  name="IntegralNuclearModel"> genie::NuclearModelMap/Default        </param>
     <param type="alg"  name="CCFormFactorsAlg">     genie::LwlynSmithFFCC/ZExp_minerva    </param>
+  </param_set>
+
+  <param_set name="ZExp_incl_minerva">
+    <param type="alg"  name="XSec-Integrator">      genie::INCLQELXSec/Default               </param>
+    <param type="alg"  name="IntegralNucleusGen">   genie::NucleusGenHybridStruck/Default    </param>
+    <param type="alg"  name="IntegralNuclearModel"> genie::NuclearModelMap/Default           </param>
+    <param type="alg"  name="CCFormFactorsAlg">     genie::LwlynSmithFFCC/ZExp_minervaNature </param>
   </param_set>
 
   <param_set name="ZExp_incl_lqcd">
